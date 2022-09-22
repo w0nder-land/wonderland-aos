@@ -4,6 +4,10 @@
 ## 🏗 Project Structure
 
 ## ✍️ Code Convention
+- [Kotlin](./documents/Kotlin.md)
+- [Resource](./documents/Resource.md)
+- [Architecture](./documents/Architecture.md)
+- [Test](./documents/Test.md)
 
 ## 📖 Tech Skill
 #### Architecture
