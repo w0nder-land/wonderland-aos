@@ -1,3 +1,9 @@
 <resources>
+    <!-- Application strings -->
     <string name="app_name">Wonderland</string>
+
+    <!-- Menu strings -->
+    <string name="menu_home">홈</string>
+
+    <!-- Screen strings -->
 </resources>
