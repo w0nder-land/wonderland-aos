@@ -55,8 +55,10 @@ android {
 
 dependencies {
 
-    implementation(project(":data"))
     implementation(project(":domain"))
+    implementation(project(":data"))
+    implementation(project(":remote"))
+    implementation(project(":cache"))
 
     AndroidConfig.run {
         implementation(CORE_KTX)

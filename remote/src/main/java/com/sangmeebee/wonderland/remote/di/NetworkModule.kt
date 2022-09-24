@@ -1,4 +1,4 @@
-package com.sangmeebee.wonderland.data.di
+package com.sangmeebee.wonderland.remote.di
 
 import dagger.Module
 import dagger.Provides
