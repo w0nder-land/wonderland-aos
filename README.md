@@ -2,6 +2,7 @@
 위치기반 축제 추천 서비스
 
 ## 🏗 Project Structure
+![Architecture_In_Search_Movie](https://user-images.githubusercontent.com/48168117/193544728-cf576bb6-417e-4651-b329-1f3daaa3d31c.png)
 
 ## ✍️ Code Convention
 - [Kotlin](./documents/Kotlin.md)
