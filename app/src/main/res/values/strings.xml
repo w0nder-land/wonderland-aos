@@ -6,4 +6,6 @@
     <string name="menu_home">홈</string>
 
     <!-- Screen strings -->
+    <!-- Splash -->
+    <string name="splash_explain">당신이 찾던 페스티벌, 원더랜드</string>
 </resources>

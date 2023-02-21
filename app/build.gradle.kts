@@ -55,6 +55,8 @@ android {
 
 dependencies {
 
+    implementation(project(":core-designsystem"))
+    implementation(project(":core-ui"))
     implementation(project(":domain"))
     implementation(project(":data"))
     implementation(project(":remote"))
@@ -64,6 +66,7 @@ dependencies {
         implementation(CORE_KTX)
         implementation(APPCOMPAT)
         implementation(MATERIAL)
+        implementation(SPLASH_SCREEN)
         implementation(CONSTRAINT_LAYOUT)
         implementation(SWIPE_REFRESH_LAYOUT)
         implementation(FRAGMENT_KTX)

@@ -21,9 +21,11 @@ object CoroutineConfig {
 
 object AndroidConfig {
     private const val fragmentKTXVersion = "1.5.2"
+    private const val splashScreenVersion = "1.0.0"
 
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:$fragmentKTXVersion"
     const val CORE_KTX = "androidx.core:core-ktx:1.8.0"
+    const val SPLASH_SCREEN = "androidx.core:core-splashscreen:${splashScreenVersion}"
     const val APPCOMPAT = "androidx.appcompat:appcompat:1.5.0"
     const val MATERIAL = "com.google.android.material:material:1.6.1"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"

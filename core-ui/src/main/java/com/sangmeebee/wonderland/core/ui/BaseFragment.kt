@@ -1,4 +1,4 @@
-package com.sangmeebee.wonderland.ui.base
+package com.sangmeebee.wonderland.core.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
