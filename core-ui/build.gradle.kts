@@ -36,13 +36,7 @@ android {
 
 dependencies {
 
-
     AndroidConfig.run {
-        implementation(CORE_KTX)
-        implementation(APPCOMPAT)
-        implementation(MATERIAL)
-        implementation(CONSTRAINT_LAYOUT)
-        implementation(SWIPE_REFRESH_LAYOUT)
         implementation(FRAGMENT_KTX)
     }
 }
