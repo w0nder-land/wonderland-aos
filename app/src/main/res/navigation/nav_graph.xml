@@ -9,5 +9,15 @@
         android:id="@+id/splashFragment"
         android:name="com.sangmeebee.wonderland.ui.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" />
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_onBoardingFragment"
+            app:destination="@id/onBoardingFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/onBoardingFragment"
+        android:name="com.sangmeebee.wonderland.feature.onboarding.ui.OnBoardingFragment"
+        android:label="OnBoardingFragment" />
+
 </navigation>

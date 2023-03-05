@@ -38,5 +38,6 @@ dependencies {
 
     AndroidConfig.run {
         implementation(FRAGMENT_KTX)
+        implementation(APPCOMPAT)
     }
 }

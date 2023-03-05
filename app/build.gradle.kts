@@ -57,10 +57,7 @@ dependencies {
 
     implementation(project(":core-designsystem"))
     implementation(project(":core-ui"))
-    implementation(project(":domain"))
-    implementation(project(":data"))
-    implementation(project(":remote"))
-    implementation(project(":cache"))
+    implementation(project(":feature-onboarding"))
 
     AndroidConfig.run {
         implementation(CORE_KTX)
