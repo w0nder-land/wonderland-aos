@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gray_100">#FFFDFDFD</color>
-    <color name="gray_200">#FFF7F8F9</color>
-    <color name="gray_300">#FFC5C8CE</color>
-    <color name="gray_400">#FF999FA4</color>
-    <color name="gray_500">#FF5A6166</color>
-    <color name="gray_600">#FF41474C</color>
-    <color name="gray_700">#FF2E363A</color>
-    <color name="gray_800">#FF1E2427</color>
-    <color name="gray_900">#FF171B1C</color>
+    <color name="gray_50">#FFFDFDFD</color>
+    <color name="gray_100">#FFF7F8F9</color>
+    <color name="gray_200">#FFC5C8CE</color>
+    <color name="gray_300">#FF999FA4</color>
+    <color name="gray_400">#FF5A6166</color>
+    <color name="gray_500">#FF41474C</color>
+    <color name="gray_600">#FF2E363A</color>
+    <color name="gray_700">#FF1E2427</color>
+    <color name="gray_800">#FF171B1C</color>
+    <color name="gray_900">#FF111111</color>
 
     <color name="wonder_500">#FFF36899</color>
     <color name="black">#FF000000</color>
