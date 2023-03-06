@@ -12,7 +12,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.sangmeebee.wonderland.core.ui.customview.BlurImageView
+
+    <ImageView
         android:id="@+id/ivOnBoarding"
         android:layout_width="225dp"
         android:layout_height="0dp"

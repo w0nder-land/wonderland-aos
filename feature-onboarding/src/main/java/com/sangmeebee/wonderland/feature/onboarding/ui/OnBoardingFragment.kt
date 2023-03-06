@@ -2,25 +2,32 @@ package com.sangmeebee.wonderland.feature.onboarding.ui
 
 import android.os.Bundle
 import android.view.View
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.viewpager2.widget.ViewPager2
 import com.sangmeebee.wonderland.core.designsystem.dpToPx
 import com.sangmeebee.wonderland.core.ui.BaseFragment
 import com.sangmeebee.wonderland.feature.onboarding.databinding.FragmentOnboardingBinding
-import com.sangmeebee.wonderland.feature.onboarding.model.OnBoardingProgress
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class OnBoardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboardingBinding::inflate) {
 
+    private val onBoardingViewModel by viewModels<OnBoardingViewModel>()
+    private val onBoardingAdapter = OnBoardingAdapter()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initView()
+        observeViewModel()
+    }
+
+    private fun initView() {
         binding.vpOnBoarding.apply {
-            adapter = OnBoardingAdapter(
-                listOf(
-                    OnBoardingProgress.PROGRESS_1,
-                    OnBoardingProgress.PROGRESS_2,
-                    OnBoardingProgress.PROGRESS_3,
-                    OnBoardingProgress.PROGRESS_FINISH
-                )
-            )
+            adapter = onBoardingAdapter
             offscreenPageLimit = 1
 
             val leftPaddingPx = 40.dpToPx()
@@ -34,7 +41,20 @@ class OnBoardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
                 page.translationX = position * -offsetPx
             }
 
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    onBoardingViewModel.fetchBlur(position)
+                }
+            })
+        }
+    }
 
+    private fun observeViewModel() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            onBoardingViewModel.uiState.collectLatest {
+                onBoardingAdapter.submitList(it)
+            }
         }
     }
 }
