@@ -54,4 +54,8 @@ dependencies {
         implementation(FRAGMENT_KTX)
         implementation(UI_KTX)
     }
+
+    ViewPager2Indicator.run {
+        implementation(DOTS_INDICATOR)
+    }
 }

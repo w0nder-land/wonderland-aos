@@ -1,4 +1,4 @@
-package com.sangmeebee.wonderland.feature.onboarding.ui
+package com.sangmeebee.wonderland.feature.onboarding.onboarding.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sangmeebee.wonderland.feature.onboarding.R
 import com.sangmeebee.wonderland.feature.onboarding.databinding.ItemOnboardingCardBinding
-import com.sangmeebee.wonderland.feature.onboarding.model.OnBoardingProgress
-import com.sangmeebee.wonderland.feature.onboarding.model.OnBoardingUiState
+import com.sangmeebee.wonderland.feature.onboarding.onboarding.model.OnBoardingProgress
+import com.sangmeebee.wonderland.feature.onboarding.onboarding.model.OnBoardingUiState
 
 class OnBoardingAdapter : ListAdapter<OnBoardingUiState, OnBoardingAdapter.OnBoardingViewHolder>(OnBoardingDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OnBoardingViewHolder {
@@ -30,7 +30,8 @@ class OnBoardingAdapter : ListAdapter<OnBoardingUiState, OnBoardingAdapter.OnBoa
                 OnBoardingProgress.PROGRESS_2 -> R.drawable.img_onboarding_card_2
                 OnBoardingProgress.PROGRESS_3 -> R.drawable.img_onboarding_card_3
                 OnBoardingProgress.PROGRESS_FINISH -> R.drawable.img_onboarding_card_start
-            }.let { id ->binding.ivOnBoarding.setImageResource(id)
+            }.let { id ->
+                binding.ivOnBoarding.setImageResource(id)
             }
 
             val blurRadius = if (item.isBlur) 2 else 1

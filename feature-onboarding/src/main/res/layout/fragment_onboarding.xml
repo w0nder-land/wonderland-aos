@@ -12,8 +12,24 @@
         android:layout_marginTop="116dp"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toTopOf="@id/btnStart"
+        app:layout_constraintBottom_toTopOf="@id/dotsIndicator"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dotsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        app:dotsColor="@color/gray_200"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="11dp"
+        app:dotsSpacing="9dp"
+        app:dotsWidthFactor="1"
+        app:layout_constraintBottom_toTopOf="@id/btnStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:progressMode="false"
+        app:selectedDotColor="@color/gray_500" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btnStart"

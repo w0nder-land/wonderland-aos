@@ -32,6 +32,11 @@ object AndroidConfig {
     const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 }
 
+object ViewPager2Indicator {
+    private const val indicatorVersion = "4.3"
+    const val DOTS_INDICATOR = "com.tbuonomo:dotsindicator:$indicatorVersion"
+}
+
 object NavigationConfig {
     private const val navVersion = "2.5.2"
     const val FRAGMENT_KTX = "androidx.navigation:navigation-fragment-ktx:$navVersion"

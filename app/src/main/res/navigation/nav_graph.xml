@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/onBoardingFragment"
-        android:name="com.sangmeebee.wonderland.feature.onboarding.ui.OnBoardingFragment"
+        android:name="com.sangmeebee.wonderland.feature.onboarding.onboarding.ui.OnBoardingFragment"
         android:label="OnBoardingFragment" />
 
 </navigation>

@@ -1,8 +1,8 @@
-package com.sangmeebee.wonderland.feature.onboarding.ui
+package com.sangmeebee.wonderland.feature.onboarding.onboarding.ui
 
 import androidx.lifecycle.ViewModel
-import com.sangmeebee.wonderland.feature.onboarding.model.OnBoardingProgress
-import com.sangmeebee.wonderland.feature.onboarding.model.OnBoardingUiState
+import com.sangmeebee.wonderland.feature.onboarding.onboarding.model.OnBoardingProgress
+import com.sangmeebee.wonderland.feature.onboarding.onboarding.model.OnBoardingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
