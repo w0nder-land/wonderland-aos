@@ -11,7 +11,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.sangmeebee.wonderland"
+        applicationId = "com.wonder.wonderland"
         minSdk = 21
         targetSdk = 33
         versionCode = 1
