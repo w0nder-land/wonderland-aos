@@ -1,6 +1,6 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
+    kotlin("android")
 }
 
 android {
@@ -35,9 +35,7 @@ android {
 }
 
 dependencies {
-
     AndroidConfig.run {
-        implementation(FRAGMENT_KTX)
         implementation(APPCOMPAT)
     }
 }

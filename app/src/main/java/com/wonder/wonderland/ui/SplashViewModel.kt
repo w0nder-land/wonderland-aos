@@ -16,7 +16,6 @@ class SplashViewModel @Inject constructor() : ViewModel() {
     private val _isReady = MutableStateFlow(false)
     val isReady: StateFlow<Boolean> = _isReady.asStateFlow()
 
-
     init {
         viewModelScope.launch {
             delay(500)

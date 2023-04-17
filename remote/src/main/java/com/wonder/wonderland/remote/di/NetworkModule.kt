@@ -62,5 +62,4 @@ internal object NetworkModule {
         .baseUrl(BASE_URL)
         .addConverterFactory(converter)
         .build()
-
 }

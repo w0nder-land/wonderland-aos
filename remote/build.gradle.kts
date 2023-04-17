@@ -11,8 +11,13 @@ java {
 dependencies {
     implementation(project(":data"))
 
-    implementation(CoroutineConfig.CORE)
-    implementation(PagingConfig.PAGING_COMMON)
+    CoroutineConfig.run {
+        implementation(COROUTINES_CORE)
+    }
+
+    PagingConfig.run {
+        implementation(PAGING_COMMON)
+    }
 
     NetworkConfig.run {
         implementation(RETROFIT)
@@ -22,11 +27,13 @@ dependencies {
         implementation(OKHTTP_LOGGING_INTERCEPTOR)
     }
 
-    implementation(ConverterConfig.GSON)
+    ConverterConfig.run {
+        implementation(GSON)
+    }
 
     HiltConfig.run {
-        implementation(CORE)
-        kapt(COMPILER)
+        implementation(DAGGER_HILT_CORE)
+        kapt(DAGGER_HILT_COMPILER)
     }
 
     UnitTestConfig.run {

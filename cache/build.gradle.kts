@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
-    id("kotlin-android")
-    id("kotlin-kapt")
+    kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -34,12 +34,15 @@ android {
 }
 
 dependencies {
-
     implementation(project(":data"))
 
-    implementation(CoroutineConfig.CORE)
+    CoroutineConfig.run {
+        implementation(COROUTINES_CORE)
+    }
 
-    implementation(PagingConfig.PAGING_COMMON)
+    PagingConfig.run {
+        implementation(PAGING_COMMON)
+    }
 
     RoomConfig.run {
         implementation(ROOM_RUNTIME)
@@ -48,11 +51,13 @@ dependencies {
         implementation(ROOM_PAGING)
     }
 
-    implementation(ConverterConfig.GSON)
+    ConverterConfig.run {
+        implementation(GSON)
+    }
 
     HiltConfig.run {
-        implementation(ANDROID)
-        kapt(COMPILER)
+        implementation(DAGGER_HILT_ANDROID)
+        kapt(DAGGER_HILT_COMPILER)
     }
 
     UnitTestConfig.run {

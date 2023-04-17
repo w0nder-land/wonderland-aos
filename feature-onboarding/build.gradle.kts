@@ -45,17 +45,6 @@ dependencies {
     AndroidConfig.run {
         implementation(CORE_KTX)
         implementation(APPCOMPAT)
-        implementation(MATERIAL)
         implementation(CONSTRAINT_LAYOUT)
-        implementation(FRAGMENT_KTX)
-    }
-
-    NavigationConfig.run {
-        implementation(FRAGMENT_KTX)
-        implementation(UI_KTX)
-    }
-
-    ViewPager2Indicator.run {
-        implementation(DOTS_INDICATOR)
     }
 }

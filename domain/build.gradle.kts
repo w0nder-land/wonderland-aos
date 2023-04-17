@@ -1,6 +1,6 @@
 plugins {
     id("kotlin")
-    id("kotlin-kapt")
+    kotlin("kapt")
 }
 
 java {
@@ -10,16 +10,21 @@ java {
 
 dependencies {
     HiltConfig.run {
-        implementation(CORE)
-        kapt(COMPILER)
+        implementation(DAGGER_HILT_CORE)
+        kapt(DAGGER_HILT_COMPILER)
     }
 
     RoomConfig.run {
         implementation(ROOM_COMMON)
     }
 
-    implementation(CoroutineConfig.CORE)
-    implementation(PagingConfig.PAGING_COMMON)
+    CoroutineConfig.run {
+        implementation(COROUTINES_CORE)
+    }
+
+    PagingConfig.run {
+        implementation(PAGING_COMMON)
+    }
 
     UnitTestConfig.run {
         testImplementation(JUNIT)

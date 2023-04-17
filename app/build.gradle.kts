@@ -1,55 +1,64 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("de.mannodermaus.android-junit5")
-    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-parcelize")
+    kotlin("android")
+    kotlin("kapt")
 }
 
 android {
     compileSdk = 33
+    buildToolsVersion = "31.0.0"
 
     defaultConfig {
         applicationId = "com.wonder.wonderland"
         minSdk = 21
         targetSdk = 33
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] =
-            "de.mannodermaus.junit5.AndroidJUnit5Builder"
-        //room to json
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
-            }
-        }
+        testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        getByName(BuildType.RELEASE) {
+            isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
+        }
+        getByName(BuildType.DEBUG) {
+            isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
+            proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = ComposeConfig.composeCompilerVersion
+    }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
+
     buildFeatures {
         viewBinding = true
-        dataBinding = true
+        buildConfig = true
+        compose = true
     }
+
     kapt {
         correctErrorTypes = true
+        useBuildCache = true
     }
 }
 
@@ -62,28 +71,32 @@ dependencies {
     AndroidConfig.run {
         implementation(CORE_KTX)
         implementation(APPCOMPAT)
-        implementation(MATERIAL)
         implementation(SPLASH_SCREEN)
+        implementation(LIFECYCLE_VIEWMODEL_KTX)
+        implementation(LIFECYCLE_VIEWMODEL_COMPOSE)
+        implementation(LIFECYCLE_EXTENSIONS)
         implementation(CONSTRAINT_LAYOUT)
-        implementation(SWIPE_REFRESH_LAYOUT)
-        implementation(FRAGMENT_KTX)
+        implementation(MATERIAL)
     }
 
-
-    NavigationConfig.run {
-        implementation(FRAGMENT_KTX)
-        implementation(UI_KTX)
+    ComposeConfig.run {
+        implementation(COMPOSE_MATERIAL3)
+        implementation(COMPOSE_NAVIGATION)
+        implementation(COMPOSE_NAVIGATION_ANIMATION)
     }
 
+    CoroutineConfig.run {
+        implementation(COROUTINES_CORE)
+        implementation(COROUTINES_ANDROID)
+    }
 
     HiltConfig.run {
-        implementation(ANDROID)
-        kapt(COMPILER)
+        implementation(DAGGER_HILT_ANDROID)
+        kapt(DAGGER_HILT_COMPILER)
+        implementation(HILT_COMMON)
+        kapt(HILT_COMPILER)
+        implementation(HILT_NAVIGATION_COMPOSE)
     }
-
-    implementation(CoilConfig.COIL)
-
-    implementation(PagingConfig.PAGING_RUNTIME)
 
     UnitTestConfig.run {
         testImplementation(JUNIT)
