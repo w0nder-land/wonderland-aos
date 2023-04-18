@@ -12,7 +12,6 @@ android {
 dependencies {
 
     implementation(project(":core-ui"))
-    implementation(project(":core-designsystem"))
 
     AndroidConfig.run {
         implementation(CORE_KTX)

@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.wonder.wonderland.core.designsystem.R
+import com.wonder.resource.R
 
 val Suit = FontFamily(
     Font(R.font.suit_bold, FontWeight.W700),

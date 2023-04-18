@@ -14,7 +14,7 @@ android {
 
 dependencies {
     implementation(project(":common:component"))
-    implementation(project(":core-designsystem"))
+    implementation(project(":common:resource"))
     implementation(project(":core-ui"))
     implementation(project(":feature-onboarding"))
 

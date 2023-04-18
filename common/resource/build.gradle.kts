@@ -5,5 +5,5 @@ plugins {
 
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
 android {
-    namespace = "com.wonder.wonderland.core.designsystem"
+    namespace = "com.wonder.resource"
 }
