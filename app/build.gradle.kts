@@ -7,63 +7,13 @@ plugins {
     kotlin("kapt")
 }
 
+apply(from = "${rootProject.rootDir.absolutePath}/config.gradle")
 android {
-    compileSdk = 33
-    buildToolsVersion = "31.0.0"
-
-    defaultConfig {
-        applicationId = "com.wonder.wonderland"
-        minSdk = 21
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
-
-        vectorDrawables.useSupportLibrary = true
-    }
-
-    buildTypes {
-        getByName(BuildType.RELEASE) {
-            isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
-            proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
-        }
-        getByName(BuildType.DEBUG) {
-            isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
-            proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = ComposeConfig.composeCompilerVersion
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
-    buildFeatures {
-        viewBinding = true
-        buildConfig = true
-        compose = true
-    }
-
-    kapt {
-        correctErrorTypes = true
-        useBuildCache = true
-    }
+    namespace = "com.wonder.wonderland"
 }
 
 dependencies {
-
+    implementation(project(":common:component"))
     implementation(project(":core-designsystem"))
     implementation(project(":core-ui"))
     implementation(project(":feature-onboarding"))

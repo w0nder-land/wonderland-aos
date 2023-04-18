@@ -1,14 +1,11 @@
-const val okhttpVersion = "4.10.0"
-const val junit5Version = "5.9.0"
-
 object GradleConfig {
-    const val GRADLE = "com.android.tools.build:gradle:7.4.0"
+    const val GRADLE = "com.android.tools.build:gradle:7.4.2"
     const val KTLINT = "org.jlleitschuh.gradle:ktlint-gradle:10.0.0"
     const val ANDROID_JUNIT5 = "de.mannodermaus.gradle.plugins:android-junit5:1.7.1.1"
 }
 
 object KotlinConfig {
-    private const val kotlinVersion = "1.7.20"
+    private const val kotlinVersion = "1.8.0"
 
     const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     const val KOTLIN_GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -28,6 +25,7 @@ object AndroidConfig {
     const val LIFECYCLE_VIEWMODEL_KTX = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     const val LIFECYCLE_VIEWMODEL_COMPOSE = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
     const val LIFECYCLE_EXTENSIONS = "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensionVersion"
+    const val LIFECYCLE_COMPOSE = "androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion"
 
     const val MATERIAL = "com.google.android.material:material:$materialVersion"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
@@ -35,10 +33,25 @@ object AndroidConfig {
 
 object ComposeConfig {
     const val composeVersion = "1.4.0"
-    const val composeCompilerVersion = "1.3.2"
+    const val composeCompilerVersion = "1.4.0"
     const val composeMaterial3Version = "1.1.0-alpha01"
     const val composeNavigationVersion = "2.5.2"
+    const val composeActivityVersion = "1.4.0"
+    const val composeCoilVersion = "2.2.2"
     const val accompanistVersion = "0.30.0"
+
+    const val COMPOSE_UI = "androidx.compose.ui:ui:$composeVersion"
+    const val COMPOSE_UI_TOOL = "androidx.compose.ui:ui-tooling:$composeVersion"
+    const val COMPOSE_UI_PREVIEW = "androidx.compose.ui:ui-tooling-preview:$composeVersion"
+    const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:$composeActivityVersion"
+    const val COMPOSE_RUNTIME = "androidx.compose.runtime:runtime:$composeVersion"
+    const val COMPOSE_FOUNDATION_LAYOUT = "androidx.compose.foundation:foundation-layout:$composeVersion"
+    const val COMPOSE_MATERIAL = "androidx.compose.material:material:$composeVersion"
+    const val COMPOSE_MATERIAL_CORE = "androidx.compose.material:material-icons-core:$composeVersion"
+    const val COMPOSE_MATERIAL_ICON = "androidx.compose.material:material-icons-extended:$composeVersion"
+    const val COMPOSE_FOUNDATION = "androidx.compose.foundation:foundation:$composeVersion"
+    const val COMPOSE_ANIMATION = "androidx.compose.animation:animation:$composeVersion"
+    const val COMPOSE_COIL = "io.coil-kt:coil-compose:$composeCoilVersion"
 
     const val COMPOSE_MATERIAL3 = "androidx.compose.material3:material3:$composeMaterial3Version"
     const val COMPOSE_NAVIGATION = "androidx.navigation:navigation-compose:$composeNavigationVersion"
@@ -69,6 +82,7 @@ object RoomConfig {
 
 object NetworkConfig {
     private const val retrofitVersion = "2.9.0"
+    const val okhttpVersion = "4.9.1"
 
     const val RETROFIT = "com.squareup.retrofit2:retrofit:$retrofitVersion"
     const val RETROFIT_CONVERTER = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -96,24 +110,32 @@ object HiltConfig {
     const val HILT_NAVIGATION_COMPOSE = "androidx.hilt:hilt-navigation-compose:$hiltVersion"
 }
 
+object TimberConfig {
+    private const val timberVersion = "4.7.1"
+
+    const val TIMBER = "com.jakewharton.timber:timber:$timberVersion"
+}
+
 /**
  * gradle for test
  * */
 
 object UnitTestConfig {
+    const val junit5Version = "5.9.0"
+
     const val JUNIT = "junit:junit:4.13.2"
     const val JUNIT_JUPITER = "org.junit.jupiter:junit-jupiter:$junit5Version"
     const val JUNIT_VINTAGE_ENGINE = "org.junit.vintage:junit-vintage-engine:$junit5Version"
     const val TRUTH = "com.google.truth:truth:1.1.3"
     const val COROUTINE_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${CoroutineConfig.coroutineVersion}"
     const val MOCKK = "io.mockk:mockk:1.12.2"
-    const val MOCK_WEBSERVER = "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+    const val MOCK_WEBSERVER = "com.squareup.okhttp3:mockwebserver:${NetworkConfig.okhttpVersion}"
 }
 
 object UITestConfig {
     private const val junit5AndroidTestVersion = "1.2.2"
 
-    const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api:${UnitTestConfig.junit5Version}"
     const val JUNIT = "androidx.test.ext:junit:1.1.3"
     const val ESPRESSO_CORE = "androidx.test.espresso:espresso-core:3.4.0"
     const val JUNIT5_CORE = "de.mannodermaus.junit5:android-test-core:$junit5AndroidTestVersion"
