@@ -10,6 +10,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core-designsystem"))
+
     ComposeConfig.run {
         api(COMPOSE_UI)
         api(COMPOSE_FOUNDATION)
