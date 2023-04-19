@@ -15,9 +15,12 @@ android {
 dependencies {
     implementation(project(Module.CommonComponent))
     implementation(project(Module.CommonResource))
+    implementation(project(Module.Domain))
+    implementation(project(Module.Data))
 
     AndroidConfig.run {
         implementation(CORE_KTX)
+        implementation(ACTIVITY_KTX)
         implementation(APPCOMPAT)
         implementation(SPLASH_SCREEN)
         implementation(LIFECYCLE_VIEWMODEL_KTX)
@@ -44,6 +47,10 @@ dependencies {
         implementation(HILT_COMMON)
         kapt(HILT_COMPILER)
         implementation(HILT_NAVIGATION_COMPOSE)
+    }
+
+    TimberConfig.run {
+        implementation(TIMBER)
     }
 
     UnitTestConfig.run {

@@ -10,7 +10,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":common:resource"))
+    implementation(project(Module.CommonResource))
 
     ComposeConfig.run {
         api(COMPOSE_UI)

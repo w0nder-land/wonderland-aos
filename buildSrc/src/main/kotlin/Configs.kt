@@ -12,13 +12,16 @@ object KotlinConfig {
 }
 
 object AndroidConfig {
+    private const val coreVersion = "1.8.0"
+    private const val activityKtxVersion = "1.6.1"
     private const val splashScreenVersion = "1.0.0"
     private const val lifecycleVersion = "2.4.1"
     private const val lifecycleExtensionVersion = "2.2.0"
     private const val materialVersion = "1.6.0-alpha02"
     private const val constraintLayoutVersion = "2.1.3"
 
-    const val CORE_KTX = "androidx.core:core-ktx:1.8.0"
+    const val CORE_KTX = "androidx.core:core-ktx:$coreVersion"
+    const val ACTIVITY_KTX = "androidx.activity:activity-ktx:$activityKtxVersion"
     const val SPLASH_SCREEN = "androidx.core:core-splashscreen:$splashScreenVersion"
     const val APPCOMPAT = "androidx.appcompat:appcompat:1.5.0"
 
@@ -89,12 +92,6 @@ object NetworkConfig {
     const val OKHTTP_BOM = "com.squareup.okhttp3:okhttp-bom:$okhttpVersion"
     const val OKHTTP = "com.squareup.okhttp3:okhttp"
     const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor"
-}
-
-object ConverterConfig {
-    private const val gsonVersion = "2.9.1"
-    const val GSON = "com.google.code.gson:gson:$gsonVersion"
-
 }
 
 object HiltConfig {

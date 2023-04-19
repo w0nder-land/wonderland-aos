@@ -1,36 +1,39 @@
 plugins {
-    id("kotlin")
+    id("com.android.library")
+    kotlin("android")
     kotlin("kapt")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
+android {
+    namespace = "com.wonder.data"
 }
 
 dependencies {
     implementation(project(Module.Domain))
 
+    KotlinConfig.run {
+        implementation(KOTLIN_STDLIB)
+    }
+
+    HiltConfig.run {
+        implementation(DAGGER_HILT_ANDROID)
+        kapt(DAGGER_HILT_COMPILER)
+    }
+
+    NetworkConfig.run {
+        implementation(RETROFIT)
+        implementation(RETROFIT_CONVERTER)
+        api(OKHTTP_BOM)
+        implementation(OKHTTP)
+        implementation(OKHTTP_LOGGING_INTERCEPTOR)
+    }
+
     CoroutineConfig.run {
         implementation(COROUTINES_CORE)
     }
 
-    PagingConfig.run {
-        implementation(PAGING_COMMON)
-    }
-
-    HiltConfig.run {
-        implementation(DAGGER_HILT_CORE)
-        kapt(DAGGER_HILT_COMPILER)
-    }
-
-    UnitTestConfig.run {
-        testImplementation(JUNIT)
-        testImplementation(JUNIT_JUPITER)
-        testImplementation(JUNIT_VINTAGE_ENGINE)
-        testImplementation(TRUTH)
-        testImplementation(COROUTINE_TEST)
-        testImplementation(MOCKK)
-        testImplementation(MOCK_WEBSERVER)
+    TimberConfig.run {
+        implementation(TIMBER)
     }
 }
