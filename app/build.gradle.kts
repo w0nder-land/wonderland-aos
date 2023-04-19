@@ -13,10 +13,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":common:component"))
-    implementation(project(":common:resource"))
-    implementation(project(":core-ui"))
-    implementation(project(":feature-onboarding"))
+    implementation(project(Module.CommonComponent))
+    implementation(project(Module.CommonResource))
 
     AndroidConfig.run {
         implementation(CORE_KTX)

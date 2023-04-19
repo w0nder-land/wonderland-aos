@@ -1,5 +1,3 @@
-package config
-
 object BuildBaseConfig {
     const val APPLICATION_ID = "com.wonder.wonderland"
     const val MIN_SDK_VERSION = 24

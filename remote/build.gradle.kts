@@ -9,7 +9,7 @@ java {
 }
 
 dependencies {
-    implementation(project(":data"))
+    implementation(project(Module.Data))
 
     CoroutineConfig.run {
         implementation(COROUTINES_CORE)

@@ -1,5 +1,3 @@
-import config.BuildBaseConfig
-
 android {
     compileSdkVersion BuildBaseConfig.COMPILE_VERSION
     buildToolsVersion BuildBaseConfig.BUILD_TOOLS_VERSION

@@ -9,7 +9,7 @@ java {
 }
 
 dependencies {
-    implementation(project(":domain"))
+    implementation(project(Module.Domain))
 
     CoroutineConfig.run {
         implementation(COROUTINES_CORE)
