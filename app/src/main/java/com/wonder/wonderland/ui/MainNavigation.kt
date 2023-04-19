@@ -6,8 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.google.accompanist.navigation.animation.composable
-
-const val mainRoute = "main"
+import com.wonder.component.navigate.mainRoute
 
 fun NavController.navigateToMain(navOptions: NavOptions? = null) {
     navigate(mainRoute, navOptions)

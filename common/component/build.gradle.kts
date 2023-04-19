@@ -44,6 +44,6 @@ dependencies {
     }
 
     TimberConfig.run {
-        implementation(TIMBER)
+        api(TIMBER)
     }
 }

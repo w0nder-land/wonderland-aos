@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.wonder.component.navigate.onboardingRoute
 import com.wonder.component.theme.WonderTheme
-import com.wonder.feature.onboarding.onboardingRoute
 import com.wonder.feature.onboarding.onboardingScreen
 import dagger.hilt.android.AndroidEntryPoint
 
