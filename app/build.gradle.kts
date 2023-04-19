@@ -30,12 +30,6 @@ dependencies {
         implementation(MATERIAL)
     }
 
-    ComposeConfig.run {
-        implementation(COMPOSE_MATERIAL3)
-        implementation(COMPOSE_NAVIGATION)
-        implementation(COMPOSE_NAVIGATION_ANIMATION)
-    }
-
     CoroutineConfig.run {
         implementation(COROUTINES_CORE)
         implementation(COROUTINES_ANDROID)

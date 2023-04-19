@@ -7,6 +7,14 @@ plugins {
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
 android {
     namespace = "com.wonder.component"
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = ComposeConfig.composeCompilerVersion
+    }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -25,6 +33,9 @@ dependencies {
         api(COMPOSE_FOUNDATION_LAYOUT)
         api(COMPOSE_COIL)
         api(COMPOSE_ACTIVITY)
+        api(COMPOSE_MATERIAL3)
+        api(COMPOSE_NAVIGATION)
+        api(COMPOSE_NAVIGATION_ANIMATION)
     }
 
     TimberConfig.run {
