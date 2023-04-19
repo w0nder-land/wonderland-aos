@@ -11,6 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.wonder.component.theme.WonderTheme
+import com.wonder.feature.onboarding.onboardingRoute
+import com.wonder.feature.onboarding.onboardingScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,8 +36,9 @@ fun MainNavGraph(mainViewModel: MainViewModel = hiltViewModel()) {
     WonderTheme {
         AnimatedNavHost(
             navController = navController,
-            startDestination = mainRoute,
+            startDestination = onboardingRoute,
         ) {
+            onboardingScreen(navController = navController)
             mainScreen(navController = navController)
         }
     }

@@ -5,10 +5,9 @@ object GradleConfig {
 }
 
 object KotlinConfig {
-    private const val kotlinVersion = "1.8.0"
+    const val kotlinVersion = "1.8.0"
 
     const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    const val KOTLIN_GRADLE_PLUGIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 }
 
 object AndroidConfig {

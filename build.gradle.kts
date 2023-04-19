@@ -10,8 +10,8 @@ buildscript {
             classpath(KTLINT)
             classpath(ANDROID_JUNIT5)
         }
-        classpath(KotlinConfig.KOTLIN_GRADLE_PLUGIN)
         classpath(HiltConfig.DAGGER_HILT_ADNROID_GRADLE_PLUGIN)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${KotlinConfig.kotlinVersion}")
     }
 }
 

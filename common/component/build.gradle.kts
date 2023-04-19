@@ -20,6 +20,11 @@ android {
 dependencies {
     implementation(project(Module.CommonResource))
 
+    HiltConfig.run {
+        api(DAGGER_HILT_ANDROID)
+        api(HILT_NAVIGATION_COMPOSE)
+    }
+
     ComposeConfig.run {
         api(COMPOSE_UI)
         api(COMPOSE_FOUNDATION)

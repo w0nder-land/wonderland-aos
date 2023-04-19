@@ -4,4 +4,5 @@ object Module {
     const val Domain = ":domain"
     const val CommonComponent = ":common:component"
     const val CommonResource = ":common:resource"
+    const val FeatureOnboarding = ":feature:onboarding"
 }
