@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,9 +36,12 @@ import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.textfield.BasicTextField
+import com.wonder.component.util.Keyboard
+import com.wonder.component.util.rememberKeyboardState
 import com.wonder.resource.R
 import com.wonder.wonderland.ui.MainDestination
 import com.wonder.wonderland.ui.MainViewModel
+import timber.log.Timber
 
 @Composable
 fun SearchView(
@@ -101,10 +105,15 @@ fun SearchTopBar(
     onSearch: (keyword: String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val keyboardState = rememberKeyboardState()
     val keyword = remember { mutableStateOf("") }
     val searchAction = {
         focusManager.clearFocus()
         onSearch(keyword.value)
+    }
+
+    LaunchedEffect(keyboardState) {
+        if (keyboardState == Keyboard.Closed) focusManager.clearFocus()
     }
 
     BasicTextField(
