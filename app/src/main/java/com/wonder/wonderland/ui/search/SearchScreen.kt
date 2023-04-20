@@ -5,19 +5,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,15 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.wonder.component.theme.Body1
-import com.wonder.component.theme.Gray100
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray50
 import com.wonder.component.theme.Gray700
 import com.wonder.component.theme.Gray900
-import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Subtitle3
-import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.tab.SlideTab
@@ -50,7 +42,8 @@ import com.wonder.component.util.rememberKeyboardState
 import com.wonder.resource.R
 import com.wonder.wonderland.ui.MainDestination
 import com.wonder.wonderland.ui.MainViewModel
-import timber.log.Timber
+import com.wonder.wonderland.ui.search.keyword.searchKeywordView
+import com.wonder.wonderland.ui.search.result.searchResultView
 
 @Composable
 fun SearchView(
@@ -87,6 +80,7 @@ fun SearchView(
             "내한공연",
             "힙합/EDM"
         ),
+        festivals = listOf("1", "2", "3", "4", "5", "6", "7"),
         onSearch = searchViewModel::searchFestival,
         onTabClick = {}
     )
@@ -98,23 +92,31 @@ private fun SearchScreen(
     recentKeywords: List<String>,
     popularKeywords: List<String>,
     tabs: List<String>,
+    festivals: List<String>,
     onSearch: (keyword: String) -> Unit,
     onTabClick: (tabIndex: Int) -> Unit
 ) {
+    var isKeywordView by remember { mutableStateOf(true) }
+
     Scaffold(
         modifier = Modifier.imePadding(),
         containerColor = Gray900,
         topBar = {
             SearchTopBar(
-                onSearch = onSearch
+                onSearch = {
+                    isKeywordView = !isKeywordView
+                    onSearch(it)
+                }
             )
         },
         content = { padding ->
             SearchContent(
                 modifier = Modifier.padding(padding),
+                isKeywordView = isKeywordView,
                 recentKeywords = recentKeywords,
                 popularKeywords = popularKeywords,
                 tabs = tabs,
+                festivals = festivals,
                 onTabClick = onTabClick
             )
         }
@@ -184,69 +186,40 @@ fun SearchTopBar(
 @Composable
 private fun SearchContent(
     modifier: Modifier,
-    tabs: List<String>,
+    isKeywordView: Boolean,
     recentKeywords: List<String>,
     popularKeywords: List<String>,
+    tabs: List<String>,
+    festivals: List<String>,
     onTabClick: (tabIndex: Int) -> Unit,
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
-    SlideTab(
-        modifier = modifier,
-        tabs = tabs,
-        selectedIndex = selectedTabIndex
-    ) {
-        selectedTabIndex = it
-        onTabClick(it)
+    if (!isKeywordView) {
+        SlideTab(
+            modifier = modifier,
+            tabs = tabs,
+            selectedIndex = selectedTabIndex
+        ) {
+            selectedTabIndex = it
+            onTabClick(it)
+        }
     }
 
     LazyColumn(
-        modifier = modifier.padding(top = 45.dp),
-        contentPadding = PaddingValues(vertical = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = modifier.padding(top = if (isKeywordView) 0.dp else 45.dp),
+        contentPadding = PaddingValues(vertical = if (isKeywordView) 20.dp else 12.dp),
+        verticalArrangement = Arrangement.spacedBy(if (isKeywordView) 16.dp else 0.dp)
     ) {
-        if (recentKeywords.isNotEmpty()) {
-            item {
-                SearchRecentKeywordView(
-                    recentKeywords = recentKeywords
-                )
-            }
-        }
-
-        item {
-            Text(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        top = if (recentKeywords.isNotEmpty()) 33.dp else 0.dp,
-                        bottom = 2.dp
-                    ),
-                text = "실시간 인기 검색어",
-                style = Subtitle2,
-                color = Gray400
+        if (isKeywordView) {
+            searchKeywordView(
+                recentKeywords = recentKeywords,
+                popularKeywords = popularKeywords
             )
-        }
-
-        itemsIndexed(popularKeywords) { index, keyword ->
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .height(34.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.width(21.dp),
-                    text = "${index + 1}",
-                    style = Subtitle3,
-                    color = Wonder500
-                )
-
-                Text(
-                    text = keyword,
-                    style = Body1,
-                    color = Gray100
-                )
-            }
+        } else {
+            searchResultView(
+                festivals = festivals
+            )
         }
     }
 }
@@ -279,6 +252,7 @@ private fun SearchScreenPreview() {
                 "내한공연",
                 "힙합/EDM"
             ),
+            festivals = listOf(),
             onSearch = {},
             onTabClick = {}
         )

@@ -12,7 +12,6 @@ import com.wonder.component.theme.Gray50
 import com.wonder.component.theme.Gray500
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle2
-import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
 
 @Composable
