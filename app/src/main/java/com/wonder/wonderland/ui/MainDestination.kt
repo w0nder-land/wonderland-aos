@@ -13,22 +13,22 @@ enum class MainDestination(
     val route: String
 ) {
     HOME(
-        icon = R.drawable.ic_home,
+        icon = R.drawable.ic_bottom_home,
         text = "홈",
         route = homeRoute
     ),
     SEARCH(
-        icon = R.drawable.ic_search,
+        icon = R.drawable.ic_bottom_search,
         text = "검색",
         route = searchRoute
     ),
     CALENDAR(
-        icon = R.drawable.ic_calendar,
+        icon = R.drawable.ic_bottom_calendar,
         text = "캘린더",
         route = calendarRoute
     ),
     MY(
-        icon = R.drawable.ic_my,
+        icon = R.drawable.ic_bottom_my,
         text = "마이",
         route = myRoute
     )

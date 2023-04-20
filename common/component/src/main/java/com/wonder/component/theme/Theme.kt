@@ -10,16 +10,16 @@ private val DarkColorScheme = darkColorScheme(
     primary = Wonder500,
     secondary = Gray900,
     error = Red900,
-    background = White,
-    surface = White,
+    background = Gray900,
+    surface = Gray900,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Wonder500,
     secondary = Gray900,
     error = Red900,
-    background = White,
-    surface = White,
+    background = Gray900,
+    surface = Gray900,
 )
 
 @Composable

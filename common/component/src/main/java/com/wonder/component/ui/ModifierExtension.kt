@@ -40,7 +40,9 @@ fun Modifier.singleClick(
             onClickLabel = onClickLabel,
             onClick = {
                 scope.launch {
-                    ClickableCheckObject.throttledFirstClicks(onClick)
+                    ClickableCheckObject.throttledFirstClicks {
+                        onClick.invoke()
+                    }
                 }
             },
             role = role,

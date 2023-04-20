@@ -136,7 +136,7 @@ fun BasicTextField(
                     .fillMaxWidth(),
                 value = text,
                 singleLine = singleLine,
-                textStyle = textStyle ?: TextStyle(
+                textStyle = textStyle?.copy(color = textColor) ?: TextStyle(
                     fontFamily = Suit,
                     fontSize = fontSize,
                     color = textColor,
