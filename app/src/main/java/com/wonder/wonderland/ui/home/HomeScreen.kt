@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.wonderland.ui.MainActivity
@@ -31,7 +32,7 @@ fun HomeView(
 @Composable
 private fun HomeScreen() {
     Scaffold(
-        containerColor = Wonder500,
+        containerColor = Gray900,
         topBar = {},
         content = { padding ->
             HomeContent(modifier = Modifier.padding(padding))

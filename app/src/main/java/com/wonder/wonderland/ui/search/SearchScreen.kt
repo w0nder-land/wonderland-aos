@@ -43,6 +43,7 @@ import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.singleClick
+import com.wonder.component.ui.tab.SlideTab
 import com.wonder.component.ui.textfield.BasicTextField
 import com.wonder.component.util.Keyboard
 import com.wonder.component.util.rememberKeyboardState
@@ -79,7 +80,15 @@ fun SearchView(
             "해리 스타일스",
             "선셋 롤러코스터"
         ),
-        onSearch = searchViewModel::searchFestival
+        tabs = listOf(
+            "전체",
+            "뮤직 페스티벌",
+            "인디/록",
+            "내한공연",
+            "힙합/EDM"
+        ),
+        onSearch = searchViewModel::searchFestival,
+        onTabClick = {}
     )
 }
 
@@ -88,7 +97,9 @@ fun SearchView(
 private fun SearchScreen(
     recentKeywords: List<String>,
     popularKeywords: List<String>,
+    tabs: List<String>,
     onSearch: (keyword: String) -> Unit,
+    onTabClick: (tabIndex: Int) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.imePadding(),
@@ -102,7 +113,9 @@ private fun SearchScreen(
             SearchContent(
                 modifier = Modifier.padding(padding),
                 recentKeywords = recentKeywords,
-                popularKeywords = popularKeywords
+                popularKeywords = popularKeywords,
+                tabs = tabs,
+                onTabClick = onTabClick
             )
         }
     )
@@ -130,7 +143,6 @@ fun SearchTopBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Timber.i("")
         if (focusState || keyword.value.isNotBlank()) {
             Box(
                 modifier = Modifier
@@ -172,11 +184,24 @@ fun SearchTopBar(
 @Composable
 private fun SearchContent(
     modifier: Modifier,
+    tabs: List<String>,
     recentKeywords: List<String>,
     popularKeywords: List<String>,
+    onTabClick: (tabIndex: Int) -> Unit,
 ) {
-    LazyColumn(
+    var selectedTabIndex by remember { mutableStateOf(0) }
+
+    SlideTab(
         modifier = modifier,
+        tabs = tabs,
+        selectedIndex = selectedTabIndex
+    ) {
+        selectedTabIndex = it
+        onTabClick(it)
+    }
+
+    LazyColumn(
+        modifier = modifier.padding(top = 45.dp),
         contentPadding = PaddingValues(vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -247,7 +272,15 @@ private fun SearchScreenPreview() {
                 "해리 스타일스",
                 "선셋 롤러코스터"
             ),
-            onSearch = {}
+            tabs = listOf(
+                "전체",
+                "뮤직 페스티벌",
+                "인디/록",
+                "내한공연",
+                "힙합/EDM"
+            ),
+            onSearch = {},
+            onTabClick = {}
         )
     }
 }
