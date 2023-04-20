@@ -20,6 +20,10 @@ android {
 dependencies {
     implementation(project(Module.CommonResource))
 
+    AndroidConfig.run {
+        api(LIFECYCLE_COMPOSE)
+    }
+
     HiltConfig.run {
         api(DAGGER_HILT_ANDROID)
         api(HILT_NAVIGATION_COMPOSE)

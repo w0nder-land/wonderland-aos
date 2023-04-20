@@ -1,5 +1,6 @@
 package com.wonder.feature.onboarding
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -33,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,14 +48,16 @@ import com.wonder.component.theme.Subtitle1
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
+import dagger.hilt.android.internal.managers.FragmentComponentManager
 import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingView(
     onMoveMain: () -> Unit
 ) {
-    BackHandler(enabled = false) {
-    }
+    val activity = FragmentComponentManager.findActivity(LocalContext.current) as Activity
+
+    BackHandler { activity.finish() }
 
     OnboardingScreen(
         onMoveMain = onMoveMain
