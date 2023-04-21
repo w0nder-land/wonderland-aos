@@ -25,13 +25,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -62,19 +67,22 @@ fun OnboardingView(
     BackHandler { activity.finish() }
 
     OnboardingScreen(
-        onMoveMain = onMoveMain
+        onMoveMain = onMoveMain,
+        onKakaoLoginClick = {}
     )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OnboardingScreen(
-    onMoveMain: () -> Unit
+    onMoveMain: () -> Unit,
+    onKakaoLoginClick: () -> Unit,
 ) {
     val config = LocalConfiguration.current
     val screenWidthDp = config.screenWidthDp.dp
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
+    var lastPageOffset by remember { mutableStateOf(0f) }
     val onboardingImages = listOf(
         R.drawable.img_onboarding_card_1,
         R.drawable.img_onboarding_card_2,
@@ -104,10 +112,10 @@ private fun OnboardingScreen(
                 var yOffset = 0.dp
                 var scale = 1f
                 if (pagerState.currentPage == 3 && page == 3) {
-                    val pageOffset = ((1 + pagerState.currentPageOffsetFraction) - 0.5f) * 2
-                    xOffset = (35.22.dp * pageOffset) + (-35.22).dp
-                    yOffset = (-60).dp * pageOffset
-                    scale = 1f + (pageOffset * 0.34f)
+                    lastPageOffset = ((1 + pagerState.currentPageOffsetFraction) - 0.5f) * 2
+                    xOffset = (35.22.dp * lastPageOffset) + (-35.22).dp
+                    yOffset = (-60).dp * lastPageOffset
+                    scale = 1f + (lastPageOffset * 0.34f)
                 }
 
                 Image(
@@ -132,17 +140,22 @@ private fun OnboardingScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            if (pagerState.currentPage < onboardingImages.lastIndex) {
-                OnboardingIndicatorView(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    currentPage = pagerState.currentPage,
-                    count = onboardingImages.size - 1
-                )
+            OnboardingIndicatorView(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .graphicsLayer {
+                        alpha = 1 - (lastPageOffset * 2)
+                    },
+                currentPage = pagerState.currentPage,
+                count = onboardingImages.size - 1
+            )
 
+            Box {
                 Box(
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
-                        .padding(top = 40.dp, bottom = 39.dp)
+                        .padding(top = 40.dp, bottom = 38.dp)
+                        .offset(y = (-51).dp * lastPageOffset)
                         .fillMaxWidth()
                         .height(58.dp)
                         .border(
@@ -151,14 +164,22 @@ private fun OnboardingScreen(
                             shape = CircleShape
                         )
                         .singleClick(shape = CircleShape) {
-                            scope.launch {
-                                pagerState.animateScrollToPage(onboardingImages.lastIndex)
+                            if (pagerState.currentPage == onboardingImages.lastIndex) {
+                                onKakaoLoginClick()
+                            } else {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(onboardingImages.lastIndex)
+                                }
                             }
                         }
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
-                        text = "시작하기",
+                        text = if (lastPageOffset < 0.7f) {
+                            "시작하기"
+                        } else {
+                            "카카오로 가입하기"
+                        },
                         style = Subtitle1,
                         color = Gray800
                     )
@@ -166,38 +187,26 @@ private fun OnboardingScreen(
                     Icon(
                         modifier = Modifier
                             .padding(end = 36.dp)
-                            .align(Alignment.CenterEnd),
+                            .align(Alignment.CenterEnd)
+                            .graphicsLayer {
+                                alpha = 1 - (lastPageOffset * 2)
+                            },
                         painter = painterResource(id = R.drawable.ic_arrow_start),
                         contentDescription = null
-                    )
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .fillMaxWidth()
-                        .height(58.dp)
-                        .border(
-                            width = 1.dp,
-                            color = Gray800,
-                            shape = CircleShape
-                        )
-                        .singleClick(shape = CircleShape) {
-                        }
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "카카오로 가입하기",
-                        style = Subtitle1,
-                        color = Gray800
                     )
                 }
 
                 Text(
                     modifier = Modifier
-                        .padding(top = 28.dp, bottom = 38.dp)
+                        .padding(bottom = 38.dp)
                         .fillMaxWidth()
-                        .singleClick(hasRipple = false) { onMoveMain() },
+                        .singleClick(hasRipple = false) {
+                            if (pagerState.currentPage == onboardingImages.lastIndex) onMoveMain()
+                        }
+                        .align(Alignment.BottomCenter)
+                        .graphicsLayer {
+                            alpha = if (lastPageOffset < 0.2f) 0f else lastPageOffset
+                        },
                     text = "간단히 둘러볼래요",
                     style = Body1,
                     color = Gray700,
@@ -234,7 +243,8 @@ private fun OnboardingIndicatorView(
 private fun OnboardingScreenPreview() {
     WonderTheme {
         OnboardingScreen(
-            onMoveMain = {}
+            onMoveMain = {},
+            onKakaoLoginClick = {}
         )
     }
 }
