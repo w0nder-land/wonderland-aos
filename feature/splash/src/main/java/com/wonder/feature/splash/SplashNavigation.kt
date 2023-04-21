@@ -21,6 +21,9 @@ fun NavGraphBuilder.splashScreen(
         SplashView(
             onMoveOnboarding = {
                 navController.navigateWithPopBackStack(Navigate.Screen.Onboarding.route)
+            },
+            onMoveMain = {
+                navController.navigateWithPopBackStack(Navigate.Screen.Main.route)
             }
         )
     }

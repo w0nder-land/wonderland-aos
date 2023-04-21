@@ -17,6 +17,7 @@ android {
 }
 
 dependencies {
+    implementation(project(Module.CommonBase))
     implementation(project(Module.CommonComponent))
     implementation(project(Module.CommonResource))
 }

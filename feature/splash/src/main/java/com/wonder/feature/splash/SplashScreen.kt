@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -22,20 +23,28 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray700
 import com.wonder.component.theme.WonderTheme
+import com.wonder.feature.splash.vm.SplashEffect
+import com.wonder.feature.splash.vm.SplashEvent
+import com.wonder.feature.splash.vm.SplashViewModel
 import com.wonder.resource.R
-import kotlinx.coroutines.delay
 
 @Composable
-fun SplashView(
+internal fun SplashView(
     splashViewModel: SplashViewModel = hiltViewModel(),
     onMoveOnboarding: () -> Unit,
+    onMoveMain: () -> Unit,
 ) {
     BackHandler(enabled = false) {
     }
 
-    LaunchedEffect(Unit) {
-        delay(1000)
-        onMoveOnboarding()
+    LaunchedEffect(true) {
+        splashViewModel.processEvent(SplashEvent.CheckServer)
+        splashViewModel.effects.collect { effect ->
+            when (effect) {
+                is SplashEffect.MoveOnboardingScreen -> onMoveOnboarding()
+                is SplashEffect.MoveMainScreen -> onMoveMain()
+            }
+        }
     }
 
     SplashScreen()
