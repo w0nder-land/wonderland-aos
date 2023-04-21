@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.wonder.component.theme.Gray50
+import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.tab.TabRowDefaults.tabIndicatorOffset
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -77,7 +78,8 @@ internal fun ScrollableTabRow(
             )
         }
         SubcomposeLayout(
-            Modifier.fillMaxWidth()
+            Modifier
+                .fillMaxWidth()
                 .wrapContentSize(align = Alignment.CenterStart)
                 .horizontalScroll(scrollState)
                 .selectableGroup()
@@ -169,12 +171,7 @@ internal object TabRowDefaults {
         thickness: Dp = DividerThickness,
         color: Color = LocalContentColor.current.copy(alpha = DividerOpacity)
     ) {
-        androidx.compose.material3.Divider(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(thickness),
-            color = color
-        )
+        HorizontalDivider(modifier = modifier, heightSize = thickness, color = color)
     }
 
     @Composable

@@ -118,10 +118,9 @@ fun WonderSwitch(
                     shape = trackShape
                 )
                 .align(Alignment.Center)
-        ) {}
+        )
 
         val thumbColor by rememberUpdatedState(if (checked) Gray50 else Gray300)
-//        val resolvedThumbColor = thumbColor
         Box(
             modifier = Modifier
                 .align(Alignment.CenterStart)

@@ -2,17 +2,16 @@ package com.wonder.component.ui.tab
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.wonder.component.theme.Gray50
 import com.wonder.component.theme.Gray500
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.divider.HorizontalDivider
 
 @Composable
 fun SlideTab(
@@ -48,12 +47,7 @@ fun SlideTab(
         }
 
         if (hasDivider) {
-            androidx.compose.material3.Divider(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(1.dp),
-                color = Gray50
-            )
+            HorizontalDivider(color = Gray50)
         }
     }
 }

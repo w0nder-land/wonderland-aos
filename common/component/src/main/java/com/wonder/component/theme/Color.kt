@@ -41,3 +41,5 @@ val Red600 = Color(0xFFFF6678)
 val Red700 = Color(0xFFFF4D62)
 val Red800 = Color(0xFFFF334C)
 val Red900 = Color(0xFFFF001F)
+
+val Sunday = Color(0xFFED6C3C)
