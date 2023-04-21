@@ -10,9 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.wonder.component.navigate.onboardingRoute
+import com.wonder.component.navigate.splashRoute
 import com.wonder.component.theme.WonderTheme
 import com.wonder.feature.onboarding.onboardingScreen
+import com.wonder.feature.splash.splashScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,8 +37,9 @@ fun MainNavGraph(mainViewModel: MainViewModel = hiltViewModel()) {
     WonderTheme {
         AnimatedNavHost(
             navController = navController,
-            startDestination = onboardingRoute,
+            startDestination = splashRoute,
         ) {
+            splashScreen(navController = navController)
             onboardingScreen(navController = navController)
             mainScreen(navController = navController)
         }

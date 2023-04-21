@@ -17,6 +17,7 @@ dependencies {
     implementation(project(Module.CommonResource))
     implementation(project(Module.Domain))
     implementation(project(Module.Data))
+    implementation(project(Module.FeatureSplash))
     implementation(project(Module.FeatureOnboarding))
 
     AndroidConfig.run {

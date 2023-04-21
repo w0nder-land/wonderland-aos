@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.wonder.component.theme.Body1
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Gray500
@@ -53,6 +54,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingView(
+    onboardingViewModel: OnboardingViewModel = hiltViewModel(),
     onMoveMain: () -> Unit
 ) {
     val activity = FragmentComponentManager.findActivity(LocalContext.current) as Activity
@@ -179,7 +181,8 @@ private fun OnboardingScreen(
                             width = 1.dp,
                             color = Gray800,
                             shape = CircleShape
-                        ).singleClick(shape = CircleShape) {
+                        )
+                        .singleClick(shape = CircleShape) {
                         }
                 ) {
                     Text(
