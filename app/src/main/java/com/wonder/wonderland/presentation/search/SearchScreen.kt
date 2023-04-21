@@ -43,7 +43,9 @@ import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
 import com.wonder.wonderland.presentation.search.keyword.searchKeywordView
+import com.wonder.wonderland.presentation.search.result.searchEmptyView
 import com.wonder.wonderland.presentation.search.result.searchResultView
+import java.util.Random
 
 @Composable
 fun SearchView(
@@ -217,9 +219,15 @@ private fun SearchContent(
                 popularKeywords = popularKeywords
             )
         } else {
-            searchResultView(
-                festivals = festivals
-            )
+            if (Random().nextInt(2) < 1) {
+                searchResultView(
+                    festivals = festivals
+                )
+            } else {
+                searchEmptyView(
+                    recommendFestivals = festivals
+                )
+            }
         }
     }
 }
