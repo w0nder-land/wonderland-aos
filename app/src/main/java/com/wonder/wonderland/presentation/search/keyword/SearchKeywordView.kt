@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.search.keyword
+package com.wonder.wonderland.presentation.search.keyword
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +22,6 @@ import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
-import com.wonder.wonderland.ui.search.SearchRecentKeywordView
 
 fun LazyListScope.searchKeywordView(
     recentKeywords: List<String>,

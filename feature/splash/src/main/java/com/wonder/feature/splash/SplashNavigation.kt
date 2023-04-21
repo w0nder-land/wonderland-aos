@@ -6,22 +6,21 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.google.accompanist.navigation.animation.composable
-import com.wonder.component.navigate.navigateWithPopBackStack
-import com.wonder.component.navigate.onboardingRoute
-import com.wonder.component.navigate.splashRoute
+import com.wonder.component.navigation.Navigate
+import com.wonder.component.navigation.navigateWithPopBackStack
 
 fun NavController.navigateToSplash(navOptions: NavOptions? = null) {
-    navigate(splashRoute, navOptions)
+    navigate(Navigate.Screen.Splash.route, navOptions)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.splashScreen(
     navController: NavHostController
 ) {
-    composable(route = splashRoute) {
+    composable(route = Navigate.Screen.Splash.route) {
         SplashView(
             onMoveOnboarding = {
-                navController.navigateWithPopBackStack(onboardingRoute)
+                navController.navigateWithPopBackStack(Navigate.Screen.Onboarding.route)
             }
         )
     }

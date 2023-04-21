@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui
+package com.wonder.wonderland.presentation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -27,16 +27,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.wonder.component.navigate.homeRoute
+import com.wonder.component.navigation.Navigate
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Suit
 import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
-import com.wonder.wonderland.ui.calendar.calendarScreen
-import com.wonder.wonderland.ui.home.homeScreen
-import com.wonder.wonderland.ui.my.myScreen
-import com.wonder.wonderland.ui.search.searchScreen
+import com.wonder.wonderland.presentation.calendar.calendarScreen
+import com.wonder.wonderland.presentation.home.homeScreen
+import com.wonder.wonderland.presentation.my.myScreen
+import com.wonder.wonderland.presentation.search.searchScreen
 
 @Composable
 fun MainView(
@@ -104,7 +104,7 @@ fun MainContent(
 ) {
     AnimatedNavHost(
         navController = mainNavController,
-        startDestination = homeRoute,
+        startDestination = Navigate.Screen.Home.route,
         enterTransition = {
             fadeIn(
                 initialAlpha = 1f,

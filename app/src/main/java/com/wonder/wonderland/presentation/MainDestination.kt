@@ -1,10 +1,7 @@
-package com.wonder.wonderland.ui
+package com.wonder.wonderland.presentation
 
 import androidx.annotation.DrawableRes
-import com.wonder.component.navigate.calendarRoute
-import com.wonder.component.navigate.homeRoute
-import com.wonder.component.navigate.myRoute
-import com.wonder.component.navigate.searchRoute
+import com.wonder.component.navigation.Navigate
 import com.wonder.resource.R
 
 enum class MainDestination(
@@ -15,21 +12,21 @@ enum class MainDestination(
     HOME(
         icon = R.drawable.ic_bottom_home,
         text = "홈",
-        route = homeRoute
+        route = Navigate.Screen.Home.route
     ),
     SEARCH(
         icon = R.drawable.ic_bottom_search,
         text = "검색",
-        route = searchRoute
+        route = Navigate.Screen.Search.route
     ),
     CALENDAR(
         icon = R.drawable.ic_bottom_calendar,
         text = "캘린더",
-        route = calendarRoute
+        route = Navigate.Screen.Calendar.route
     ),
     MY(
         icon = R.drawable.ic_bottom_my,
         text = "마이",
-        route = myRoute
+        route = Navigate.Screen.My.route
     )
 }

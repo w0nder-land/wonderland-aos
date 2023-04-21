@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.calendar
+package com.wonder.wonderland.presentation.my
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
@@ -8,15 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.wonder.component.theme.Wonder500
+import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.WonderTheme
-import com.wonder.wonderland.ui.MainDestination
-import com.wonder.wonderland.ui.MainViewModel
+import com.wonder.wonderland.presentation.MainDestination
+import com.wonder.wonderland.presentation.MainViewModel
 
 @Composable
-fun CalendarView(
+fun MyView(
     mainViewModel: MainViewModel,
-    calendarViewModel: CalendarViewModel = hiltViewModel(),
+    myViewModel: MyViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
     BackHandler {
@@ -24,29 +24,29 @@ fun CalendarView(
         onBackClick()
     }
 
-    CalendarScreen()
+    MyScreen()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CalendarScreen() {
+private fun MyScreen() {
     Scaffold(
-        containerColor = Wonder500,
+        containerColor = Gray900,
         topBar = {},
         content = { padding ->
-            CalendarContent(modifier = Modifier.padding(padding))
+            MyContent(modifier = Modifier.padding(padding))
         }
     )
 }
 
 @Composable
-private fun CalendarContent(modifier: Modifier) {
+private fun MyContent(modifier: Modifier) {
 }
 
 @Preview
 @Composable
-private fun CalendarScreenPreview() {
+private fun MyScreenPreview() {
     WonderTheme {
-        CalendarScreen()
+        MyScreen()
     }
 }

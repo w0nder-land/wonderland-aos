@@ -34,7 +34,7 @@ fun SplashView(
     }
 
     LaunchedEffect(Unit) {
-        delay(2000)
+        delay(1000)
         onMoveOnboarding()
     }
 

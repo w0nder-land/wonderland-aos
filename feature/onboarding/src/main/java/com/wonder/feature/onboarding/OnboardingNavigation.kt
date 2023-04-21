@@ -6,21 +6,20 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.google.accompanist.navigation.animation.composable
-import com.wonder.component.navigate.mainRoute
-import com.wonder.component.navigate.navigateWithPopBackStack
-import com.wonder.component.navigate.onboardingRoute
+import com.wonder.component.navigation.Navigate
+import com.wonder.component.navigation.navigateWithPopBackStack
 
 fun NavController.navigateToOnboarding(navOptions: NavOptions? = null) {
-    navigate(onboardingRoute, navOptions)
+    navigate(Navigate.Screen.Onboarding.route, navOptions)
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.onboardingScreen(
     navController: NavHostController
 ) {
-    composable(route = onboardingRoute) {
+    composable(route = Navigate.Screen.Onboarding.route) {
         OnboardingView(
-            onMoveMain = { navController.navigateWithPopBackStack(mainRoute) }
+            onMoveMain = { navController.navigateWithPopBackStack(Navigate.Screen.Main.route) }
         )
     }
 }

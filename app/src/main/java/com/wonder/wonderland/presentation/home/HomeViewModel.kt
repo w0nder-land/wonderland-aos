@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.home
+package com.wonder.wonderland.presentation.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

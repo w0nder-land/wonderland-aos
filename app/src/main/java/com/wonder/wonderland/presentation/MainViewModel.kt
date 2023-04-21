@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui
+package com.wonder.wonderland.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

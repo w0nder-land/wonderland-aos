@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.search
+package com.wonder.wonderland.presentation.search.keyword
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

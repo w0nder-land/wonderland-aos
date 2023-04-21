@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.search
+package com.wonder.wonderland.presentation.search
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

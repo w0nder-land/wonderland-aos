@@ -1,4 +1,4 @@
-package com.wonder.component.navigate
+package com.wonder.component.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions

@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.calendar
+package com.wonder.wonderland.presentation.calendar
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

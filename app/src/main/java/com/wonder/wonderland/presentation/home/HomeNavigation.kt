@@ -1,4 +1,4 @@
-package com.wonder.wonderland.ui.calendar
+package com.wonder.wonderland.presentation.home
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.remember
@@ -9,13 +9,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.animation.composable
-import com.wonder.component.navigate.calendarRoute
-import com.wonder.component.navigate.mainRoute
-import com.wonder.wonderland.ui.MainViewModel
+import com.wonder.component.navigation.Navigate
+import com.wonder.wonderland.presentation.MainViewModel
 
-fun NavController.navigateToCalendar() {
+fun NavController.navigateToHome() {
     navigate(
-        route = calendarRoute,
+        route = Navigate.Screen.Home.route,
         navOptions = navOptions {
             graph.startDestinationRoute?.let { startRoute ->
                 popUpTo(startRoute) {
@@ -29,19 +28,18 @@ fun NavController.navigateToCalendar() {
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.calendarScreen(
+fun NavGraphBuilder.homeScreen(
     navController: NavHostController,
     mainNavController: NavHostController
 ) {
-    composable(route = calendarRoute) { entry ->
+    composable(route = Navigate.Screen.Home.route) { entry ->
         val parentEntry: NavBackStackEntry = remember(entry) {
-            navController.getBackStackEntry(mainRoute)
+            navController.getBackStackEntry(Navigate.Screen.Main.route)
         }
         val mainViewModel: MainViewModel = hiltViewModel(parentEntry)
 
-        CalendarView(
-            mainViewModel = mainViewModel,
-            onBackClick = { mainNavController.popBackStack() }
+        HomeView(
+            mainViewModel = mainViewModel
         )
     }
 }
