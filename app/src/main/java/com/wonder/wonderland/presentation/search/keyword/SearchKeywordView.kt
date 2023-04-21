@@ -3,6 +3,7 @@ package com.wonder.wonderland.presentation.search.keyword
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -22,6 +23,7 @@ import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.singleClick
 
 fun LazyListScope.searchKeywordView(
     recentKeywords: List<String>,
@@ -52,6 +54,9 @@ fun LazyListScope.searchKeywordView(
     itemsIndexed(popularKeywords) { index, keyword ->
         Row(
             modifier = Modifier
+                .fillMaxWidth()
+                .singleClick {
+                }
                 .padding(horizontal = 16.dp)
                 .height(34.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -72,7 +77,7 @@ fun LazyListScope.searchKeywordView(
     }
 }
 
-@Preview
+@Preview(showBackground = true, backgroundColor = 0xFF111111)
 @Composable
 private fun SearchKeywordViewPreview() {
     WonderTheme {

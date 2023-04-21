@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
@@ -37,6 +38,7 @@ import com.wonder.component.theme.Subtitle1
 import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 import java.util.Random
 
@@ -47,6 +49,8 @@ fun LazyListScope.searchResultView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .singleClick {
+                }
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(17.dp)
@@ -140,6 +144,10 @@ fun LazyListScope.searchEmptyView(
         ) {
             items(recommendFestivals) { festival ->
                 Column(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .singleClick {
+                        },
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Image(
@@ -151,6 +159,7 @@ fun LazyListScope.searchEmptyView(
                                 R.drawable.img_sample_festival_3
                             ).random()
                         ),
+                        contentScale = ContentScale.Crop,
                         contentDescription = null
                     )
 

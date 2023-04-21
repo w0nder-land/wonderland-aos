@@ -27,6 +27,7 @@ import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 
 @Composable
@@ -76,6 +77,8 @@ private fun SearchRecentKeywordItemView(keyword: String) {
                 color = Gray800,
                 shape = CircleShape
             )
+            .singleClick(shape = CircleShape) {
+            }
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp)
@@ -87,6 +90,8 @@ private fun SearchRecentKeywordItemView(keyword: String) {
         )
 
         Icon(
+            modifier = Modifier.singleClick(shape = CircleShape) {
+            },
             painter = painterResource(id = R.drawable.ic_close),
             tint = Gray400,
             contentDescription = null
