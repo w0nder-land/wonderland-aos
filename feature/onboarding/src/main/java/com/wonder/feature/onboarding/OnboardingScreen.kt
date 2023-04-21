@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,18 +54,29 @@ import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Subtitle1
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.singleClick
+import com.wonder.feature.onboarding.vm.OnboardingEffect
+import com.wonder.feature.onboarding.vm.OnboardingViewModel
 import com.wonder.resource.R
 import dagger.hilt.android.internal.managers.FragmentComponentManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun OnboardingView(
+internal fun OnboardingView(
     onboardingViewModel: OnboardingViewModel = hiltViewModel(),
     onMoveMain: () -> Unit
 ) {
     val activity = FragmentComponentManager.findActivity(LocalContext.current) as Activity
 
     BackHandler { activity.finish() }
+
+    LaunchedEffect(Unit) {
+        onboardingViewModel.effects.collect { effect ->
+            when (effect) {
+                OnboardingEffect.KakaoLogin -> {}
+                OnboardingEffect.MoveMain -> onMoveMain()
+            }
+        }
+    }
 
     OnboardingScreen(
         onMoveMain = onMoveMain,
