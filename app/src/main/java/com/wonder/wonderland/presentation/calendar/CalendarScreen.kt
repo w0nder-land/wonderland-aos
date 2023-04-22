@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -173,26 +174,31 @@ private fun CalendarContent(
             )
         }
 
-        items(calendarInfo.beforeMonthDayCount) { index ->
+        itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
             CalendarDayView(
-                day = calendarInfo.lastDayOfMonth - calendarInfo.beforeMonthDayCount + index + 1,
+                day = "${(calendarInfo.lastDayOfMonth - calendarInfo.beforeMonthDayCount) + index + 2}",
+                festivalDaysGroup = day.festivalDaysGroup,
                 isSunday = index == 0,
                 isCurrentMonth = false
             )
         }
 
-        items(calendarInfo.lastDayOfMonth) { index ->
+        itemsIndexed(calendarInfo.calendarDays) { index, day ->
             CalendarDayView(
-                day = index + 1,
+                day = day.day,
+                festivalDaysGroup = day.festivalDaysGroup,
                 isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
+                isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
                 isToday = calendarInfo.today == (index + 1)
             )
         }
 
-        items(calendarInfo.afterMonthDayCount) { index ->
+        itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
             CalendarDayView(
-                day = index + 1,
+                day = "${index + 1}",
+                festivalDaysGroup = day.festivalDaysGroup,
                 isSunday = false,
+                isSaturday = index == calendarInfo.afterMonthDayCount - 1,
                 isCurrentMonth = false
             )
         }

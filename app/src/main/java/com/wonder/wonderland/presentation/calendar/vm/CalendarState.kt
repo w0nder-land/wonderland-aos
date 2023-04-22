@@ -6,5 +6,5 @@ import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 internal data class CalendarState(
     override val isLoading: Boolean = false,
     override val hasError: Boolean = false,
-    val calendarInfo: CalendarInfo = CalendarInfo(),
+    val calendarInfo: CalendarInfo = CalendarInfo()
 ) : WonderState

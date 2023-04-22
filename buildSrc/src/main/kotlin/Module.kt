@@ -3,6 +3,7 @@ object Module {
     const val Data = ":data"
     const val Domain = ":domain"
     const val CommonBase = ":common:base"
+    const val CommonModel = ":common:model"
     const val CommonComponent = ":common:component"
     const val CommonResource = ":common:resource"
     const val FeatureSplash = ":feature:splash"

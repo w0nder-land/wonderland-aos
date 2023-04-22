@@ -1,5 +1,6 @@
 package com.wonder.component.util
 
+import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -25,3 +26,23 @@ fun getDate(pattern: String = "yyyyMMdd"): String = SimpleDateFormat(pattern).fo
 
 @Suppress("SimpleDateFormat")
 fun Long.getDate(pattern: String = "yyyyMMdd"): String = SimpleDateFormat(pattern).format(this)
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toYear(): Int = SimpleDateFormat("yyyy").format(this).toInt()
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toMonth(): Int = SimpleDateFormat("M").format(this).toInt()
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toDay(): Int = SimpleDateFormat("d").format(this).toInt()
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toDateString(pattern: String = "yyyyMMdd"): String = SimpleDateFormat(pattern).format(this)
+
+fun Date.toCalendar(): Calendar = Calendar.getInstance().apply {
+    time = this@toCalendar
+}
+
+@SuppressLint("SimpleDateFormat")
+fun String.toDate(pattern: String = "yyyyMMdd"): Date =
+    SimpleDateFormat(pattern).parse(this) ?: Date()
