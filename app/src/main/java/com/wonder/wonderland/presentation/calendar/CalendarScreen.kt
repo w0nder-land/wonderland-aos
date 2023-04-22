@@ -81,17 +81,19 @@ private fun CalendarScreen(
             )
         },
         content = { padding ->
-            Box {
-                CalendarContent(
-                    modifier = Modifier.padding(padding),
-                    calendarInfo = calendarState.calendarInfo
-                )
+            if (!calendarState.isLoading) {
+                Box {
+                    CalendarContent(
+                        modifier = Modifier.padding(padding),
+                        calendarInfo = calendarState.calendarInfo
+                    )
 
-                CalendarFilterView(
-                    modifier = Modifier
-                        .padding(padding)
-                        .align(Alignment.BottomCenter)
-                )
+                    CalendarFilterView(
+                        modifier = Modifier
+                            .padding(padding)
+                            .align(Alignment.BottomCenter)
+                    )
+                }
             }
         }
     )

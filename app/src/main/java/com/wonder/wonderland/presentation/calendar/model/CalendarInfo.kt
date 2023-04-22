@@ -4,7 +4,7 @@ internal data class CalendarInfo(
     val currentMonth: String = "",
     val today: Int = 1,
     val firstDayOfWeek: Int = 1,
-    val lastDayOfMonth: Int = 0,
+    val lastDayOfMonth: Int = 30,
     val beforeMonthLastDayOfMonth: Int = 0,
     val calendarDays: List<CalendarDayInfo> = List(
         size = lastDayOfMonth,
