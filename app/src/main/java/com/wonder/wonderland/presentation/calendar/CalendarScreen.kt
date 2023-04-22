@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,9 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wonder.component.theme.Caption2
-import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray50
-import com.wonder.component.theme.Gray700
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle1
 import com.wonder.component.theme.Subtitle3
@@ -45,15 +42,14 @@ import com.wonder.component.theme.Sunday
 import com.wonder.component.theme.White
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
-import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
-import java.util.Random
 
 @Composable
 internal fun CalendarView(
@@ -80,12 +76,15 @@ private fun CalendarScreen(
         containerColor = Gray900,
         topBar = {
             CalendarTopBar(
-                currentMonth = calendarState.currentMonth
+                currentMonth = calendarState.calendarInfo.currentMonth
             )
         },
         content = { padding ->
             Box {
-                CalendarContent(modifier = Modifier.padding(padding))
+                CalendarContent(
+                    modifier = Modifier.padding(padding),
+                    calendarInfo = calendarState.calendarInfo
+                )
 
                 CalendarFilterView(
                     modifier = Modifier
@@ -153,8 +152,10 @@ private fun CalendarTopBar(
 }
 
 @Composable
-private fun CalendarContent(modifier: Modifier) {
-    val today = Random().nextInt(30)
+private fun CalendarContent(
+    modifier: Modifier,
+    calendarInfo: CalendarInfo
+) {
     val weeks = listOf("일", "월", "화", "수", "목", "금", "토")
 
     LazyVerticalGrid(
@@ -172,32 +173,28 @@ private fun CalendarContent(modifier: Modifier) {
             )
         }
 
-        items(35) { index ->
-            Column(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .height(113.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                HorizontalDivider(color = Gray700)
+        items(calendarInfo.beforeMonthDayCount) { index ->
+            CalendarDayView(
+                day = calendarInfo.lastDayOfMonth - calendarInfo.beforeMonthDayCount + index + 1,
+                isSunday = index == 0,
+                isCurrentMonth = false
+            )
+        }
 
-                Box(
-                    modifier = Modifier
-                        .size(21.dp)
-                        .background(
-                            color = if (today == index) Gray400 else Color.Unspecified,
-                            shape = CircleShape
-                        )
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "${index + 1}",
-                        style = Caption2,
-                        color = if (index % 7 == 0) Sunday else White
-                    )
-                }
-            }
+        items(calendarInfo.lastDayOfMonth) { index ->
+            CalendarDayView(
+                day = index + 1,
+                isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
+                isToday = calendarInfo.today == (index + 1)
+            )
+        }
+
+        items(calendarInfo.afterMonthDayCount) { index ->
+            CalendarDayView(
+                day = index + 1,
+                isSunday = false,
+                isCurrentMonth = false
+            )
         }
     }
 }
@@ -263,7 +260,13 @@ private fun CalendarScreenPreview() {
     WonderTheme {
         CalendarScreen(
             calendarState = CalendarState(
-                currentMonth = "2023년 4월"
+                calendarInfo = CalendarInfo(
+                    currentMonth = "2023년 4월",
+                    today = 22,
+                    firstDayOfWeek = 7,
+                    lastDayOfMonth = 30,
+                    beforeMonthLastDayOfMonth = 31,
+                )
             ),
         )
     }
