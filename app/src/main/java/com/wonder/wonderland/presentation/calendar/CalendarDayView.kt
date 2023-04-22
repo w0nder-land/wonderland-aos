@@ -33,7 +33,7 @@ import com.wonder.wonderland.presentation.calendar.model.FestivalDay
 @Composable
 internal fun CalendarDayView(
     day: String,
-    festivalDaysGroup: Map<String, List<FestivalDay>>,
+    festivalDays: List<FestivalDay>,
     isSunday: Boolean,
     isSaturday: Boolean = false,
     isToday: Boolean = false,
@@ -69,58 +69,54 @@ internal fun CalendarDayView(
         }
 
         Box {
-            festivalDaysGroup.forEach { group ->
-                group.value.firstOrNull { festivalDay ->
-                    festivalDay.day == day.toInt()
-                }?.let { festivalDay ->
-                    Box(
-                        modifier = Modifier
-                            .padding(
-                                top = 18.dp * festivalDay.order + 2.dp,
-                                start = startPadding(
+            festivalDays.forEach { festivalDay ->
+                Box(
+                    modifier = Modifier
+                        .padding(
+                            top = 18.dp * festivalDay.order + 2.dp,
+                            start = startPadding(
+                                isSunday = isSunday,
+                                isStartDay = festivalDay.startDay == day.toInt()
+                            ),
+                            end = endPadding(
+                                isSaturday = isSaturday,
+                                isEndDay = festivalDay.endDay == day.toInt()
+                            ),
+                        )
+                        .fillMaxWidth()
+                        .height(16.dp)
+                        .background(
+                            color = if (festivalDay.festivalName.toInt() % 3 == 0) {
+                                WonderBlue
+                            } else if (festivalDay.festivalName.toInt() % 3 == 1) {
+                                WonderYellow
+                            } else {
+                                Wonder100
+                            },
+                            shape = RoundedCornerShape(
+                                topStart = startCornerRadius(
                                     isSunday = isSunday,
                                     isStartDay = festivalDay.startDay == day.toInt()
                                 ),
-                                end = endPadding(
+                                bottomStart = startCornerRadius(
+                                    isSunday = isSunday,
+                                    isStartDay = festivalDay.startDay == day.toInt()
+                                ),
+                                topEnd = endCornerRadius(
                                     isSaturday = isSaturday,
                                     isEndDay = festivalDay.endDay == day.toInt()
                                 ),
-                            )
-                            .fillMaxWidth()
-                            .height(16.dp)
-                            .background(
-                                color = if (festivalDay.festivalName.toInt() % 3 == 0) {
-                                    WonderBlue
-                                } else if (festivalDay.festivalName.toInt() % 3 == 1) {
-                                    WonderYellow
-                                } else {
-                                    Wonder100
-                                },
-                                shape = RoundedCornerShape(
-                                    topStart = startCornerRadius(
-                                        isSunday = isSunday,
-                                        isStartDay = festivalDay.startDay == day.toInt()
-                                    ),
-                                    bottomStart = startCornerRadius(
-                                        isSunday = isSunday,
-                                        isStartDay = festivalDay.startDay == day.toInt()
-                                    ),
-                                    topEnd = endCornerRadius(
-                                        isSaturday = isSaturday,
-                                        isEndDay = festivalDay.endDay == day.toInt()
-                                    ),
-                                    bottomEnd = endCornerRadius(
-                                        isSaturday = isSaturday,
-                                        isEndDay = festivalDay.endDay == day.toInt()
-                                    )
+                                bottomEnd = endCornerRadius(
+                                    isSaturday = isSaturday,
+                                    isEndDay = festivalDay.endDay == day.toInt()
                                 )
                             )
-                    ) {
-                        Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = festivalDay.festivalName
                         )
-                    }
+                ) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = festivalDay.festivalName
+                    )
                 }
             }
         }
@@ -153,7 +149,7 @@ private fun CalendarDayViewPreview() {
     WonderTheme {
         CalendarDayView(
             day = "22",
-            festivalDaysGroup = emptyMap(),
+            festivalDays = emptyList(),
             isSunday = false
         )
     }

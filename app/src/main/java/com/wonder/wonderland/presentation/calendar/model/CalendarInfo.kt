@@ -10,8 +10,7 @@ internal data class CalendarInfo(
         size = lastDayOfMonth,
         init = {
             CalendarDayInfo(
-                day = "${it + 1}",
-                festivalDaysGroup = mapOf()
+                day = "${it + 1}"
             )
         }
     ),
@@ -19,8 +18,7 @@ internal data class CalendarInfo(
         size = lastDayOfMonth,
         init = {
             CalendarDayInfo(
-                day = "${it + 1}",
-                festivalDaysGroup = mapOf()
+                day = "${it + 1}"
             )
         }
     ),
@@ -28,8 +26,7 @@ internal data class CalendarInfo(
         size = lastDayOfMonth,
         init = {
             CalendarDayInfo(
-                day = "${it + 1}",
-                festivalDaysGroup = mapOf()
+                day = "${it + 1}"
             )
         }
     ),
@@ -40,5 +37,5 @@ internal data class CalendarInfo(
 
 internal data class CalendarDayInfo(
     val day: String,
-    val festivalDaysGroup: Map<String, List<FestivalDay>>
+    val festivalDays: List<FestivalDay> = emptyList()
 )

@@ -172,7 +172,7 @@ internal class CalendarViewModel @Inject constructor() :
             calendarDays.add(
                 CalendarDayInfo(
                     day = "$day",
-                    festivalDaysGroup = festivalDays.groupBy { it.festivalName }
+                    festivalDays = festivalDays
                 )
             )
         }

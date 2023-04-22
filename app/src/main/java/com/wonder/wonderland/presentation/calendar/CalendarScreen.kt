@@ -177,7 +177,7 @@ private fun CalendarContent(
         itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
             CalendarDayView(
                 day = "${(calendarInfo.lastDayOfMonth - calendarInfo.beforeMonthDayCount) + index + 2}",
-                festivalDaysGroup = day.festivalDaysGroup,
+                festivalDays = day.festivalDays,
                 isSunday = index == 0,
                 isCurrentMonth = false
             )
@@ -186,7 +186,7 @@ private fun CalendarContent(
         itemsIndexed(calendarInfo.calendarDays) { index, day ->
             CalendarDayView(
                 day = day.day,
-                festivalDaysGroup = day.festivalDaysGroup,
+                festivalDays = day.festivalDays,
                 isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
                 isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
                 isToday = calendarInfo.today == (index + 1)
@@ -196,7 +196,7 @@ private fun CalendarContent(
         itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
             CalendarDayView(
                 day = "${index + 1}",
-                festivalDaysGroup = day.festivalDaysGroup,
+                festivalDays = day.festivalDays,
                 isSunday = false,
                 isSaturday = index == calendarInfo.afterMonthDayCount - 1,
                 isCurrentMonth = false
