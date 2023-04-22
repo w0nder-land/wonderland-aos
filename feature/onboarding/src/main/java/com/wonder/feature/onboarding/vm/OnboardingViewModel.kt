@@ -10,20 +10,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class OnboardingViewModel @Inject constructor() :
-    WonderViewModel<OnboardingEvent, OnboardingState, OnboardingEffect>(OnboardingState()) {
+    WonderViewModel<OnboardingEvent, OnboardingResult, OnboardingState, OnboardingEffect>(OnboardingState()) {
 
-    override fun Flow<OnboardingEvent>.toEffects(): Flow<OnboardingEffect> = merge(
-        filterIsInstance<OnboardingEvent.ClickKakaoLogin>().toClickKakaoLoginEffect(),
-        filterIsInstance<OnboardingEvent.ClickLookAround>().toClickLookAroundEffect()
+    override fun Flow<OnboardingEvent>.toResults(): Flow<OnboardingResult> = merge(
+        filterIsInstance<OnboardingEvent.ClickKakaoLogin>().toClickKakaoLoginResult(),
+        filterIsInstance<OnboardingEvent.ClickLookAround>().toClickLookAroundResult(),
     )
 
-    override fun OnboardingEvent.reduce(state: OnboardingState): OnboardingState = state
+    override fun Flow<OnboardingResult>.toEffects(): Flow<OnboardingEffect> = merge(
+        filterIsInstance<OnboardingResult.KakaoLogin>().toClickKakaoLoginEffect(),
+        filterIsInstance<OnboardingResult.MoveMain>().toClickLookAroundEffect()
+    )
 
-    private fun Flow<OnboardingEvent.ClickKakaoLogin>.toClickKakaoLoginEffect() = map {
+    override fun OnboardingResult.reduce(state: OnboardingState): OnboardingState = state
+
+    private fun Flow<OnboardingEvent.ClickKakaoLogin>.toClickKakaoLoginResult() = map {
+        OnboardingResult.KakaoLogin
+    }
+
+    private fun Flow<OnboardingEvent.ClickLookAround>.toClickLookAroundResult() = map {
+        OnboardingResult.MoveMain
+    }
+
+    private fun Flow<OnboardingResult.KakaoLogin>.toClickKakaoLoginEffect() = map {
         OnboardingEffect.KakaoLogin
     }
 
-    private fun Flow<OnboardingEvent.ClickLookAround>.toClickLookAroundEffect() = map {
+    private fun Flow<OnboardingResult.MoveMain>.toClickLookAroundEffect() = map {
         OnboardingEffect.MoveMain
     }
 }

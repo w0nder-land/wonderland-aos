@@ -12,17 +12,26 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SplashViewModel @Inject constructor(
     private val checkServerUseCase: CheckServerUseCase
-) : WonderViewModel<SplashEvent, SplashState, SplashEffect>(SplashState()) {
+) : WonderViewModel<SplashEvent, SplashResult, SplashState, SplashEffect>(SplashState()) {
 
-    override fun Flow<SplashEvent>.toEffects(): Flow<SplashEffect> = merge(
-        filterIsInstance<SplashEvent.CheckServer>().toCheckServerEffect()
+    override fun Flow<SplashEvent>.toResults(): Flow<SplashResult> = merge(
+        filterIsInstance<SplashEvent.CheckServer>().toCheckServerResult()
     )
 
-    override fun SplashEvent.reduce(state: SplashState): SplashState = state
+    override fun Flow<SplashResult>.toEffects(): Flow<SplashEffect> = merge(
+        filterIsInstance<SplashResult.SuccessCheckServer>().toCheckServerEffect()
+    )
 
-    private fun Flow<SplashEvent.CheckServer>.toCheckServerEffect(): Flow<SplashEffect> =
+    override fun SplashResult.reduce(state: SplashState): SplashState = state
+
+    private fun Flow<SplashEvent.CheckServer>.toCheckServerResult(): Flow<SplashResult> =
         mapLatest {
             checkServerUseCase()
+            SplashResult.SuccessCheckServer
+        }
+
+    private fun Flow<SplashResult.SuccessCheckServer>.toCheckServerEffect(): Flow<SplashEffect> =
+        mapLatest {
             SplashEffect.MoveOnboardingScreen
         }
 }

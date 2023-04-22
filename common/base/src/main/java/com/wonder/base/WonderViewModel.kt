@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * Event가 발생하게 되면 Event에 따라
- * toStates()와 reduce()에서 새로운 상태가 생성 되거나
+ * Event가 발생하게 되면 Result를 생성
+ * Result에 따라 toStates()와 reduce()에서 새로운 상태가 생성 되거나
  * toEffects()에서 새로운 동작이 생성된다.
  */
-abstract class WonderViewModel<E : WonderEvent, S : WonderState, SE : WonderEffect>(
+abstract class WonderViewModel<E : WonderEvent, R : WonderResult, S : WonderState, SE : WonderEffect>(
     initialState: S
 ) : ViewModel() {
     val states: StateFlow<S>
@@ -27,14 +27,16 @@ abstract class WonderViewModel<E : WonderEvent, S : WonderState, SE : WonderEffe
     init {
         events
             .share()
-            .also { event ->
-                states = event.toStates(initialState)
+            .toResults()
+            .share()
+            .also { result ->
+                states = result.toStates(initialState)
                     .stateIn(
                         scope = viewModelScope,
-                        started = SharingStarted.Lazily,
+                        started = SharingStarted.Eagerly,
                         initialValue = initialState
                     )
-                effects = event.toEffects().share()
+                effects = result.toEffects().share()
             }
     }
 
@@ -44,10 +46,11 @@ abstract class WonderViewModel<E : WonderEvent, S : WonderState, SE : WonderEffe
         }
     }
 
-    protected abstract fun E.reduce(state: S): S
-    protected open fun Flow<E>.toEffects(): Flow<SE> = emptyFlow()
+    protected abstract fun Flow<E>.toResults(): Flow<R>
+    protected abstract fun R.reduce(state: S): S
+    protected open fun Flow<R>.toEffects(): Flow<SE> = emptyFlow()
 
-    private fun Flow<E>.toStates(initialState: S): Flow<S> {
+    private fun Flow<R>.toStates(initialState: S): Flow<S> {
         return scan(initialState) { state, event -> event.reduce(state) }
     }
 
@@ -57,6 +60,7 @@ abstract class WonderViewModel<E : WonderEvent, S : WonderState, SE : WonderEffe
 }
 
 interface WonderEvent
+interface WonderResult
 interface WonderState {
     val isLoading: Boolean
     val hasError: Boolean

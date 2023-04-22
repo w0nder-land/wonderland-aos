@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray50
@@ -50,10 +51,12 @@ import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
+import com.wonder.wonderland.presentation.calendar.vm.CalendarState
+import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
 import java.util.Random
 
 @Composable
-fun CalendarView(
+internal fun CalendarView(
     mainViewModel: MainViewModel,
     calendarViewModel: CalendarViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
@@ -63,15 +66,23 @@ fun CalendarView(
         onBackClick()
     }
 
-    CalendarScreen()
+    CalendarScreen(
+        calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CalendarScreen() {
+private fun CalendarScreen(
+    calendarState: CalendarState
+) {
     Scaffold(
         containerColor = Gray900,
-        topBar = { CalendarTopBar() },
+        topBar = {
+            CalendarTopBar(
+                currentMonth = calendarState.currentMonth
+            )
+        },
         content = { padding ->
             Box {
                 CalendarContent(modifier = Modifier.padding(padding))
@@ -87,7 +98,9 @@ private fun CalendarScreen() {
 }
 
 @Composable
-private fun CalendarTopBar() {
+private fun CalendarTopBar(
+    currentMonth: String
+) {
     var isInterestFestivalChecked by remember { mutableStateOf(false) }
 
     Row(
@@ -107,7 +120,7 @@ private fun CalendarTopBar() {
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "2023년 1월",
+                text = currentMonth,
                 style = Subtitle1,
                 color = White
             )
@@ -248,6 +261,10 @@ private fun CalendarFilterView(
 @Composable
 private fun CalendarScreenPreview() {
     WonderTheme {
-        CalendarScreen()
+        CalendarScreen(
+            calendarState = CalendarState(
+                currentMonth = "2023년 4월"
+            ),
+        )
     }
 }
