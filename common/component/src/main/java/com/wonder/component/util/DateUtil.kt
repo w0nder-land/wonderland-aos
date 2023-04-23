@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-fun getCurrentMonth(): String {
+fun getCurrentYearMonth(): String {
     val calendar = Calendar.getInstance()
     return "${calendar[Calendar.YEAR]}년 ${calendar[Calendar.MONTH] + 1}월"
 }

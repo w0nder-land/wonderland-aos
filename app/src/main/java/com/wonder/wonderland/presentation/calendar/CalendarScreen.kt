@@ -83,7 +83,7 @@ private fun CalendarScreen(
         containerColor = Gray900,
         topBar = {
             CalendarTopBar(
-                currentMonth = calendarState.calendarInfo.currentMonth
+                currentMonth = calendarState.calendarInfo.currentYearMonth
             )
         },
         content = { padding ->
@@ -275,11 +275,10 @@ private fun CalendarScreenPreview() {
         CalendarScreen(
             calendarState = CalendarState(
                 calendarInfo = CalendarInfo(
-                    currentMonth = "2023년 4월",
+                    currentYearMonth = "2023년 4월",
                     today = 22,
                     firstDayOfWeek = 7,
-                    lastDayOfMonth = 30,
-                    beforeMonthLastDayOfMonth = 31,
+                    lastDayOfMonth = 30
                 )
             ),
         )
