@@ -126,12 +126,20 @@ internal fun CalendarDayView(
 private fun startPadding(
     isSunday: Boolean,
     isStartDay: Boolean
-) = if (isSunday || isStartDay) 8.dp else 0.dp
+) = if (isSunday) {
+    8.dp
+} else {
+    if (isStartDay) 1.dp else 0.dp
+}
 
 private fun endPadding(
     isSaturday: Boolean,
     isEndDay: Boolean
-) = if (isSaturday || isEndDay) 8.dp else 0.dp
+) = if (isSaturday) {
+    8.dp
+} else {
+    if (isEndDay) 1.dp else 0.dp
+}
 
 private fun startCornerRadius(
     isSunday: Boolean,
