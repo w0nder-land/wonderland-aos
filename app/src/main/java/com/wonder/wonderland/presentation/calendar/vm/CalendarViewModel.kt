@@ -103,6 +103,26 @@ internal class CalendarViewModel @Inject constructor() :
                 startDate = "2023.04.3",
                 endDate = "2023.04.7"
             ),
+            FestivalInfo(
+                name = "13",
+                startDate = "2023.04.26",
+                endDate = "2023.04.26"
+            ),
+            FestivalInfo(
+                name = "14",
+                startDate = "2023.04.23",
+                endDate = "2023.04.23"
+            ),
+            FestivalInfo(
+                name = "15",
+                startDate = "2023.04.24",
+                endDate = "2023.04.24"
+            ),
+            FestivalInfo(
+                name = "16",
+                startDate = "2023.04.25",
+                endDate = "2023.04.25"
+            ),
         )
     }
 }

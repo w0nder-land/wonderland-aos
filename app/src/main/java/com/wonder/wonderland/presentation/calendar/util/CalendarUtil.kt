@@ -234,21 +234,27 @@ private fun getOrder(
             if (festivalDayRange.contains(beforeFestivalStartDay) ||
                 festivalDayRange.contains(beforeFestivalEndDay)
             ) { // 이전 축제가 현재 축제 기간에 속해 있을 경우
-                order = if (festivalDay == startDay) { // 축제 시작 일인 경우
-                    (festivalDays.lastOrNull()?.order ?: 0) + 1
-                } else { // 축제 시작일이 아닌 경우
-                    val beforeDay = calendarDays.lastOrNull()
-                    val beforeFestivalDay = beforeDay
-                        ?.festivalDays
-                        ?.firstOrNull { beforeFestivalDay ->
-                            beforeFestivalDay.festivalName == festivalInfo.name
-                        }
-                    if (beforeFestivalDay?.weekRange?.first == weekRange.first) { // 축제 시작일의 주와 같은 주일 경우
-                        beforeFestivalDay.order
-                    } else { // 축제 시작일의 주와 같은 주가 아닐 경우
-                        festivalDays.size
-                    }
-                }
+                order = getOrder(
+                    festivalDay = festivalDay,
+                    startDay = startDay,
+                    festivalInfo = festivalInfo,
+                    weekRange = weekRange,
+                    festivalDays = festivalDays,
+                    calendarDays = calendarDays
+                )
+            } else if (IntRange(
+                    beforeFestivalStartDay,
+                    beforeFestivalEndDay
+                ).contains(festivalDayOfYear)
+            ) { // 현재 축제 일이 이전 축제 기간에 포함된 경우
+                order = getOrder(
+                    festivalDay = festivalDay,
+                    startDay = startDay,
+                    festivalInfo = festivalInfo,
+                    weekRange = weekRange,
+                    festivalDays = festivalDays,
+                    calendarDays = calendarDays
+                )
             }
         } else if (beforeFestivalStartDay < weekRange.first &&
             beforeFestivalEndDay > weekRange.last
@@ -266,6 +272,34 @@ private fun getOrder(
         }
     }
     return order
+}
+
+/**
+ * 해당 일이 속한 주의 다른 축제 수
+ */
+private fun getOrder(
+    festivalDay: Int,
+    startDay: Int,
+    festivalInfo: FestivalInfo,
+    weekRange: IntRange,
+    festivalDays: List<FestivalDay>,
+    calendarDays: List<CalendarDayInfo>
+): Int {
+    return if (festivalDay == startDay) { // 축제 시작 일인 경우
+        (festivalDays.lastOrNull()?.order ?: 0) + 1
+    } else { // 축제 시작일이 아닌 경우
+        val beforeDay = calendarDays.lastOrNull()
+        val beforeFestivalDay = beforeDay
+            ?.festivalDays
+            ?.firstOrNull { beforeFestivalDay ->
+                beforeFestivalDay.festivalName == festivalInfo.name
+            }
+        if (beforeFestivalDay?.weekRange?.first == weekRange.first) { // 축제 시작일의 주와 같은 주일 경우
+            beforeFestivalDay.order
+        } else { // 축제 시작일의 주와 같은 주가 아닐 경우
+            festivalDays.size
+        }
+    }
 }
 
 /**
