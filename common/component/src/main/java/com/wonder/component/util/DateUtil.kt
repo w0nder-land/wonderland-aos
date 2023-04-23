@@ -43,6 +43,22 @@ fun Date.toCalendar(): Calendar = Calendar.getInstance().apply {
     time = this@toCalendar
 }
 
+fun Calendar.month(): Int = get(Calendar.MONTH)
+
+fun Calendar.dayOfYear(): Int = get(Calendar.DAY_OF_YEAR)
+
+fun Calendar.dayOfMonth(): Int = get(Calendar.DAY_OF_MONTH)
+
+fun Calendar.dayOfWeek(): Int = get(Calendar.DAY_OF_WEEK)
+
+fun Calendar.addDayOfYear(amount: Int): Calendar = apply {
+    add(Calendar.DAY_OF_YEAR, amount)
+}
+
+fun Calendar.addDayOfMonth(amount: Int): Calendar = apply {
+    add(Calendar.DAY_OF_MONTH, amount)
+}
+
 @SuppressLint("SimpleDateFormat")
 fun String.toDate(pattern: String = "yyyyMMdd"): Date =
     SimpleDateFormat(pattern).parse(this) ?: Date()
