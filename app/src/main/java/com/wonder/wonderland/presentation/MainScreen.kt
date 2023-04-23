@@ -74,18 +74,26 @@ private fun MainScreen(
 
                     if (currentDestination != destination) {
                         with(mainNavController) {
-                            navigate(
-                                route = destination.route,
-                                navOptions = navOptions {
-                                    graph.startDestinationRoute?.let { startRoute ->
-                                        popUpTo(startRoute) {
-                                            saveState = true
+                            if (currentBackStack.value.any { it.destination.route == destination.route }) {
+                                popBackStack(
+                                    route = destination.route,
+                                    inclusive = false,
+                                    saveState = true
+                                )
+                            } else {
+                                navigate(
+                                    route = destination.route,
+                                    navOptions = navOptions {
+                                        graph.startDestinationRoute?.let { startRoute ->
+                                            popUpTo(startRoute) {
+                                                saveState = true
+                                            }
                                         }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 },

@@ -37,7 +37,7 @@ internal fun SplashView(
     BackHandler(enabled = false) {
     }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         splashViewModel.processEvent(SplashEvent.CheckServer)
         splashViewModel.effects.collect { effect ->
             when (effect) {

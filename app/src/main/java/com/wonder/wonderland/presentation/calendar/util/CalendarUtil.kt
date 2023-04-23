@@ -78,9 +78,9 @@ private suspend fun getCalendarDays(
             for (festivalDay in startDay until endDay + 1) {
                 if (festivalDay == day) {
                     if (Calendar.getInstance().apply {
-                            time = startDate
-                            add(Calendar.DAY_OF_MONTH, festivalDay - startDay)
-                        }[Calendar.MONTH] != currentMonth
+                        time = startDate
+                        add(Calendar.DAY_OF_MONTH, festivalDay - startDay)
+                    }[Calendar.MONTH] != currentMonth
                     ) return@forEachIndexed
 
                     // 해당일이 해당하는 주에 다른 축제가 먼저 있었으면

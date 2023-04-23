@@ -2,13 +2,6 @@ package com.wonder.wonderland.presentation.calendar.vm
 
 import com.imaec.model.FestivalInfo
 import com.wonder.base.WonderViewModel
-import com.wonder.component.util.getCurrentMonth
-import com.wonder.component.util.toCalendar
-import com.wonder.component.util.toDate
-import com.wonder.component.util.toDay
-import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
-import com.wonder.wonderland.presentation.calendar.model.FestivalDay
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,16 +10,11 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 internal class CalendarViewModel @Inject constructor() :
     WonderViewModel<CalendarEvent, CalendarResult, CalendarState, CalendarEffect>(CalendarState()) {
-
-    init {
-        processEvent(CalendarEvent.GetCurrentMonth)
-    }
 
     override fun Flow<CalendarEvent>.toResults(): Flow<CalendarResult> = merge(
         filterIsInstance<CalendarEvent.GetCurrentMonth>().toGetCurrentMonthResult()
