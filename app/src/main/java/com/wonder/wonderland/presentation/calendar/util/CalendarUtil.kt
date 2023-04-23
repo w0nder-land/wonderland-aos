@@ -87,24 +87,26 @@ private suspend fun getCalendarDays(
                     // order += 1
 
                     // 해당일의 주, 시작일(일요일)과 마지막일(토요일)을 가져온다
-                    val currentWeekCalendar = Calendar.getInstance().apply {
-                        time = startDate
+                    val currentWeekCalendar = startDate.toCalendar().apply {
                         add(Calendar.DAY_OF_MONTH, festivalDay - startDay)
                         set(Calendar.DAY_OF_MONTH, festivalDay)
                         if (get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                             set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
                         }
                     }
+                    val festivalDayCalendar = startDate.toCalendar()
 
                     val weekRange = IntRange(
                         currentWeekCalendar[Calendar.DAY_OF_YEAR],
                         currentWeekCalendar[Calendar.DAY_OF_YEAR] + 6
                     )
+                    val festivalDayRange = IntRange(
+                        festivalDayCalendar[Calendar.DAY_OF_YEAR],
+                        festivalDayCalendar[Calendar.DAY_OF_YEAR] + (endDay - startDay)
+                    )
 
                     // 해당일이 해당하는 주에 다른 축제 수
-                    val festivalDayCalendar = startDate.toCalendar().apply {
-                        add(Calendar.DAY_OF_YEAR, festivalDay - startDay)
-                    }
+                    festivalDayCalendar.add(Calendar.DAY_OF_YEAR, festivalDay - startDay)
                     val festivalDayOfYear = festivalDayCalendar[Calendar.DAY_OF_YEAR]
                     var order = 0
                     festivals.take(festivalIndex).forEach {
@@ -118,11 +120,38 @@ private suspend fun getCalendarDays(
                         if (weekRange.contains(beforeFestivalStartDay) ||
                             weekRange.contains(beforeFestivalEndDay)
                         ) {
-                            order++
+                            if (festivalDayRange.contains(beforeFestivalStartDay) ||
+                                festivalDayRange.contains(beforeFestivalEndDay)
+                            ) {
+                                order = if (festivalDay == startDay) {
+                                    (festivalDays.lastOrNull()?.order ?: 0) + 1
+                                } else {
+                                    val beforeDay = calendarDays.lastOrNull()
+                                    val beforeFestivalDay = beforeDay
+                                        ?.festivalDays
+                                        ?.firstOrNull { beforeFestivalDay ->
+                                            beforeFestivalDay.festivalName == festivalInfo.name
+                                        }
+                                    if (beforeFestivalDay?.weekRange?.first == weekRange.first) {
+                                        beforeFestivalDay.order
+                                    } else {
+                                        festivalDays.size
+                                    }
+                                }
+                            }
                         } else if (beforeFestivalStartDay < weekRange.first &&
                             beforeFestivalEndDay > weekRange.last
                         ) {
-                            order++
+                            order = if (festivalDay == startDay) {
+                                (festivalDays.lastOrNull()?.order ?: 0) + 1
+                            } else {
+                                calendarDays
+                                    .lastOrNull()
+                                    ?.festivalDays
+                                    ?.firstOrNull { beforeFestivalDay ->
+                                        beforeFestivalDay.festivalName == festivalInfo.name
+                                    }?.order ?: 0
+                            }
                         }
                     }
 
@@ -132,6 +161,7 @@ private suspend fun getCalendarDays(
                             day = festivalDay,
                             startDay = startDay,
                             endDay = endDay,
+                            weekRange = weekRange,
                             order = order
                         )
                     )

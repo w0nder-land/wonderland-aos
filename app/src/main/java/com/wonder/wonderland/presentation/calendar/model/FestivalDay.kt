@@ -5,5 +5,6 @@ internal data class FestivalDay(
     val day: Int,
     val startDay: Int,
     val endDay: Int,
+    val weekRange: IntRange,
     val order: Int
 )

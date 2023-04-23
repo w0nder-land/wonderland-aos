@@ -19,7 +19,7 @@ internal fun AppNavGraph(mainViewModel: MainViewModel = hiltViewModel()) {
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Navigate.Screen.Main.route,
+        startDestination = Navigate.Screen.Splash.route,
     ) {
         splashScreen(navController = navController)
         onboardingScreen(navController = navController)
