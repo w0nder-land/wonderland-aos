@@ -224,7 +224,7 @@ private fun CalendarFilterView(
             .padding(bottom = 16.dp)
             .size(width = 83.dp, height = 44.dp)
             .background(
-                color = if (isSelected) White else Color.Unspecified,
+                color = if (isSelected) White else Gray900,
                 shape = CircleShape
             )
             .border(
