@@ -50,4 +50,9 @@ dependencies {
     TimberConfig.run {
         api(TIMBER)
     }
+
+    ExternalLibConfig.run {
+        api(SNAPPER)
+        api(BOTTOM_SHEET_DIALOG)
+    }
 }

@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -28,21 +31,38 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
+import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
+import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
+import com.wonder.component.theme.Black
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray50
+import com.wonder.component.theme.Gray600
+import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle1
+import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Subtitle3
+import com.wonder.component.theme.Suit
 import com.wonder.component.theme.Sunday
 import com.wonder.component.theme.White
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.bottomsheet.BottomSheetTopDot
+import com.wonder.component.ui.divider.HorizontalDivider
+import com.wonder.component.ui.picker.WheelPicker
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
@@ -71,20 +91,26 @@ internal fun CalendarView(
     }
 
     CalendarScreen(
-        calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value
+        calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value,
+        onSelectYearMonth = { yearMonth ->
+            calendarViewModel.processEvent(CalendarEvent.UpdateCurrentYearMonth(yearMonth))
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CalendarScreen(
-    calendarState: CalendarState
+    calendarState: CalendarState,
+    onSelectYearMonth: (yearMonth: String) -> Unit,
 ) {
     Scaffold(
         containerColor = Gray900,
         topBar = {
             CalendarTopBar(
-                currentMonth = calendarState.currentYearMonth
+                currentMonth = calendarState.currentYearMonth,
+                yearMonthItems = calendarState.yearMonthItems,
+                onSelectYearMonth = onSelectYearMonth
             )
         },
         content = { padding ->
@@ -108,9 +134,12 @@ private fun CalendarScreen(
 
 @Composable
 private fun CalendarTopBar(
-    currentMonth: String
+    currentMonth: String,
+    yearMonthItems: List<String>,
+    onSelectYearMonth: (yearMonth: String) -> Unit,
 ) {
     var isInterestFestivalChecked by remember { mutableStateOf(false) }
+    var isShowSelectMonthBottomSheet by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -123,7 +152,8 @@ private fun CalendarTopBar(
         Row(
             modifier = Modifier
                 .height(56.dp)
-                .singleClick {
+                .singleClick(shape = RoundedCornerShape(8.dp)) {
+                    isShowSelectMonthBottomSheet = true
                 },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -158,6 +188,15 @@ private fun CalendarTopBar(
                 color = Gray50
             )
         }
+    }
+
+    if (isShowSelectMonthBottomSheet) {
+        SelectMonthBottomSheetDialog(
+            currentMonth = currentMonth,
+            yearMonthItems = yearMonthItems,
+            onSelectYearMonth = onSelectYearMonth,
+            onBottomSheetClose = { isShowSelectMonthBottomSheet = false }
+        )
     }
 }
 
@@ -269,6 +308,112 @@ private fun CalendarFilterView(
     }
 }
 
+@Composable
+private fun SelectMonthBottomSheetDialog(
+    currentMonth: String,
+    yearMonthItems: List<String>,
+    onSelectYearMonth: (yearMonth: String) -> Unit,
+    onBottomSheetClose: () -> Unit,
+) {
+    var selectedIndex by remember { mutableStateOf(yearMonthItems.indexOf(currentMonth)) }
+    val gradientColors = listOf(
+        Gray800.copy(alpha = 1f),
+        Gray800.copy(alpha = 0f)
+    )
+
+    BottomSheetDialog(
+        onDismissRequest = onBottomSheetClose,
+        properties = BottomSheetDialogProperties(
+            dismissWithAnimation = true,
+            behaviorProperties = BottomSheetBehaviorProperties(
+                isDraggable = false
+            )
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .height(346.dp)
+                .background(
+                    color = Gray800,
+                    shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
+                )
+        ) {
+            BottomSheetTopDot()
+
+            Box {
+                WheelPicker(
+                    startIndex = selectedIndex,
+                    menuCount = yearMonthItems.size,
+                    isInfinite = false,
+                    onCurrentIndex = { selectedIndex = it },
+                    content = { index ->
+                        Text(
+                            text = yearMonthItems[index],
+                            style = TextStyle(
+                                fontFamily = Suit,
+                                fontWeight = FontWeight.W500,
+                                fontSize = 24.sp,
+                                lineHeight = 36.sp,
+                                platformStyle = PlatformTextStyle(
+                                    includeFontPadding = false
+                                )
+                            ),
+                            color = White
+                        )
+                    }
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(42.dp)
+                        .background(brush = Brush.verticalGradient(colors = gradientColors))
+                )
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(42.dp)
+                        .background(
+                            brush = Brush.verticalGradient(colors = gradientColors.reversed())
+                        )
+                        .align(Alignment.BottomCenter)
+                )
+            }
+
+            HorizontalDivider(color = Gray600)
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(76.dp)
+                    .padding(horizontal = 20.dp, vertical = 14.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .background(
+                            color = White,
+                            shape = RoundedCornerShape(6.dp)
+                        )
+                        .singleClick {
+                            onSelectYearMonth(yearMonthItems[selectedIndex])
+                            onBottomSheetClose()
+                        }
+                ) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "확인",
+                        style = Subtitle2,
+                        color = Gray800
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun CalendarScreenPreview() {
@@ -301,6 +446,7 @@ private fun CalendarScreenPreview() {
                     afterCalendarDays = afterCalendarDays
                 )
             ),
+            onSelectYearMonth = {}
         )
     }
 }

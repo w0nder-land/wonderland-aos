@@ -112,6 +112,14 @@ object TimberConfig {
     const val TIMBER = "com.jakewharton.timber:timber:$timberVersion"
 }
 
+object ExternalLibConfig {
+    private const val snapperVersion = "0.3.0"
+    private const val bottomSheetDialogVersion = "1.2.1"
+
+    const val SNAPPER = "dev.chrisbanes.snapper:snapper:$snapperVersion"
+    const val BOTTOM_SHEET_DIALOG = "com.holix.android:bottomsheetdialog-compose:$bottomSheetDialogVersion"
+}
+
 /**
  * gradle for test
  * */

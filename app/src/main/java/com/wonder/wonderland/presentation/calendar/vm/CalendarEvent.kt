@@ -6,4 +6,5 @@ internal sealed interface CalendarEvent : WonderEvent {
 
     object GetCurrentYearMonth : CalendarEvent
     object GetCurrentCalendar : CalendarEvent
+    data class UpdateCurrentYearMonth(val yearMonth: String) : CalendarEvent
 }

@@ -2,6 +2,7 @@ package com.wonder.wonderland.presentation.calendar.vm
 
 import com.imaec.model.FestivalInfo
 import com.wonder.base.WonderViewModel
+import com.wonder.component.util.addMonth
 import com.wonder.component.util.getCurrentYearMonth
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,14 +21,16 @@ internal class CalendarViewModel @Inject constructor() :
 
     override fun Flow<CalendarEvent>.toResults(): Flow<CalendarResult> = merge(
         filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
-        filterIsInstance<CalendarEvent.GetCurrentCalendar>().toGetCurrentCalendarResult()
+        filterIsInstance<CalendarEvent.GetCurrentCalendar>().toGetCurrentCalendarResult(),
+        filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult()
     )
 
     override fun CalendarResult.reduce(state: CalendarState): CalendarState {
         return when (this) {
             is CalendarResult.CurrentYearMonth -> {
                 state.copy(
-                    currentYearMonth = currentYearMonth
+                    currentYearMonth = currentYearMonth,
+                    yearMonthItems = yearMonthItems
                 )
             }
             is CalendarResult.CurrentCalendar -> {
@@ -35,14 +39,21 @@ internal class CalendarViewModel @Inject constructor() :
                     calendarInfo = calendarInfo
                 )
             }
+            is CalendarResult.UpdateYearMonth -> {
+                state.copy(currentYearMonth = currentYearMonth)
+            }
         }
     }
 
     private fun Flow<CalendarEvent.GetCurrentYearMonth>.toGetCurrentYearMonthResult(): Flow<CalendarResult> =
         mapLatest {
             val currentYearMonth = getCurrentYearMonth()
+            val yearMonthItems = getYearMonthItems()
 
-            CalendarResult.CurrentYearMonth(currentYearMonth = currentYearMonth)
+            CalendarResult.CurrentYearMonth(
+                currentYearMonth = currentYearMonth,
+                yearMonthItems = yearMonthItems
+            )
         }
 
     private fun Flow<CalendarEvent.GetCurrentCalendar>.toGetCurrentCalendarResult(): Flow<CalendarResult> =
@@ -52,6 +63,23 @@ internal class CalendarViewModel @Inject constructor() :
             }
             CalendarResult.CurrentCalendar(calendarInfo = calendarInfo)
         }
+
+    private fun Flow<CalendarEvent.UpdateCurrentYearMonth>.toUpdateCurrentYearMonthResult(): Flow<CalendarResult> =
+        mapLatest {
+            CalendarResult.UpdateYearMonth(currentYearMonth = it.yearMonth)
+        }
+
+    private val yearMonthRange = 2000
+    private fun getYearMonthItems(): List<String> {
+        val monthItems = mutableListOf<String>()
+        val calendar = Calendar.getInstance().addMonth(-yearMonthRange / 2)
+        repeat(yearMonthRange) {
+            calendar.addMonth(1)
+            monthItems.add("${calendar[Calendar.YEAR]}년 ${calendar[Calendar.MONTH] + 1}월")
+        }
+
+        return monthItems
+    }
 
     private fun getFestivals(): List<FestivalInfo> {
         return listOf(
@@ -138,5 +166,3 @@ internal class CalendarViewModel @Inject constructor() :
         )
     }
 }
-
-const val checkName = "7"

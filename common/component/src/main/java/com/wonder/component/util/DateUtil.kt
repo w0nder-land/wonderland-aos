@@ -51,6 +51,10 @@ fun Calendar.dayOfMonth(): Int = get(Calendar.DAY_OF_MONTH)
 
 fun Calendar.dayOfWeek(): Int = get(Calendar.DAY_OF_WEEK)
 
+fun Calendar.addMonth(amount: Int): Calendar = apply {
+    add(Calendar.MONTH, amount)
+}
+
 fun Calendar.addDayOfYear(amount: Int): Calendar = apply {
     add(Calendar.DAY_OF_YEAR, amount)
 }
