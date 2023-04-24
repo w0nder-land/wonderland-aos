@@ -5,5 +5,6 @@ import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 
 internal sealed interface CalendarResult : WonderResult {
 
-    data class CurrentMonth(val calendarInfo: CalendarInfo) : CalendarResult
+    data class CurrentYearMonth(val currentYearMonth: String) : CalendarResult
+    data class CurrentCalendar(val calendarInfo: CalendarInfo) : CalendarResult
 }

@@ -6,7 +6,6 @@ import com.wonder.component.util.addDayOfYear
 import com.wonder.component.util.dayOfMonth
 import com.wonder.component.util.dayOfWeek
 import com.wonder.component.util.dayOfYear
-import com.wonder.component.util.getCurrentYearMonth
 import com.wonder.component.util.month
 import com.wonder.component.util.toCalendar
 import com.wonder.component.util.toDate
@@ -63,7 +62,6 @@ internal suspend fun getCalendarInfo(
     )
 
     return CalendarInfo(
-        currentYearMonth = getCurrentYearMonth(),
         today = today,
         firstDayOfWeek = firstDayOfWeek,
         lastDayOfMonth = lastDayOfMonth,

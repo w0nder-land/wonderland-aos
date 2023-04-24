@@ -28,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,6 +48,7 @@ import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
+import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
@@ -66,7 +66,8 @@ internal fun CalendarView(
     }
 
     LaunchedEffect(Unit) {
-        calendarViewModel.processEvent(CalendarEvent.GetCurrentMonth)
+        calendarViewModel.processEvent(CalendarEvent.GetCurrentYearMonth)
+        calendarViewModel.processEvent(CalendarEvent.GetCurrentCalendar)
     }
 
     CalendarScreen(
@@ -83,7 +84,7 @@ private fun CalendarScreen(
         containerColor = Gray900,
         topBar = {
             CalendarTopBar(
-                currentMonth = calendarState.calendarInfo.currentYearMonth
+                currentMonth = calendarState.currentYearMonth
             )
         },
         content = { padding ->
@@ -271,14 +272,33 @@ private fun CalendarFilterView(
 @Preview
 @Composable
 private fun CalendarScreenPreview() {
+    val calendarDays = mutableListOf<CalendarDayInfo>().apply {
+        repeat(30) {
+            add(CalendarDayInfo(day = "${it + 1}"))
+        }
+    }
+    val beforeCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+        repeat(6) {
+            add(CalendarDayInfo(day = "${it + 21}"))
+        }
+    }
+    val afterCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+        repeat(6) {
+            add(CalendarDayInfo(day = "${it + 1}"))
+        }
+    }
     WonderTheme {
         CalendarScreen(
             calendarState = CalendarState(
+                isLoading = false,
+                currentYearMonth = "2023년 4월",
                 calendarInfo = CalendarInfo(
-                    currentYearMonth = "2023년 4월",
                     today = 22,
                     firstDayOfWeek = 7,
-                    lastDayOfMonth = 30
+                    lastDayOfMonth = 30,
+                    calendarDays = calendarDays,
+                    beforeCalendarDays = beforeCalendarDays,
+                    afterCalendarDays = afterCalendarDays
                 )
             ),
         )

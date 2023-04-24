@@ -2,6 +2,7 @@ package com.wonder.wonderland.presentation.calendar.vm
 
 import com.imaec.model.FestivalInfo
 import com.wonder.base.WonderViewModel
+import com.wonder.component.util.getCurrentYearMonth
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,12 +18,18 @@ internal class CalendarViewModel @Inject constructor() :
     WonderViewModel<CalendarEvent, CalendarResult, CalendarState, CalendarEffect>(CalendarState()) {
 
     override fun Flow<CalendarEvent>.toResults(): Flow<CalendarResult> = merge(
-        filterIsInstance<CalendarEvent.GetCurrentMonth>().toGetCurrentMonthResult()
+        filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
+        filterIsInstance<CalendarEvent.GetCurrentCalendar>().toGetCurrentCalendarResult()
     )
 
     override fun CalendarResult.reduce(state: CalendarState): CalendarState {
         return when (this) {
-            is CalendarResult.CurrentMonth -> {
+            is CalendarResult.CurrentYearMonth -> {
+                state.copy(
+                    currentYearMonth = currentYearMonth
+                )
+            }
+            is CalendarResult.CurrentCalendar -> {
                 state.copy(
                     isLoading = false,
                     calendarInfo = calendarInfo
@@ -31,14 +38,19 @@ internal class CalendarViewModel @Inject constructor() :
         }
     }
 
-    private fun Flow<CalendarEvent.GetCurrentMonth>.toGetCurrentMonthResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.GetCurrentYearMonth>.toGetCurrentYearMonthResult(): Flow<CalendarResult> =
+        mapLatest {
+            val currentYearMonth = getCurrentYearMonth()
+
+            CalendarResult.CurrentYearMonth(currentYearMonth = currentYearMonth)
+        }
+
+    private fun Flow<CalendarEvent.GetCurrentCalendar>.toGetCurrentCalendarResult(): Flow<CalendarResult> =
         mapLatest {
             val calendarInfo = withContext(Dispatchers.Default) {
                 getCalendarInfo(getFestivals())
             }
-            CalendarResult.CurrentMonth(
-                calendarInfo = calendarInfo
-            )
+            CalendarResult.CurrentCalendar(calendarInfo = calendarInfo)
         }
 
     private fun getFestivals(): List<FestivalInfo> {

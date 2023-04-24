@@ -4,5 +4,6 @@ import com.wonder.base.WonderEvent
 
 internal sealed interface CalendarEvent : WonderEvent {
 
-    object GetCurrentMonth : CalendarEvent
+    object GetCurrentYearMonth : CalendarEvent
+    object GetCurrentCalendar : CalendarEvent
 }

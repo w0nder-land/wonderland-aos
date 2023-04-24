@@ -1,7 +1,6 @@
 package com.wonder.wonderland.presentation.calendar.model
 
 internal data class CalendarInfo(
-    val currentYearMonth: String = "",
     val today: Int = 1,
     val firstDayOfWeek: Int = 1,
     val lastDayOfMonth: Int = 30,
