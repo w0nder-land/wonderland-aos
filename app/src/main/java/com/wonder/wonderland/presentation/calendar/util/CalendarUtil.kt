@@ -2,7 +2,7 @@ package com.wonder.wonderland.presentation.calendar.util
 
 import com.imaec.model.FestivalInfo
 import com.wonder.component.util.addDayOfMonth
-import com.wonder.component.util.addDayOfYear
+import com.wonder.component.util.addMonth
 import com.wonder.component.util.dayOfMonth
 import com.wonder.component.util.dayOfWeek
 import com.wonder.component.util.dayOfYear
@@ -18,13 +18,13 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 internal suspend fun getCalendarInfo(
-    festivals: List<FestivalInfo>
+    festivals: List<FestivalInfo>,
+    calendar: Calendar
 ): CalendarInfo {
     // 현재 월
     // month : 현재 월
     // firstDayOfWeek : 현재 월의 첫 번째 요일
     // lastDayOfMonth : 현재 월의 마지막 날
-    val calendar = Calendar.getInstance()
     val month = calendar.month()
     val today = calendar.dayOfMonth()
     calendar.set(Calendar.DAY_OF_MONTH, 1)
@@ -33,7 +33,7 @@ internal suspend fun getCalendarInfo(
 
     // 전 월
     // beforeMonthLastDayOfMonth : 전 월의 마자믹 날
-    calendar.set(Calendar.MONTH, calendar.month())
+    calendar.addMonth(-1)
     val beforeMonthLastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
     val sortedFestivals = festivals.sortedBy { it.startDate }
 
@@ -47,19 +47,24 @@ internal suspend fun getCalendarInfo(
 
     // 현재 월 달력에서 전 월로 표시되는 달력 정보를 가져온다
     val beforeCalendarDays = getCalendarDays(
-        firstDay = beforeMonthLastDayOfMonth - firstDayOfWeek + 1,
-        lastDay = beforeMonthLastDayOfMonth,
+        firstDay = (beforeMonthLastDayOfMonth - firstDayOfWeek) + 2,
+        lastDay = beforeMonthLastDayOfMonth + 1,
         currentMonth = month - 1,
         festivals = sortedFestivals
     )
 
     // 현재 월 달력에서 다음 월로 표시되는 달력 정보를 가져온다
-    val afterCalendarDays = getCalendarDays(
-        firstDay = 1,
-        lastDay = 7 - (firstDayOfWeek - 1 + lastDayOfMonth) % 7 + 1,
-        currentMonth = month + 1,
-        festivals = sortedFestivals
-    )
+    val afterCalendarLastDay = 7 - (firstDayOfWeek - 1 + lastDayOfMonth) % 7
+    val afterCalendarDays = if (afterCalendarLastDay < 7) {
+        getCalendarDays(
+            firstDay = 1,
+            lastDay = 7 - (firstDayOfWeek - 1 + lastDayOfMonth) % 7 + 1,
+            currentMonth = month + 1,
+            festivals = sortedFestivals
+        )
+    } else {
+        emptyList()
+    }
 
     return CalendarInfo(
         today = today,
@@ -122,25 +127,35 @@ private fun getFestivalDays(
         // endDay : 축제 종료 일자
         val startDate = festivalInfo.startDate.toDate("yyyy.MM.dd")
         val startDay = startDate.toDay()
+        val startDayOfYear = startDate.toCalendar().dayOfYear()
         val endDate = festivalInfo.endDate.toDate("yyyy.MM.dd")
         val endDay = endDate.toDay()
+        val endDayOfYear = endDate.toCalendar().dayOfYear()
+        // 축제 시작 월의 마지막 일
+        val lastDayOfMonth = startDate.toCalendar().getActualMaximum(Calendar.DAY_OF_MONTH)
 
         // 해당 축제 일에 다른 축제가 있으면 달력에서 일정이 쌓일 수 있도록 order를 증가
-        for (festivalDay in startDay until endDay + 1) {
+        for (festivalDayOfYear in startDayOfYear until endDayOfYear + 1) {
+            val festivalDay = if (festivalDayOfYear - startDayOfYear + startDay <= lastDayOfMonth) {
+                festivalDayOfYear - startDayOfYear + startDay
+            } else {
+                festivalDayOfYear - startDayOfYear + startDay - lastDayOfMonth
+            }
             if (festivalDay != day) continue
 
             // 축제 일이 현재 월인 경우에만 달력에 축제 일정을 추가
-            val festivalMonth = startDate.toCalendar().addDayOfMonth(festivalDay - startDay)
+            val festivalMonth = startDate.toCalendar().addDayOfMonth(festivalDayOfYear - startDayOfYear)
             if (festivalMonth.month() != currentMonth) return@forEachIndexed
 
             // 해당 일의 주의 시작일(일요일)과 마지막 일(토요일)을 가져온다
             val weekRange = getCurrentWeekRange(
-                festivalCalendar = startDate.toCalendar().addDayOfMonth(festivalDay - startDay)
+                festivalCalendar = startDate.toCalendar().addDayOfMonth(festivalDayOfYear - startDayOfYear)
             )
 
             // 해당 일이 속한 주의 다른 축제 수
             val order = getOrder(
                 beforeFestivals = festivals.take(festivalIndex),
+                festivalDayOfYear = festivalDayOfYear,
                 festivalDay = festivalDay,
                 startDay = startDay,
                 endDay = endDay,
@@ -155,8 +170,8 @@ private fun getFestivalDays(
                 FestivalDay(
                     festivalName = festivalInfo.name,
                     day = festivalDay,
-                    startDay = startDay,
-                    endDay = endDay,
+                    isStartDay = festivalDayOfYear == startDayOfYear,
+                    isEndDay = festivalDayOfYear == endDayOfYear,
                     weekRange = weekRange,
                     order = order
                 )
@@ -172,12 +187,11 @@ private fun getFestivalDays(
  * @param festivalCalendar 축제 일 기준 calendar
  */
 private fun getCurrentWeekRange(festivalCalendar: Calendar): IntRange {
-    val currentWeekCalendar = festivalCalendar
-        .apply {
-            if (dayOfWeek() != Calendar.SUNDAY) {
-                set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
-            }
+    val currentWeekCalendar = festivalCalendar.apply {
+        if (dayOfWeek() != Calendar.SUNDAY) {
+            set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
         }
+    }
     return IntRange(
         currentWeekCalendar.dayOfYear(),
         currentWeekCalendar.dayOfYear() + 6
@@ -189,6 +203,7 @@ private fun getCurrentWeekRange(festivalCalendar: Calendar): IntRange {
  */
 private fun getOrder(
     beforeFestivals: List<FestivalInfo>,
+    festivalDayOfYear: Int,
     festivalDay: Int,
     startDay: Int,
     endDay: Int,
@@ -205,11 +220,6 @@ private fun getOrder(
         startDay = startDay,
         endDay = endDay
     )
-    // 현재 축제 일
-    val festivalDayOfYear = festivalCalendar
-        .addDayOfYear(festivalDay - startDay)
-        .dayOfYear()
-
     beforeFestivals.forEach {
         // 축제 시작일이 현재 주의 시작일보다 작거나 축제 종료일이 현재 주의 마지막 날보다 크면
         // 해당일의 첫 번째 축제이기 때문에 order를 증가시키지 않는다

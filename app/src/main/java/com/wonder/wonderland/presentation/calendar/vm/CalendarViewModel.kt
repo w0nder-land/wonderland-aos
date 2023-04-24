@@ -4,6 +4,8 @@ import com.imaec.model.FestivalInfo
 import com.wonder.base.WonderViewModel
 import com.wonder.component.util.addMonth
 import com.wonder.component.util.getCurrentYearMonth
+import com.wonder.component.util.toCalendar
+import com.wonder.component.util.toDate
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +61,10 @@ internal class CalendarViewModel @Inject constructor() :
     private fun Flow<CalendarEvent.GetCurrentCalendar>.toGetCurrentCalendarResult(): Flow<CalendarResult> =
         mapLatest {
             val calendarInfo = withContext(Dispatchers.Default) {
-                getCalendarInfo(getFestivals())
+                getCalendarInfo(
+                    festivals = getFestivals(),
+                    calendar = it.yearMonth.toDate("yyyy년 M월").toCalendar()
+                )
             }
             CalendarResult.CurrentCalendar(calendarInfo = calendarInfo)
         }
@@ -83,6 +88,11 @@ internal class CalendarViewModel @Inject constructor() :
 
     private fun getFestivals(): List<FestivalInfo> {
         return listOf(
+            FestivalInfo(
+                name = "0",
+                startDate = "2023.02.26",
+                endDate = "2023.03.04"
+            ),
             FestivalInfo(
                 name = "1",
                 startDate = "2023.04.01",
@@ -162,6 +172,16 @@ internal class CalendarViewModel @Inject constructor() :
                 name = "16",
                 startDate = "2023.04.25",
                 endDate = "2023.04.25"
+            ),
+            FestivalInfo(
+                name = "17",
+                startDate = "2023.03.28",
+                endDate = "2023.04.1"
+            ),
+            FestivalInfo(
+                name = "18",
+                startDate = "2023.02.28",
+                endDate = "2023.03.1"
             ),
         )
     }

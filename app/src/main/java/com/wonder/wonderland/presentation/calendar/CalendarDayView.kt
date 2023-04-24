@@ -76,11 +76,11 @@ internal fun CalendarDayView(
                             top = 18.dp * festivalDay.order + 2.dp,
                             start = startPadding(
                                 isSunday = isSunday,
-                                isStartDay = festivalDay.startDay == day.toInt()
+                                isStartDay = festivalDay.isStartDay
                             ),
                             end = endPadding(
                                 isSaturday = isSaturday,
-                                isEndDay = festivalDay.endDay == day.toInt()
+                                isEndDay = festivalDay.isEndDay
                             ),
                         )
                         .fillMaxWidth()
@@ -96,19 +96,19 @@ internal fun CalendarDayView(
                             shape = RoundedCornerShape(
                                 topStart = startCornerRadius(
                                     isSunday = isSunday,
-                                    isStartDay = festivalDay.startDay == day.toInt()
+                                    isStartDay = festivalDay.isStartDay
                                 ),
                                 bottomStart = startCornerRadius(
                                     isSunday = isSunday,
-                                    isStartDay = festivalDay.startDay == day.toInt()
+                                    isStartDay = festivalDay.isStartDay
                                 ),
                                 topEnd = endCornerRadius(
                                     isSaturday = isSaturday,
-                                    isEndDay = festivalDay.endDay == day.toInt()
+                                    isEndDay = festivalDay.isEndDay
                                 ),
                                 bottomEnd = endCornerRadius(
                                     isSaturday = isSaturday,
-                                    isEndDay = festivalDay.endDay == day.toInt()
+                                    isEndDay = festivalDay.isEndDay
                                 )
                             )
                         )

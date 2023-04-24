@@ -43,7 +43,7 @@ fun Date.toCalendar(): Calendar = Calendar.getInstance().apply {
     time = this@toCalendar
 }
 
-fun Calendar.month(): Int = get(Calendar.MONTH)
+fun Calendar.month(): Int = get(Calendar.MONTH) + 1
 
 fun Calendar.dayOfYear(): Int = get(Calendar.DAY_OF_YEAR)
 

@@ -7,7 +7,7 @@ internal data class CalendarInfo(
     val calendarDays: List<CalendarDayInfo> = emptyList(),
     val beforeCalendarDays: List<CalendarDayInfo> = emptyList(),
     val afterCalendarDays: List<CalendarDayInfo> = emptyList(),
-    val beforeMonthDayCount: Int = firstDayOfWeek - 1,
+    val beforeMonthDayCount: Int = if (firstDayOfWeek - 1 == 0) 7 else firstDayOfWeek - 1,
     val afterMonthDayCount: Int = 7 - (beforeMonthDayCount + lastDayOfMonth) % 7
 )
 

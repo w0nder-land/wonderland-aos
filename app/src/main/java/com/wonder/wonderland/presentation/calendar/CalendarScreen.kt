@@ -80,6 +80,8 @@ internal fun CalendarView(
     calendarViewModel: CalendarViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
+    val calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value
+
     BackHandler {
         mainViewModel.selectBottomNavigationItem(MainDestination.HOME)
         onBackClick()
@@ -87,11 +89,18 @@ internal fun CalendarView(
 
     LaunchedEffect(Unit) {
         calendarViewModel.processEvent(CalendarEvent.GetCurrentYearMonth)
-        calendarViewModel.processEvent(CalendarEvent.GetCurrentCalendar)
+    }
+
+    LaunchedEffect(calendarState.currentYearMonth) {
+        if (calendarState.currentYearMonth.isEmpty()) return@LaunchedEffect
+
+        calendarViewModel.processEvent(
+            event = CalendarEvent.GetCurrentCalendar(calendarState.currentYearMonth)
+        )
     }
 
     CalendarScreen(
-        calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value,
+        calendarState = calendarState,
         onSelectYearMonth = { yearMonth ->
             calendarViewModel.processEvent(CalendarEvent.UpdateCurrentYearMonth(yearMonth))
         }
@@ -224,7 +233,7 @@ private fun CalendarContent(
 
         itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
             CalendarDayView(
-                day = "${(calendarInfo.lastDayOfMonth - calendarInfo.beforeMonthDayCount) + index + 2}",
+                day = day.day,
                 festivalDays = day.festivalDays,
                 isSunday = index == 0,
                 isCurrentMonth = false
@@ -243,7 +252,7 @@ private fun CalendarContent(
 
         itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
             CalendarDayView(
-                day = "${index + 1}",
+                day = day.day,
                 festivalDays = day.festivalDays,
                 isSunday = false,
                 isSaturday = index == calendarInfo.afterMonthDayCount - 1,
