@@ -1,6 +1,7 @@
 package com.wonder.data.di
 
 import com.wonder.data.service.AppService
+import com.wonder.data.service.AuthService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,4 +17,8 @@ internal object ServiceModule {
     @Provides
     @Singleton
     fun provideAppService(retrofit: Retrofit): AppService = retrofit.create()
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create()
 }

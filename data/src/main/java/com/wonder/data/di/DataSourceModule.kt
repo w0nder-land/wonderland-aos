@@ -2,6 +2,8 @@ package com.wonder.data.di
 
 import com.wonder.data.remote.AppRemoteDataSource
 import com.wonder.data.remote.AppRemoteDataSourceImpl
+import com.wonder.data.remote.auth.AuthRemoteDataSource
+import com.wonder.data.remote.auth.AuthRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,10 @@ internal abstract class DataSourceModule {
     abstract fun bindsAppRemoteDataSource(
         appRemoteDataSourceImpl: AppRemoteDataSourceImpl
     ): AppRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsAuthRemoteDataSource(
+        authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
+    ): AuthRemoteDataSource
 }
