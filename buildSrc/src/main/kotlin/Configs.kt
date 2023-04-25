@@ -112,6 +112,12 @@ object TimberConfig {
     const val TIMBER = "com.jakewharton.timber:timber:$timberVersion"
 }
 
+object KakaoConfig {
+    private const val kakaoVersion = "2.13.0"
+
+    const val KAKAO_LOGIN = "com.kakao.sdk:v2-user:$kakaoVersion"
+}
+
 object ExternalLibConfig {
     private const val snapperVersion = "0.3.0"
     private const val bottomSheetDialogVersion = "1.2.1"

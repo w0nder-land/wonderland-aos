@@ -47,6 +47,10 @@ dependencies {
         implementation(HILT_NAVIGATION_COMPOSE)
     }
 
+    KakaoConfig.run {
+        implementation(KAKAO_LOGIN)
+    }
+
     TimberConfig.run {
         implementation(TIMBER)
     }

@@ -4,6 +4,6 @@ import com.wonder.base.WonderResult
 
 internal sealed interface OnboardingResult : WonderResult {
 
-    object KakaoLogin : OnboardingResult
+    object ClickKakaoLogin : OnboardingResult
     object MoveMain : OnboardingResult
 }

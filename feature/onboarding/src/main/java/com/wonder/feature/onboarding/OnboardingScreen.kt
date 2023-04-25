@@ -46,6 +46,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.imaec.auth.getKakaoUserId
+import com.imaec.auth.signInKakao
 import com.wonder.component.theme.Body1
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Gray500
@@ -55,6 +57,7 @@ import com.wonder.component.theme.Subtitle1
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.singleClick
 import com.wonder.feature.onboarding.vm.OnboardingEffect
+import com.wonder.feature.onboarding.vm.OnboardingEvent
 import com.wonder.feature.onboarding.vm.OnboardingViewModel
 import com.wonder.resource.R
 import dagger.hilt.android.internal.managers.FragmentComponentManager
@@ -65,14 +68,27 @@ internal fun OnboardingView(
     onboardingViewModel: OnboardingViewModel = hiltViewModel(),
     onMoveMain: () -> Unit
 ) {
-    val activity = FragmentComponentManager.findActivity(LocalContext.current) as Activity
+    val context = LocalContext.current
+    val activity = FragmentComponentManager.findActivity(context) as Activity
 
     BackHandler { activity.finish() }
 
     LaunchedEffect(Unit) {
         onboardingViewModel.effects.collect { effect ->
             when (effect) {
-                OnboardingEffect.KakaoLogin -> {}
+                OnboardingEffect.KakaoLogin -> {
+                    signInKakao(context) { token, error ->
+                        if (error != null) {
+                            // TODO : 카카오 로그인 실패 처리
+                        } else if (token != null) {
+                            getKakaoUserId { userId ->
+                                onboardingViewModel.processEvent(
+                                    OnboardingEvent.KakaoLogin(userId)
+                                )
+                            }
+                        }
+                    }
+                }
                 OnboardingEffect.MoveMain -> onMoveMain()
             }
         }
@@ -80,7 +96,9 @@ internal fun OnboardingView(
 
     OnboardingScreen(
         onMoveMain = onMoveMain,
-        onKakaoLoginClick = {}
+        onKakaoLoginClick = {
+            onboardingViewModel.processEvent(OnboardingEvent.ClickKakaoLogin)
+        }
     )
 }
 

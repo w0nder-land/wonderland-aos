@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("kapt")
 }
 
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
@@ -20,4 +21,14 @@ dependencies {
     implementation(project(Module.CommonBase))
     implementation(project(Module.CommonComponent))
     implementation(project(Module.CommonResource))
+    implementation(project(Module.CommonAuth))
+    implementation(project(Module.Domain))
+
+    HiltConfig.run {
+        kapt(DAGGER_HILT_COMPILER)
+    }
+
+    KakaoConfig.run {
+        implementation(KAKAO_LOGIN)
+    }
 }

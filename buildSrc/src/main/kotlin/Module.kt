@@ -6,6 +6,7 @@ object Module {
     const val CommonModel = ":common:model"
     const val CommonComponent = ":common:component"
     const val CommonResource = ":common:resource"
+    const val CommonAuth = ":common:auth"
     const val FeatureSplash = ":feature:splash"
     const val FeatureOnboarding = ":feature:onboarding"
 }
