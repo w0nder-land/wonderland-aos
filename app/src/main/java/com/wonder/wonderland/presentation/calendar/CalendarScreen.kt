@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,26 +18,33 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,7 +52,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
-import com.wonder.component.theme.Black
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray50
 import com.wonder.component.theme.Gray600
@@ -68,12 +73,15 @@ import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
+import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterDrawer
 import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CalendarView(
     mainViewModel: MainViewModel,
@@ -81,10 +89,16 @@ internal fun CalendarView(
     onBackClick: () -> Unit,
 ) {
     val calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     BackHandler {
-        mainViewModel.selectBottomNavigationItem(MainDestination.HOME)
-        onBackClick()
+        if (drawerState.isOpen) {
+            scope.launch { drawerState.close() }
+        } else {
+            mainViewModel.selectBottomNavigationItem(MainDestination.HOME)
+            onBackClick()
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -101,6 +115,7 @@ internal fun CalendarView(
 
     CalendarScreen(
         calendarState = calendarState,
+        drawerState = drawerState,
         onSelectYearMonth = { yearMonth ->
             calendarViewModel.processEvent(CalendarEvent.UpdateCurrentYearMonth(yearMonth))
         }
@@ -111,34 +126,56 @@ internal fun CalendarView(
 @Composable
 private fun CalendarScreen(
     calendarState: CalendarState,
+    drawerState: DrawerState,
     onSelectYearMonth: (yearMonth: String) -> Unit,
 ) {
-    Scaffold(
-        containerColor = Gray900,
-        topBar = {
-            CalendarTopBar(
-                currentMonth = calendarState.currentYearMonth,
-                yearMonthItems = calendarState.yearMonthItems,
-                onSelectYearMonth = onSelectYearMonth
-            )
-        },
-        content = { padding ->
-            if (!calendarState.isLoading) {
-                Box {
-                    CalendarContent(
-                        modifier = Modifier.padding(padding),
-                        calendarInfo = calendarState.calendarInfo
-                    )
+    val scope = rememberCoroutineScope()
 
-                    CalendarFilterView(
-                        modifier = Modifier
-                            .padding(padding)
-                            .align(Alignment.BottomCenter)
-                    )
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        ModalNavigationDrawer(
+            modifier = Modifier,
+            drawerState = drawerState,
+            drawerContent = {
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    CalendarFilterDrawer()
                 }
             }
+        ) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                Scaffold(
+                    containerColor = Gray900,
+                    topBar = {
+                        CalendarTopBar(
+                            currentMonth = calendarState.currentYearMonth,
+                            yearMonthItems = calendarState.yearMonthItems,
+                            onSelectYearMonth = onSelectYearMonth
+                        )
+                    },
+                    content = { padding ->
+                        if (!calendarState.isLoading) {
+                            Box {
+                                CalendarContent(
+                                    modifier = Modifier.padding(padding),
+                                    calendarInfo = calendarState.calendarInfo
+                                )
+
+                                CalendarFilterView(
+                                    modifier = Modifier
+                                        .padding(padding)
+                                        .align(Alignment.BottomCenter),
+                                    onFilterClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                )
+            }
         }
-    )
+    }
 }
 
 @Composable
@@ -264,7 +301,8 @@ private fun CalendarContent(
 
 @Composable
 private fun CalendarFilterView(
-    modifier: Modifier
+    modifier: Modifier,
+    onFilterClick: () -> Unit,
 ) {
     var isSelected by remember { mutableStateOf(false) }
 
@@ -281,7 +319,10 @@ private fun CalendarFilterView(
                 color = White,
                 shape = CircleShape
             )
-            .singleClick(shape = CircleShape) { isSelected = !isSelected }
+            .singleClick(shape = CircleShape) {
+                onFilterClick()
+                isSelected = !isSelected
+            }
     ) {
         Row(
             modifier = Modifier.align(Alignment.Center),
@@ -423,6 +464,7 @@ private fun SelectMonthBottomSheetDialog(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun CalendarScreenPreview() {
@@ -455,6 +497,46 @@ private fun CalendarScreenPreview() {
                     afterCalendarDays = afterCalendarDays
                 )
             ),
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+            onSelectYearMonth = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun CalendarScreenDrawerPreview() {
+    val calendarDays = mutableListOf<CalendarDayInfo>().apply {
+        repeat(30) {
+            add(CalendarDayInfo(day = "${it + 1}"))
+        }
+    }
+    val beforeCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+        repeat(6) {
+            add(CalendarDayInfo(day = "${it + 21}"))
+        }
+    }
+    val afterCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+        repeat(6) {
+            add(CalendarDayInfo(day = "${it + 1}"))
+        }
+    }
+    WonderTheme {
+        CalendarScreen(
+            calendarState = CalendarState(
+                isLoading = false,
+                currentYearMonth = "2023년 4월",
+                calendarInfo = CalendarInfo(
+                    today = 22,
+                    firstDayOfWeek = 7,
+                    lastDayOfMonth = 30,
+                    calendarDays = calendarDays,
+                    beforeCalendarDays = beforeCalendarDays,
+                    afterCalendarDays = afterCalendarDays
+                )
+            ),
+            drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
             onSelectYearMonth = {}
         )
     }
