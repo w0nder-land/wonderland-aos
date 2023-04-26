@@ -42,7 +42,6 @@ dependencies {
         api(COMPOSE_FOUNDATION_LAYOUT)
         api(COMPOSE_COIL)
         api(COMPOSE_ACTIVITY)
-        api(COMPOSE_MATERIAL3)
         api(COMPOSE_NAVIGATION)
         api(COMPOSE_NAVIGATION_ANIMATION)
     }
@@ -53,6 +52,5 @@ dependencies {
 
     ExternalLibConfig.run {
         api(SNAPPER)
-        api(BOTTOM_SHEET_DIALOG)
     }
 }

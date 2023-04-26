@@ -22,10 +22,12 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -49,9 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
-import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
-import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray50
 import com.wonder.component.theme.Gray600
@@ -81,7 +80,6 @@ import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CalendarView(
     mainViewModel: MainViewModel,
@@ -122,7 +120,6 @@ internal fun CalendarView(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CalendarScreen(
     calendarState: CalendarState,
@@ -358,6 +355,7 @@ private fun CalendarFilterView(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SelectMonthBottomSheetDialog(
     currentMonth: String,
@@ -365,31 +363,22 @@ private fun SelectMonthBottomSheetDialog(
     onSelectYearMonth: (yearMonth: String) -> Unit,
     onBottomSheetClose: () -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedIndex by remember { mutableStateOf(yearMonthItems.indexOf(currentMonth)) }
     val gradientColors = listOf(
         Gray800.copy(alpha = 1f),
         Gray800.copy(alpha = 0f)
     )
 
-    BottomSheetDialog(
+    ModalBottomSheet(
         onDismissRequest = onBottomSheetClose,
-        properties = BottomSheetDialogProperties(
-            dismissWithAnimation = true,
-            behaviorProperties = BottomSheetBehaviorProperties(
-                isDraggable = false
-            )
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .height(346.dp)
-                .background(
-                    color = Gray800,
-                    shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
-                )
-        ) {
+        sheetState = sheetState,
+        dragHandle = {
             BottomSheetTopDot()
-
+        },
+        containerColor = Gray800
+    ) {
+        Column(modifier = Modifier.height(346.dp)) {
             Box {
                 WheelPicker(
                     startIndex = selectedIndex,
@@ -464,7 +453,6 @@ private fun SelectMonthBottomSheetDialog(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun CalendarScreenPreview() {
@@ -503,7 +491,6 @@ private fun CalendarScreenPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun CalendarScreenDrawerPreview() {

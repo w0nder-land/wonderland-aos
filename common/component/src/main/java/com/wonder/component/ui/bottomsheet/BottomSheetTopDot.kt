@@ -1,6 +1,7 @@
 package com.wonder.component.ui.bottomsheet
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.wonder.component.theme.Gray500
+import com.wonder.component.theme.Gray800
 
 @Composable
 fun BottomSheetTopDot() {
@@ -16,6 +18,7 @@ fun BottomSheetTopDot() {
         modifier = Modifier
             .fillMaxWidth()
             .height(24.dp)
+            .background(Gray800)
     ) {
         val width = size.width
         val height = size.height

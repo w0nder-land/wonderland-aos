@@ -36,7 +36,7 @@ object AndroidConfig {
 object ComposeConfig {
     const val composeVersion = "1.4.0"
     const val composeCompilerVersion = "1.4.0"
-    const val composeMaterial3Version = "1.1.0-alpha01"
+    const val composeMaterial3Version = "1.1.0-rc01"
     const val composeNavigationVersion = "2.5.2"
     const val composeActivityVersion = "1.4.0"
     const val composeCoilVersion = "2.2.2"
@@ -120,10 +120,8 @@ object KakaoConfig {
 
 object ExternalLibConfig {
     private const val snapperVersion = "0.3.0"
-    private const val bottomSheetDialogVersion = "1.2.1"
 
     const val SNAPPER = "dev.chrisbanes.snapper:snapper:$snapperVersion"
-    const val BOTTOM_SHEET_DIALOG = "com.holix.android:bottomsheetdialog-compose:$bottomSheetDialogVersion"
 }
 
 /**
