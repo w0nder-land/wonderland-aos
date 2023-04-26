@@ -29,15 +29,14 @@ import com.wonder.component.theme.Body1
 import com.wonder.component.theme.Body2
 import com.wonder.component.theme.Caption1
 import com.wonder.component.theme.Gray100
-import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Gray300
 import com.wonder.component.theme.Gray50
 import com.wonder.component.theme.Gray700
 import com.wonder.component.theme.Heading2
 import com.wonder.component.theme.Subtitle1
-import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.common.RecommendFestivalView
 import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 import java.util.Random
@@ -143,32 +142,15 @@ fun LazyListScope.searchEmptyView(
             horizontalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             items(recommendFestivals) { festival ->
-                Column(
-                    modifier = Modifier
-                        .width(120.dp)
-                        .singleClick {
-                        },
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Image(
-                        modifier = Modifier.size(width = 120.dp, height = 160.dp),
-                        painter = painterResource(
-                            id = listOf(
-                                R.drawable.img_sample_festival_1,
-                                R.drawable.img_sample_festival_2,
-                                R.drawable.img_sample_festival_3
-                            ).random()
-                        ),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null
-                    )
-
-                    Text(
-                        text = "서울재즈페스티벌 2023",
-                        style = Subtitle3,
-                        color = Gray200
-                    )
-                }
+                RecommendFestivalView(
+                    festivalImage = listOf(
+                        R.drawable.img_sample_festival_1,
+                        R.drawable.img_sample_festival_2,
+                        R.drawable.img_sample_festival_3
+                    ).random(),
+                    festivalTitle = "서울재즈페스티벌 2023",
+                    onFestivalClick = {}
+                )
             }
         }
     }

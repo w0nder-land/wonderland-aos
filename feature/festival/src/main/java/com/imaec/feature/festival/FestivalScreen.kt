@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.imaec.feature.festival.item.FestivalDetailInfoItemView
+import com.imaec.feature.festival.item.FestivalGuestItemView
+import com.imaec.feature.festival.item.FestivalInfoItemView
+import com.imaec.feature.festival.item.FestivalRecommendItemView
 import com.imaec.feature.festival.vm.FestivalViewModel
 import com.wonder.component.theme.Caption1
 import com.wonder.component.theme.Gray500
@@ -106,14 +111,29 @@ private fun FestivalScreen(
 private fun FestivalContent(
     modifier: Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        items(100) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-                text = "$it"
-            )
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(top = 32.dp, bottom = 85.dp),
+        verticalArrangement = Arrangement.spacedBy(48.dp)
+    ) {
+        item {
+            FestivalTitleItemView()
+        }
+
+        item {
+            FestivalInfoItemView()
+        }
+
+        item {
+            FestivalGuestItemView()
+        }
+
+        item {
+            FestivalDetailInfoItemView()
+        }
+
+        item {
+            FestivalRecommendItemView()
         }
     }
 }
