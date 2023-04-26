@@ -7,6 +7,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.composable
+import com.imaec.feature.festival.navigateToFestival
 import com.wonder.component.navigation.Navigate
 import com.wonder.wonderland.presentation.MainViewModel
 
@@ -22,7 +23,8 @@ fun NavGraphBuilder.homeScreen(
         val mainViewModel: MainViewModel = hiltViewModel(parentEntry)
 
         HomeView(
-            mainViewModel = mainViewModel
+            mainViewModel = mainViewModel,
+            onFestivalClick = { navController.navigateToFestival() }
         )
     }
 }

@@ -155,7 +155,7 @@ fun SearchTopBar(
                     modifier = Modifier
                         .size(24.dp)
                         .align(Alignment.Center),
-                    painter = painterResource(id = R.drawable.ic_arrow_left),
+                    painter = painterResource(id = R.drawable.ic_back),
                     tint = Gray50,
                     contentDescription = null
                 )

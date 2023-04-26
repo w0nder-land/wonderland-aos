@@ -4,6 +4,8 @@ sealed class Navigate(val route: String) {
     sealed class Screen {
         object Splash : Navigate("splash")
         object Onboarding : Navigate("onboarding")
+        object Festival : Navigate("festival")
+        // Main BottomTab
         object Main : Navigate("main")
         object Home : Navigate("home")
         object Search : Navigate("search")
