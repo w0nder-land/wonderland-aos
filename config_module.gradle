@@ -29,10 +29,16 @@ android {
     productFlavors {
         dev {
             flavorDimensions BuildTypeDebug.dimensionsName
+            manifestPlaceholders = [
+                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+            ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
         prod {
             flavorDimensions BuildTypeRelease.dimensionsName
+            manifestPlaceholders = [
+                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+            ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
     }

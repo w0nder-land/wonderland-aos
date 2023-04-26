@@ -59,12 +59,18 @@ android {
             applicationIdSuffix BuildTypeDebug.suffixName
             versionCode BuildTypeDebug.versionCode
             versionName BuildTypeDebug.versionName
+            manifestPlaceholders = [
+                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+            ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
         prod {
             flavorDimensions BuildTypeRelease.dimensionsName
             versionCode BuildTypeRelease.versionCode
             versionName BuildTypeRelease.versionName
+            manifestPlaceholders = [
+                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+            ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
     }
