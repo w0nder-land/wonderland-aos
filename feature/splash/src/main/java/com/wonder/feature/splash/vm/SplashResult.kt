@@ -4,5 +4,5 @@ import com.wonder.base.WonderResult
 
 internal sealed interface SplashResult : WonderResult {
 
-    object SuccessCheckServer : SplashResult
+    data class SuccessCheckServer(val isLogin: Boolean) : SplashResult
 }

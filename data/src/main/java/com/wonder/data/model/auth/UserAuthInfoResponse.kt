@@ -12,21 +12,21 @@ internal data class UserAuthInfoResponse(
 }
 
 internal data class UserAuthInfoDataResponse(
+    val userId: Int,
     val nickname: String,
-    val refreshToken: String,
-    val refreshTokenExpiredAt: String,
     val socialType: String,
     val token: String,
     val tokenExpiredAt: String,
-    val userId: Int
+    val refreshToken: String,
+    val refreshTokenExpiredAt: String
 ) : DataToDomainMapper<UserAuthInfo> {
     override fun mapper() = UserAuthInfo(
+        userId = userId,
         nickname = nickname,
-        refreshToken = refreshToken,
-        refreshTokenExpiredAt = refreshTokenExpiredAt,
         socialType = socialType,
         token = token,
         tokenExpiredAt = tokenExpiredAt,
-        userId = userId
+        refreshToken = refreshToken,
+        refreshTokenExpiredAt = refreshTokenExpiredAt
     )
 }

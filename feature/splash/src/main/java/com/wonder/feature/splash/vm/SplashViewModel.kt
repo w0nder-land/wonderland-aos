@@ -2,6 +2,7 @@ package com.wonder.feature.splash.vm
 
 import com.wonder.base.WonderViewModel
 import com.wonder.domain.usecase.CheckServerUseCase
+import com.wonder.domain.usecase.auth.IsLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SplashViewModel @Inject constructor(
-    private val checkServerUseCase: CheckServerUseCase
+    private val checkServerUseCase: CheckServerUseCase,
+    private val isLoginUseCase: IsLoginUseCase,
 ) : WonderViewModel<SplashEvent, SplashResult, SplashState, SplashEffect>(SplashState()) {
 
     override fun Flow<SplashEvent>.toResults(): Flow<SplashResult> = merge(
@@ -27,11 +29,12 @@ internal class SplashViewModel @Inject constructor(
     private fun Flow<SplashEvent.CheckServer>.toCheckServerResult(): Flow<SplashResult> =
         mapLatest {
             checkServerUseCase()
-            SplashResult.SuccessCheckServer
+            val isLogin = isLoginUseCase()
+            SplashResult.SuccessCheckServer(isLogin)
         }
 
     private fun Flow<SplashResult.SuccessCheckServer>.toCheckServerEffect(): Flow<SplashEffect> =
         mapLatest {
-            SplashEffect.MoveOnboardingScreen
+            if (it.isLogin) SplashEffect.MoveMainScreen else SplashEffect.MoveOnboardingScreen
         }
 }
