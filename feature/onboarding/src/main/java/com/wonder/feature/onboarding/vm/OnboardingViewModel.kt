@@ -34,7 +34,7 @@ internal class OnboardingViewModel @Inject constructor(
     }
 
     private fun Flow<OnboardingEvent.KakaoLogin>.toKakaoLoginResult() = map {
-        signInKakaoUseCase(it.userId)
+        signInKakaoUseCase(it.token)
         OnboardingResult.MoveMain
     }
 

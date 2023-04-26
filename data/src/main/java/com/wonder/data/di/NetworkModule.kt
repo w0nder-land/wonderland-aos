@@ -1,14 +1,20 @@
 package com.wonder.data.di
 
+import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
 import com.wonder.data.BuildConfig
 import com.wonder.data.constant.HOST_WONDERLAND
+import com.wonder.data.constant.Header
+import com.wonder.data.constant.HeaderValue
+import com.wonder.data.util.DeviceIdProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -20,6 +26,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
+
+    @Singleton
+    @Provides
+    fun provideHeaderInterceptor(@ApplicationContext context: Context): Interceptor =
+        Interceptor { chain ->
+            val request = chain.request()
+                .newBuilder()
+                .addHeader(Header.CLIENT_ID, HeaderValue.CLIENT_ID)
+                .addHeader(Header.UNIQUE_ID, DeviceIdProvider.getDeviceId(context))
+                .build()
+            return@Interceptor chain.proceed(request)
+        }
 
     @Singleton
     @Provides
@@ -56,9 +74,11 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun providesOkHttpClient(
+        interceptor: Interceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient = OkHttpClient
         .Builder()
+        .addInterceptor(interceptor)
         .addNetworkInterceptor(httpLoggingInterceptor)
         .connectTimeout(60, TimeUnit.SECONDS)
         .build()

@@ -4,6 +4,14 @@ import com.wonder.data.model.mapper.DataToDomainMapper
 import com.wonder.domain.model.auth.UserAuthInfo
 
 internal data class UserAuthInfoResponse(
+    val message: String,
+    val timestamp: Long,
+    val data: UserAuthInfoDataResponse
+) : DataToDomainMapper<UserAuthInfo> {
+    override fun mapper(): UserAuthInfo = data.mapper()
+}
+
+internal data class UserAuthInfoDataResponse(
     val nickname: String,
     val refreshToken: String,
     val refreshTokenExpiredAt: String,

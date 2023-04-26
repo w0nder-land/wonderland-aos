@@ -46,7 +46,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.imaec.auth.getKakaoUserId
 import com.imaec.auth.signInKakao
 import com.wonder.component.theme.Body1
 import com.wonder.component.theme.Gray200
@@ -81,11 +80,9 @@ internal fun OnboardingView(
                         if (error != null) {
                             // TODO : 카카오 로그인 실패 처리
                         } else if (token != null) {
-                            getKakaoUserId { userId ->
-                                onboardingViewModel.processEvent(
-                                    OnboardingEvent.KakaoLogin(userId)
-                                )
-                            }
+                            onboardingViewModel.processEvent(
+                                OnboardingEvent.KakaoLogin(token.accessToken)
+                            )
                         }
                     }
                 }

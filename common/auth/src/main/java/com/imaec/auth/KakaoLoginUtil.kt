@@ -34,12 +34,3 @@ fun signInKakao(
         )
     }
 }
-
-fun getKakaoUserId(
-    callback: (userId: Long) -> Unit
-) {
-    val apiClient = UserApiClient.instance
-    apiClient.me { user, _ ->
-        callback(user?.id ?: return@me)
-    }
-}

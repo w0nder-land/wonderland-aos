@@ -4,5 +4,5 @@ import com.wonder.domain.model.auth.UserAuthInfo
 
 internal interface AuthRemoteDataSource {
 
-    suspend fun signInKakao(uid: Long): UserAuthInfo
+    suspend fun signInKakao(token: String): UserAuthInfo
 }

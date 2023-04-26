@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class SignInKakaoUseCase @Inject constructor(
     private val authRepository: AuthRepository
-) : UseCase<Long, UserAuthInfo>() {
+) : UseCase<String, UserAuthInfo>() {
 
-    override suspend fun execute(parameters: Long): UserAuthInfo =
+    override suspend fun execute(parameters: String): UserAuthInfo =
         authRepository.signInKakao(parameters)
 }

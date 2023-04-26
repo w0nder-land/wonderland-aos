@@ -9,8 +9,8 @@ internal class AuthRemoteDataSourceImpl @Inject constructor(
     private val authService: AuthService
 ) : AuthRemoteDataSource {
 
-    override suspend fun signInKakao(uid: Long): UserAuthInfo =
+    override suspend fun signInKakao(token: String): UserAuthInfo =
         authService.signInKakao(
-            signInKakaoRequest = SignInKakaoRequest(uid = uid)
+            signInKakaoRequest = SignInKakaoRequest(token)
         ).mapper()
 }

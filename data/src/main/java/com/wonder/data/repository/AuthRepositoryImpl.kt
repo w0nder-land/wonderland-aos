@@ -9,6 +9,6 @@ internal class AuthRepositoryImpl @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource
 ) : AuthRepository {
 
-    override suspend fun signInKakao(uid: Long): UserAuthInfo =
-        authRemoteDataSource.signInKakao(uid)
+    override suspend fun signInKakao(token: String): UserAuthInfo =
+        authRemoteDataSource.signInKakao(token)
 }
