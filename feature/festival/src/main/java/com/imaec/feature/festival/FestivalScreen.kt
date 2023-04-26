@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -33,6 +32,8 @@ import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
+import com.wonder.component.ui.topbar.TopBar
+import com.wonder.component.ui.topbar.TopBarIcon
 import com.wonder.resource.R
 
 @Composable
@@ -53,8 +54,12 @@ private fun FestivalScreen(
 ) {
     Scaffold(
         topBar = {
-            FestivalTopBar(
-                onBackClick = onBackClick
+            TopBar(
+                rightIcon = TopBarIcon(
+                    iconRes = R.drawable.ic_share,
+                    onIconClick = {}
+                ),
+                onLeftIconClick = onBackClick
             )
         },
         content = { padding ->
@@ -66,40 +71,6 @@ private fun FestivalScreen(
             FestivalBottomBar()
         }
     )
-}
-
-@Composable
-private fun FestivalTopBar(
-    onBackClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(36.dp)
-                .singleClick(shape = CircleShape) { onBackClick() }
-                .padding(6.dp),
-            painter = painterResource(id = R.drawable.ic_back),
-            tint = White,
-            contentDescription = null
-        )
-
-        Icon(
-            modifier = Modifier
-                .size(36.dp)
-                .singleClick(shape = CircleShape) { }
-                .padding(6.dp),
-            painter = painterResource(id = R.drawable.ic_share),
-            tint = White,
-            contentDescription = null
-        )
-    }
 }
 
 @Composable
