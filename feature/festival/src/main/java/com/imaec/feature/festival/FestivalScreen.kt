@@ -1,6 +1,7 @@
 package com.imaec.feature.festival
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,13 +11,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,14 +32,17 @@ import com.wonder.component.theme.Caption1
 import com.wonder.component.theme.Gray500
 import com.wonder.component.theme.Gray600
 import com.wonder.component.theme.Gray700
+import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.White
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
+import com.wonder.component.ui.topbar.CollapsingTopBar
 import com.wonder.component.ui.topbar.TopBar
 import com.wonder.component.ui.topbar.TopBarIcon
+import com.wonder.component.ui.topbar.platCollapsedScrollBehavior
 import com.wonder.resource.R
 
 @Composable
@@ -48,18 +57,38 @@ internal fun FestivalView(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FestivalScreen(
     onBackClick: () -> Unit,
 ) {
+    val scrollBehavior = platCollapsedScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopBar(
-                rightIcon = TopBarIcon(
-                    iconRes = R.drawable.ic_share,
-                    onIconClick = {}
-                ),
-                onLeftIconClick = onBackClick
+            CollapsingTopBar(
+                scrollBehavior = scrollBehavior,
+                topBarColor = Gray900,
+                topBar = {
+                    TopBar(
+                        rightIcon = TopBarIcon(
+                            iconRes = R.drawable.ic_share,
+                            onIconClick = {}
+                        ),
+                        onLeftIconClick = onBackClick
+                    )
+                },
+                content = {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Gray900),
+                        painter = painterResource(id = R.drawable.img_sample_festival),
+                        contentScale = ContentScale.FillWidth,
+                        contentDescription = null
+                    )
+                }
             )
         },
         content = { padding ->
@@ -77,6 +106,16 @@ private fun FestivalScreen(
 private fun FestivalContent(
     modifier: Modifier
 ) {
+    LazyColumn(modifier = modifier) {
+        items(100) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                text = "$it"
+            )
+        }
+    }
 }
 
 @Composable
