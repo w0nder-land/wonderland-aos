@@ -2,6 +2,7 @@ package com.wonder.data.constant
 
 object Header {
 
+    const val ACCESS_TOKEN = "Authorization"
     const val CLIENT_ID = "Client-id"
     const val UNIQUE_ID = "Unique-id"
     const val DEVICE_MODEL = "Device-model"
