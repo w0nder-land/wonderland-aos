@@ -47,7 +47,10 @@ internal class CalendarViewModel @Inject constructor(
                 )
             }
             is CalendarResult.UpdateYearMonth -> {
-                state.copy(currentYearMonth = currentYearMonth)
+                state.copy(
+                    isLoading = true,
+                    currentYearMonth = currentYearMonth
+                )
             }
         }
     }

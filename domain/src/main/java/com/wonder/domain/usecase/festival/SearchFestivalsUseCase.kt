@@ -30,5 +30,5 @@ data class SearchFestivalParam(
     val region: String? = null,
     val age: String? = null,
     val page: Int? = null,
-    val size: Int? = null,
+    val size: Int? = 50,
 )

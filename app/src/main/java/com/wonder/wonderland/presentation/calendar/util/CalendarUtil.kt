@@ -10,6 +10,7 @@ import com.wonder.component.util.month
 import com.wonder.component.util.toCalendar
 import com.wonder.component.util.toDate
 import com.wonder.component.util.toDay
+import com.wonder.component.util.year
 import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.model.FestivalDay
@@ -166,14 +167,28 @@ private fun getFestivalDays(
                 calendarDays = calendarDays
             )
 
+            // 해당 주에 포함된 축제 수
+            val festivalCountInWeek = getFestivalCountInWeek(
+                festivalCalendar = startDate.toCalendar(),
+                startDay = startDayOfYear,
+                endDay = endDayOfYear,
+                weekRange = weekRange
+            )
+
             festivalDays.add(
                 FestivalDay(
                     festivalId = festivalItem.festivalId,
                     festivalName = festivalItem.festivalName,
+                    year = startDate
+                        .toCalendar()
+                        .addDayOfMonth(amount = festivalDayOfYear - startDayOfYear)
+                        .year(),
+                    month = currentMonth,
                     day = festivalDay,
                     isStartDay = festivalDayOfYear == startDayOfYear,
                     isEndDay = festivalDayOfYear == endDayOfYear,
                     weekRange = weekRange,
+                    festivalCountInWeek = festivalCountInWeek,
                     order = order
                 )
             )
@@ -324,4 +339,25 @@ private fun getFestivalRange(
         festivalCalendar.dayOfYear(),
         festivalCalendar.dayOfYear() + (endDay - startDay)
     )
+}
+
+private fun getFestivalCountInWeek(
+    festivalCalendar: Calendar,
+    startDay: Int,
+    endDay: Int,
+    weekRange: IntRange
+): Int {
+    val festivalDayRange = getFestivalRange(
+        festivalCalendar = festivalCalendar,
+        startDay = startDay,
+        endDay = endDay
+    )
+
+    var countOfWeek = 0
+    festivalDayRange.forEach { dayOfFestival ->
+        weekRange.forEach { dayOfWeek ->
+            if (dayOfFestival == dayOfWeek) countOfWeek++
+        }
+    }
+    return countOfWeek
 }

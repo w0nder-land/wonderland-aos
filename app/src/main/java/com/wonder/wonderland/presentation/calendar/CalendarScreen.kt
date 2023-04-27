@@ -1,6 +1,8 @@
 package com.wonder.wonderland.presentation.calendar
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +12,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
@@ -32,13 +37,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
@@ -46,6 +55,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,6 +85,8 @@ import com.wonder.wonderland.presentation.MainViewModel
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterDrawer
 import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
+import com.wonder.wonderland.presentation.calendar.model.FestivalDay
+import com.wonder.wonderland.presentation.calendar.model.FestivalDayWithOffset
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
@@ -153,7 +165,8 @@ private fun CalendarScreen(
                             Box {
                                 CalendarContent(
                                     modifier = Modifier.padding(padding),
-                                    calendarInfo = calendarState.calendarInfo
+                                    calendarInfo = calendarState.calendarInfo,
+                                    currentMonth = calendarState.currentYearMonth,
                                 )
 
                                 CalendarFilterView(
@@ -243,57 +256,136 @@ private fun CalendarTopBar(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CalendarContent(
     modifier: Modifier,
-    calendarInfo: CalendarInfo
+    calendarInfo: CalendarInfo,
+    currentMonth: String,
 ) {
-    val weeks = listOf("일", "월", "화", "수", "목", "금", "토")
-
-    LazyVerticalGrid(
-        modifier = modifier,
-        columns = GridCells.Fixed(7),
-        contentPadding = PaddingValues(vertical = 12.dp)
-    ) {
-        items(weeks) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = it,
-                style = Caption2,
-                color = if (it == "일") Sunday else White,
-                textAlign = TextAlign.Center
-            )
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val lazyGridState = rememberLazyGridState()
+    var scrollOffset by remember { mutableStateOf(0f) }
+    val weeks = remember { mutableListOf("일", "월", "화", "수", "목", "금", "토") }
+    val festivalDayWithOffsetItems = remember(currentMonth) {
+        mutableStateListOf<FestivalDayWithOffset>()
+    }
+    val onFestivalAdd: (FestivalDay, Offset) -> Unit = { festivalDay, offset ->
+        val isFestivalDayIncluded = festivalDayWithOffsetItems.any {
+            it.festivalDay.festivalId == festivalDay.festivalId &&
+                it.festivalDay.weekRange == festivalDay.weekRange
         }
-
-        itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
-            CalendarDayView(
-                day = day.day,
-                festivalDays = day.festivalDays,
-                isSunday = index == 0,
-                isCurrentMonth = false
-            )
-        }
-
-        itemsIndexed(calendarInfo.calendarDays) { index, day ->
-            CalendarDayView(
-                day = day.day,
-                festivalDays = day.festivalDays,
-                isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
-                isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
-                isToday = calendarInfo.today == (index + 1)
-            )
-        }
-
-        itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
-            CalendarDayView(
-                day = day.day,
-                festivalDays = day.festivalDays,
-                isSunday = false,
-                isSaturday = index == calendarInfo.afterMonthDayCount - 1,
-                isCurrentMonth = false
+        if (!isFestivalDayIncluded) {
+            festivalDayWithOffsetItems.add(
+                FestivalDayWithOffset(
+                    festivalDay = festivalDay,
+                    offset = offset
+                )
             )
         }
     }
+
+    LaunchedEffect(currentMonth) {
+        lazyGridState.scrollToItem(0)
+        festivalDayWithOffsetItems.clear()
+    }
+
+    Box {
+        CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+            LazyVerticalGrid(
+                modifier = modifier,
+                state = lazyGridState,
+                columns = GridCells.Fixed(7),
+                contentPadding = PaddingValues(vertical = 12.dp)
+            ) {
+                items(weeks) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = it,
+                        style = Caption2,
+                        color = if (it == "일") Sunday else White,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
+                    CalendarDayView(
+                        currentMonth = currentMonth,
+                        day = day.day,
+                        festivalDays = day.festivalDays,
+                        isSunday = index == 0,
+                        isCurrentMonth = false,
+                        onStartOrSundayPositioned = onFestivalAdd
+                    )
+                }
+
+                itemsIndexed(calendarInfo.calendarDays) { index, day ->
+                    CalendarDayView(
+                        currentMonth = currentMonth,
+                        day = day.day,
+                        festivalDays = day.festivalDays,
+                        isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
+                        isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
+                        isToday = calendarInfo.today == (index + 1),
+                        onStartOrSundayPositioned = onFestivalAdd,
+                        onScrollOffsetChanged = {
+                            scrollOffset = it
+                        }
+                    )
+                }
+
+                itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
+                    CalendarDayView(
+                        currentMonth = currentMonth,
+                        day = day.day,
+                        festivalDays = day.festivalDays,
+                        isSunday = false,
+                        isSaturday = index == calendarInfo.afterMonthDayCount - 1,
+                        isCurrentMonth = false,
+                        onStartOrSundayPositioned = onFestivalAdd
+                    )
+                }
+            }
+        }
+
+        festivalDayWithOffsetItems.forEach {
+            FestivalNameView(
+                festivalName = it.festivalDay.festivalName,
+                festivalCountInWeek = it.festivalDay.festivalCountInWeek,
+                dayWidth = (screenWidth / 7) - 6.dp,
+                offset = it.offset.copy(y = it.offset.y + scrollOffset)
+            )
+        }
+    }
+}
+
+@Composable
+private fun FestivalNameView(
+    festivalName: String,
+    festivalCountInWeek: Int,
+    dayWidth: Dp,
+    offset: Offset
+) {
+    val x = with(LocalDensity.current) { offset.x.toDp() }
+    val y = with(LocalDensity.current) { offset.y.toDp() }
+    Text(
+        modifier = Modifier
+            .width(dayWidth * festivalCountInWeek)
+            .padding(start = 4.dp, top = 1.dp)
+            .offset(x = x, y = y),
+        text = festivalName,
+        style = TextStyle(
+            fontFamily = Suit,
+            fontWeight = FontWeight.W600,
+            fontSize = 10.sp,
+            lineHeight = 16.sp,
+            platformStyle = PlatformTextStyle(
+                includeFontPadding = false
+            )
+        ),
+        color = Gray800,
+        maxLines = 1
+    )
 }
 
 @Composable

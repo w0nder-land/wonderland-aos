@@ -12,20 +12,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray700
-import com.wonder.component.theme.Gray800
-import com.wonder.component.theme.Suit
 import com.wonder.component.theme.Sunday
 import com.wonder.component.theme.SundayDisable
 import com.wonder.component.theme.White
@@ -38,17 +39,30 @@ import com.wonder.wonderland.presentation.calendar.model.FestivalDay
 
 @Composable
 internal fun CalendarDayView(
+    currentMonth: String,
     day: String,
     festivalDays: List<FestivalDay>,
     isSunday: Boolean,
     isSaturday: Boolean = false,
     isToday: Boolean = false,
     isCurrentMonth: Boolean = true,
+    onStartOrSundayPositioned: (festivalDay: FestivalDay, offset: Offset) -> Unit,
+    onScrollOffsetChanged: (scrollOffset: Float) -> Unit = {},
 ) {
+    var initOffset by remember(currentMonth, day) { mutableStateOf<Float?>(null) }
     Column(
         modifier = Modifier
             .padding(top = 8.dp)
-            .defaultMinSize(minHeight = 113.dp),
+            .defaultMinSize(minHeight = 113.dp)
+            .onGloballyPositioned {
+                if (day == "15" && isCurrentMonth) {
+                    initOffset?.let { yOffset ->
+                        onScrollOffsetChanged(it.positionInRoot().y - yOffset)
+                    } ?: run {
+                        initOffset = it.positionInRoot().y
+                    }
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorizontalDivider(color = Gray700)
@@ -118,23 +132,15 @@ internal fun CalendarDayView(
                                 )
                             )
                         )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(start = 4.dp, top = 1.dp),
-                        text = festivalDay.festivalName,
-                        style = TextStyle(
-                            fontFamily = Suit,
-                            fontWeight = FontWeight.W600,
-                            fontSize = 10.sp,
-                            lineHeight = 16.sp,
-                            platformStyle = PlatformTextStyle(
-                                includeFontPadding = false
-                            )
-                        ),
-                        color = Gray800,
-                        maxLines = 1
-                    )
-                }
+                        .onGloballyPositioned { coordinates ->
+                            if (festivalDay.isStartDay || isSunday) {
+                                onStartOrSundayPositioned(
+                                    festivalDay,
+                                    coordinates.positionInRoot(),
+                                )
+                            }
+                        }
+                )
             }
         }
     }
@@ -173,19 +179,24 @@ private fun endCornerRadius(
 private fun CalendarDayViewPreview() {
     WonderTheme {
         CalendarDayView(
+            currentMonth = "2023년 4월",
             day = "22",
             festivalDays = listOf(
                 FestivalDay(
                     festivalId = 1,
                     festivalName = "live SUM 2023 : 예빛, 허회경, 정새벽",
+                    year = 2023,
+                    month = 4,
                     day = 22,
                     isStartDay = true,
                     isEndDay = true,
                     weekRange = IntRange(0, 1),
+                    festivalCountInWeek = 0,
                     order = 0
                 )
             ),
-            isSunday = false
+            isSunday = false,
+            onStartOrSundayPositioned = { _, _ -> }
         )
     }
 }
