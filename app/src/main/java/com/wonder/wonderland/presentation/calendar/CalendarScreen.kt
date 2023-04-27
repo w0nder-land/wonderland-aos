@@ -107,7 +107,7 @@ internal fun CalendarView(
         if (calendarState.currentYearMonth.isEmpty()) return@LaunchedEffect
 
         calendarViewModel.processEvent(
-            event = CalendarEvent.GetCurrentCalendar(calendarState.currentYearMonth)
+            event = CalendarEvent.SearchFestivals(calendarState.currentYearMonth)
         )
     }
 

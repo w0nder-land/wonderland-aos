@@ -36,6 +36,7 @@ internal object NetworkModule {
                 .newBuilder()
                 .addHeader(Header.CLIENT_ID, HeaderValue.CLIENT_ID)
                 .addHeader(Header.UNIQUE_ID, DeviceIdProvider.getDeviceId(context))
+                .addHeader(Header.ACCESS_TOKEN, "")
                 .build()
             return@Interceptor chain.proceed(request)
         }

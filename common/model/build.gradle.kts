@@ -7,3 +7,7 @@ apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
 android {
     namespace = "com.wonder.model"
 }
+
+dependencies {
+    implementation(project(Module.Domain))
+}

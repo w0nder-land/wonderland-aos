@@ -1,11 +1,15 @@
 package com.wonder.wonderland.presentation.calendar.vm
 
 import com.imaec.model.FestivalInfo
+import com.imaec.model.festival.toVo
 import com.wonder.base.WonderViewModel
 import com.wonder.component.util.addMonth
 import com.wonder.component.util.getCurrentYearMonth
 import com.wonder.component.util.toCalendar
 import com.wonder.component.util.toDate
+import com.wonder.component.util.toDateString
+import com.wonder.domain.usecase.festival.SearchFestivalParam
+import com.wonder.domain.usecase.festival.SearchFestivalsUseCase
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +22,13 @@ import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
-internal class CalendarViewModel @Inject constructor() :
-    WonderViewModel<CalendarEvent, CalendarResult, CalendarState, CalendarEffect>(CalendarState()) {
+internal class CalendarViewModel @Inject constructor(
+    private val searchFestivalsUseCase: SearchFestivalsUseCase
+) : WonderViewModel<CalendarEvent, CalendarResult, CalendarState, CalendarEffect>(CalendarState()) {
 
     override fun Flow<CalendarEvent>.toResults(): Flow<CalendarResult> = merge(
         filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
-        filterIsInstance<CalendarEvent.GetCurrentCalendar>().toGetCurrentCalendarResult(),
+        filterIsInstance<CalendarEvent.SearchFestivals>().toSearchFestivalsResult(),
         filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult()
     )
 
@@ -58,11 +63,18 @@ internal class CalendarViewModel @Inject constructor() :
             )
         }
 
-    private fun Flow<CalendarEvent.GetCurrentCalendar>.toGetCurrentCalendarResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.SearchFestivals>.toSearchFestivalsResult(): Flow<CalendarResult> =
         mapLatest {
+            val festivals = searchFestivalsUseCase(
+                SearchFestivalParam(
+                    date = it.yearMonth.toDate("yyyy년 M월").toDateString("yyyy-MM")
+                )
+            ).festivals.map { festivalItem ->
+                festivalItem.toVo()
+            }
             val calendarInfo = withContext(Dispatchers.Default) {
                 getCalendarInfo(
-                    festivals = getFestivals(),
+                    festivals = festivals,
                     calendar = it.yearMonth.toDate("yyyy년 M월").toCalendar()
                 )
             }

@@ -15,11 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray700
+import com.wonder.component.theme.Gray800
+import com.wonder.component.theme.Suit
 import com.wonder.component.theme.Sunday
 import com.wonder.component.theme.SundayDisable
 import com.wonder.component.theme.White
@@ -69,7 +75,7 @@ internal fun CalendarDayView(
         }
 
         Box {
-            festivalDays.forEach { festivalDay ->
+            festivalDays.forEachIndexed { index, festivalDay ->
                 Box(
                     modifier = Modifier
                         .padding(
@@ -86,9 +92,9 @@ internal fun CalendarDayView(
                         .fillMaxWidth()
                         .height(16.dp)
                         .background(
-                            color = if (festivalDay.festivalName.toInt() % 3 == 0) {
+                            color = if (index % 3 == 0) {
                                 WonderBlue
-                            } else if (festivalDay.festivalName.toInt() % 3 == 1) {
+                            } else if (index % 3 == 1) {
                                 WonderYellow
                             } else {
                                 Wonder100
@@ -114,8 +120,19 @@ internal fun CalendarDayView(
                         )
                 ) {
                     Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = festivalDay.festivalName
+                        modifier = Modifier.padding(start = 4.dp, top = 1.dp),
+                        text = festivalDay.festivalName,
+                        style = TextStyle(
+                            fontFamily = Suit,
+                            fontWeight = FontWeight.W600,
+                            fontSize = 10.sp,
+                            lineHeight = 16.sp,
+                            platformStyle = PlatformTextStyle(
+                                includeFontPadding = false
+                            )
+                        ),
+                        color = Gray800,
+                        maxLines = 1
                     )
                 }
             }
@@ -157,7 +174,17 @@ private fun CalendarDayViewPreview() {
     WonderTheme {
         CalendarDayView(
             day = "22",
-            festivalDays = emptyList(),
+            festivalDays = listOf(
+                FestivalDay(
+                    festivalId = 1,
+                    festivalName = "live SUM 2023 : 예빛, 허회경, 정새벽",
+                    day = 22,
+                    isStartDay = true,
+                    isEndDay = true,
+                    weekRange = IntRange(0, 1),
+                    order = 0
+                )
+            ),
             isSunday = false
         )
     }

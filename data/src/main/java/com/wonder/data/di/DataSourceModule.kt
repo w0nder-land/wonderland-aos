@@ -4,6 +4,8 @@ import com.wonder.data.remote.AppRemoteDataSource
 import com.wonder.data.remote.AppRemoteDataSourceImpl
 import com.wonder.data.remote.auth.AuthRemoteDataSource
 import com.wonder.data.remote.auth.AuthRemoteDataSourceImpl
+import com.wonder.data.remote.festival.FestivalRemoteDataSource
+import com.wonder.data.remote.festival.FestivalRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,4 +27,10 @@ internal abstract class DataSourceModule {
     abstract fun bindsAuthRemoteDataSource(
         authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
     ): AuthRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsFestivalRemoteDataSource(
+        festivalRemoteDataSourceImpl: FestivalRemoteDataSourceImpl
+    ): FestivalRemoteDataSource
 }

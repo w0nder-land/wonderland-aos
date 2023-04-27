@@ -2,8 +2,10 @@ package com.wonder.data.di
 
 import com.wonder.data.repository.AppRepositoryImpl
 import com.wonder.data.repository.AuthRepositoryImpl
+import com.wonder.data.repository.FestivalRepositoryImpl
 import com.wonder.domain.repository.AppRepository
 import com.wonder.domain.repository.AuthRepository
+import com.wonder.domain.repository.FestivalRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,4 +23,10 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsFestivalRepository(
+        festivalRepositoryImpl: FestivalRepositoryImpl
+    ): FestivalRepository
 }

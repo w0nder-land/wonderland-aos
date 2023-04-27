@@ -1,6 +1,6 @@
 package com.wonder.wonderland.presentation.calendar.util
 
-import com.imaec.model.FestivalInfo
+import com.imaec.model.festival.FestivalItemVo
 import com.wonder.component.util.addDayOfMonth
 import com.wonder.component.util.addMonth
 import com.wonder.component.util.dayOfMonth
@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 internal suspend fun getCalendarInfo(
-    festivals: List<FestivalInfo>,
+    festivals: List<FestivalItemVo>,
     calendar: Calendar
 ): CalendarInfo {
     // 현재 월
@@ -35,7 +35,7 @@ internal suspend fun getCalendarInfo(
     // beforeMonthLastDayOfMonth : 전 월의 마자믹 날
     calendar.addMonth(-1)
     val beforeMonthLastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-    val sortedFestivals = festivals.sortedBy { it.startDate }
+    val sortedFestivals = festivals.sortedBy { it.startDate }.distinctBy { it.festivalName }
 
     // 현재 월의 달력 정보를 가져온다
     val calendarDays = getCalendarDays(
@@ -87,7 +87,7 @@ private suspend fun getCalendarDays(
     firstDay: Int,
     lastDay: Int,
     currentMonth: Int,
-    festivals: List<FestivalInfo>,
+    festivals: List<FestivalItemVo>,
 ): List<CalendarDayInfo> = withContext(Dispatchers.Default) {
     // 달력 정보, 현재 일자와 축제 일정을 가진다
     val calendarDays = mutableListOf<CalendarDayInfo>()
@@ -117,18 +117,18 @@ private suspend fun getCalendarDays(
 private fun getFestivalDays(
     currentMonth: Int,
     day: Int,
-    festivals: List<FestivalInfo>,
+    festivals: List<FestivalItemVo>,
     calendarDays: List<CalendarDayInfo>
 ): List<FestivalDay> {
     val festivalDays = mutableListOf<FestivalDay>()
 
-    festivals.forEachIndexed { festivalIndex, festivalInfo ->
+    festivals.forEachIndexed { festivalIndex, festivalItem ->
         // startDay : 축제 시작 일자
         // endDay : 축제 종료 일자
-        val startDate = festivalInfo.startDate.toDate("yyyy.MM.dd")
+        val startDate = festivalItem.startDate.toDate("yyyy-MM-dd")
         val startDay = startDate.toDay()
         val startDayOfYear = startDate.toCalendar().dayOfYear()
-        val endDate = festivalInfo.endDate.toDate("yyyy.MM.dd")
+        val endDate = festivalItem.endDate.toDate("yyyy-MM-dd")
         val endDay = endDate.toDay()
         val endDayOfYear = endDate.toCalendar().dayOfYear()
         // 축제 시작 월의 마지막 일
@@ -161,14 +161,15 @@ private fun getFestivalDays(
                 endDay = endDay,
                 weekRange = weekRange,
                 festivalCalendar = startDate.toCalendar(),
-                festivalInfo = festivalInfo,
+                festivalItem = festivalItem,
                 festivalDays = festivalDays,
                 calendarDays = calendarDays
             )
 
             festivalDays.add(
                 FestivalDay(
-                    festivalName = festivalInfo.name,
+                    festivalId = festivalItem.festivalId,
+                    festivalName = festivalItem.festivalName,
                     day = festivalDay,
                     isStartDay = festivalDayOfYear == startDayOfYear,
                     isEndDay = festivalDayOfYear == endDayOfYear,
@@ -202,14 +203,14 @@ private fun getCurrentWeekRange(festivalCalendar: Calendar): IntRange {
  * 해당 일이 속한 주의 다른 축제 수
  */
 private fun getOrder(
-    beforeFestivals: List<FestivalInfo>,
+    beforeFestivals: List<FestivalItemVo>,
     festivalDayOfYear: Int,
     festivalDay: Int,
     startDay: Int,
     endDay: Int,
     weekRange: IntRange,
     festivalCalendar: Calendar,
-    festivalInfo: FestivalInfo,
+    festivalItem: FestivalItemVo,
     festivalDays: List<FestivalDay>,
     calendarDays: List<CalendarDayInfo>
 ): Int {
@@ -228,11 +229,11 @@ private fun getOrder(
         // beforeFestivalStartDay : 이전 축제의 시작일
         // beforeFestivalEndDay : 이전 축제의 종료일
         val beforeFestivalStartDay = it.startDate
-            .toDate("yyyy.MM.dd")
+            .toDate("yyyy-MM-dd")
             .toCalendar()
             .dayOfYear()
         val beforeFestivalEndDay = it.endDate
-            .toDate("yyyy.MM.dd")
+            .toDate("yyyy-MM-dd")
             .toCalendar()
             .dayOfYear()
 
@@ -245,7 +246,7 @@ private fun getOrder(
                 order = getOrder(
                     festivalDay = festivalDay,
                     startDay = startDay,
-                    festivalInfo = festivalInfo,
+                    festivalItem = festivalItem,
                     weekRange = weekRange,
                     festivalDays = festivalDays,
                     calendarDays = calendarDays
@@ -258,7 +259,7 @@ private fun getOrder(
                 order = getOrder(
                     festivalDay = festivalDay,
                     startDay = startDay,
-                    festivalInfo = festivalInfo,
+                    festivalItem = festivalItem,
                     weekRange = weekRange,
                     festivalDays = festivalDays,
                     calendarDays = calendarDays
@@ -274,7 +275,7 @@ private fun getOrder(
                     .lastOrNull()
                     ?.festivalDays
                     ?.firstOrNull { beforeFestivalDay ->
-                        beforeFestivalDay.festivalName == festivalInfo.name
+                        beforeFestivalDay.festivalId == festivalItem.festivalId
                     }?.order ?: 0
             }
         }
@@ -288,7 +289,7 @@ private fun getOrder(
 private fun getOrder(
     festivalDay: Int,
     startDay: Int,
-    festivalInfo: FestivalInfo,
+    festivalItem: FestivalItemVo,
     weekRange: IntRange,
     festivalDays: List<FestivalDay>,
     calendarDays: List<CalendarDayInfo>
@@ -300,7 +301,7 @@ private fun getOrder(
         val beforeFestivalDay = beforeDay
             ?.festivalDays
             ?.firstOrNull { beforeFestivalDay ->
-                beforeFestivalDay.festivalName == festivalInfo.name
+                beforeFestivalDay.festivalId == festivalItem.festivalId
             }
         if (beforeFestivalDay?.weekRange?.first == weekRange.first) { // 축제 시작일의 주와 같은 주일 경우
             beforeFestivalDay.order
