@@ -2,6 +2,7 @@ package com.wonder.data.repository
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.util.Log
 import androidx.core.os.bundleOf
 import com.wonder.data.constant.ACCOUNT_TYPE
 import com.wonder.data.constant.AccountKey
@@ -9,6 +10,7 @@ import com.wonder.data.remote.auth.AuthRemoteDataSource
 import com.wonder.domain.model.auth.UserAuthInfo
 import com.wonder.domain.model.member.UserInfo
 import com.wonder.domain.repository.AuthRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 internal class AuthRepositoryImpl @Inject constructor(
@@ -20,11 +22,15 @@ internal class AuthRepositoryImpl @Inject constructor(
     override val userInfo: UserInfo?
         get() = if (account != null) {
             try {
-                accountToUserInfo(accountManager, account)
+                val userInfo = accountToUserInfo(accountManager, account)
+                Timber.i("  ## userInfo : $userInfo")
+                userInfo
             } catch (e: Exception) {
+                Timber.i("  ## accountToUserInfo error : ${Log.getStackTraceString(e)}")
                 null
             }
         } else {
+            Timber.i("  ## account is null")
             null
         }
 

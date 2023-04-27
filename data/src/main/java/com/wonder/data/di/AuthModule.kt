@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -22,6 +23,9 @@ internal object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAccount(accountManager: AccountManager): Account? =
-        accountManager.getAccountsByType(ACCOUNT_TYPE).firstOrNull()
+    fun provideAccount(accountManager: AccountManager): Account? {
+        val account = accountManager.getAccountsByType(ACCOUNT_TYPE).firstOrNull()
+        Timber.i("  ## account : $account")
+        return account
+    }
 }
