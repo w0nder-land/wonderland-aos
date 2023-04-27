@@ -7,5 +7,5 @@ internal class AppRemoteDataSourceImpl @Inject constructor(
     private val appService: AppService
 ) : AppRemoteDataSource {
 
-    override suspend fun checkServer() = appService.checkServer().mapper()
+    override suspend fun checkServer() = appService.checkServer().data.mapper()
 }

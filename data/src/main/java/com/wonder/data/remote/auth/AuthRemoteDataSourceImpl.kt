@@ -12,5 +12,5 @@ internal class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun signInKakao(token: String): UserAuthInfo =
         authService.signInKakao(
             signInKakaoRequest = SignInKakaoRequest(token)
-        ).mapper()
+        ).data.mapper()
 }
