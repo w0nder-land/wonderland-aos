@@ -1,6 +1,6 @@
 package com.wonder.domain.usecase.festival
 
-import com.wonder.domain.model.Festival
+import com.wonder.domain.model.festival.Festival
 import com.wonder.domain.repository.FestivalRepository
 import com.wonder.domain.usecase.UseCase
 import javax.inject.Inject

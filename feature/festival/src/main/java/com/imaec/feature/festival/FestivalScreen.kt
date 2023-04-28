@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -28,10 +30,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
+import com.imaec.feature.festival.item.FestivalCastingItemView
 import com.imaec.feature.festival.item.FestivalDetailInfoItemView
-import com.imaec.feature.festival.item.FestivalGuestItemView
 import com.imaec.feature.festival.item.FestivalInfoItemView
-import com.imaec.feature.festival.item.FestivalRecommendItemView
+import com.imaec.feature.festival.item.FestivalTitleItemView
+import com.imaec.feature.festival.vm.FestivalEvent
+import com.imaec.feature.festival.vm.FestivalState
 import com.imaec.feature.festival.vm.FestivalViewModel
 import com.wonder.component.theme.Caption1
 import com.wonder.component.theme.Gray500
@@ -48,8 +54,8 @@ import com.wonder.component.ui.topbar.CollapsingTopBar
 import com.wonder.component.ui.topbar.TopBar
 import com.wonder.component.ui.topbar.TopBarIcon
 import com.wonder.component.ui.topbar.platCollapsedScrollBehavior
+import com.wonder.domain.model.festival.FestivalDetail
 import com.wonder.resource.R
-import timber.log.Timber
 
 @Composable
 internal fun FestivalView(
@@ -58,9 +64,12 @@ internal fun FestivalView(
 ) {
     BackHandler { onBack() }
 
-    Timber.i("  ## festivalId : ${festivalViewModel.festivalId}")
+    LaunchedEffect(Unit) {
+        festivalViewModel.processEvent(FestivalEvent.GetFestival)
+    }
 
     FestivalScreen(
+        festivalState = festivalViewModel.states.collectAsStateWithLifecycle().value,
         onBackClick = onBack
     )
 }
@@ -68,9 +77,12 @@ internal fun FestivalView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FestivalScreen(
+    festivalState: FestivalState,
     onBackClick: () -> Unit,
 ) {
     val scrollBehavior = platCollapsedScrollBehavior(rememberTopAppBarState())
+
+    if (festivalState.isLoading || festivalState.festival == null) return
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -91,9 +103,12 @@ private fun FestivalScreen(
                     Image(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .aspectRatio(1f)
                             .background(Gray900),
-                        painter = painterResource(id = R.drawable.img_sample_festival),
-                        contentScale = ContentScale.FillWidth,
+                        painter = rememberAsyncImagePainter(
+                            model = festivalState.festival.thumbNailUrl
+                        ),
+                        contentScale = ContentScale.Crop,
                         contentDescription = null
                     )
                 }
@@ -101,18 +116,22 @@ private fun FestivalScreen(
         },
         content = { padding ->
             FestivalContent(
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
+                festival = festivalState.festival
             )
         },
         bottomBar = {
-            FestivalBottomBar()
+            FestivalBottomBar(
+                festival = festivalState.festival
+            )
         }
     )
 }
 
 @Composable
 private fun FestivalContent(
-    modifier: Modifier
+    modifier: Modifier,
+    festival: FestivalDetail,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -120,29 +139,48 @@ private fun FestivalContent(
         verticalArrangement = Arrangement.spacedBy(48.dp)
     ) {
         item {
-            FestivalTitleItemView()
+            FestivalTitleItemView(
+                festivalName = festival.festivalName,
+                festivalDescription = festival.description
+            )
         }
 
         item {
-            FestivalInfoItemView()
+            FestivalInfoItemView(
+                startDate = festival.startDate,
+                endDate = festival.endDate,
+                location = festival.location,
+                runningTime = festival.runningTime,
+                age = festival.age,
+                links = festival.links,
+                ticketingDate = festival.ticketingDate,
+                ticketingItems = festival.ticketingItems
+            )
         }
 
         item {
-            FestivalGuestItemView()
+            FestivalCastingItemView(
+                castings = festival.castings
+            )
         }
 
         item {
-            FestivalDetailInfoItemView()
+            FestivalDetailInfoItemView(
+                images = festival.images
+            )
         }
 
-        item {
-            FestivalRecommendItemView()
-        }
+        // TODO : 추후 추가 예정
+//        item {
+//            FestivalRecommendItemView()
+//        }
     }
 }
 
 @Composable
-private fun FestivalBottomBar() {
+private fun FestivalBottomBar(
+    festival: FestivalDetail,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -160,8 +198,14 @@ private fun FestivalBottomBar() {
             ) {
                 Icon(
                     modifier = Modifier.size(26.dp),
-                    painter = painterResource(id = R.drawable.ic_heart_fill),
-                    tint = Wonder500,
+                    painter = painterResource(
+                        id = if (festival.isLiked) {
+                            R.drawable.ic_heart_fill
+                        } else {
+                            R.drawable.ic_heart
+                        }
+                    ),
+                    tint = if (festival.isLiked) Wonder500 else White,
                     contentDescription = null
                 )
 
@@ -200,6 +244,7 @@ private fun FestivalBottomBar() {
 private fun FestivalScreenPreview() {
     WonderTheme {
         FestivalScreen(
+            festivalState = FestivalState(),
             onBackClick = {}
         )
     }

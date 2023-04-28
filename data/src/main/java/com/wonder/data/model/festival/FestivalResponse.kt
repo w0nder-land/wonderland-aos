@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 import com.wonder.data.model.DataResponse
 import com.wonder.data.model.mapper.DataToDomainMapper
 import com.wonder.data.model.mapper.mapper
-import com.wonder.domain.model.Age
-import com.wonder.domain.model.Category
-import com.wonder.domain.model.Festival
-import com.wonder.domain.model.FestivalItem
-import com.wonder.domain.model.FilterItems
-import com.wonder.domain.model.Page
-import com.wonder.domain.model.Region
-import com.wonder.domain.model.State
+import com.wonder.domain.model.festival.Age
+import com.wonder.domain.model.festival.Category
+import com.wonder.domain.model.festival.Festival
+import com.wonder.domain.model.festival.FestivalItem
+import com.wonder.domain.model.festival.FilterItems
+import com.wonder.domain.model.festival.Page
+import com.wonder.domain.model.festival.Region
+import com.wonder.domain.model.festival.State
 
 /**
  * 축제 검색 응답 데이터

@@ -1,6 +1,6 @@
 package com.imaec.model.festival
 
-import com.wonder.domain.model.FestivalItem
+import com.wonder.domain.model.festival.FestivalItem
 
 data class FestivalItemVo(
     val festivalId: Int,

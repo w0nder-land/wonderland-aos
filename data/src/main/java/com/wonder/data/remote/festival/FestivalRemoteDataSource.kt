@@ -1,6 +1,7 @@
 package com.wonder.data.remote.festival
 
-import com.wonder.domain.model.Festival
+import com.wonder.domain.model.festival.Festival
+import com.wonder.domain.model.festival.FestivalDetail
 
 internal interface FestivalRemoteDataSource {
 
@@ -14,4 +15,6 @@ internal interface FestivalRemoteDataSource {
         page: Int?,
         size: Int?,
     ): Festival
+
+    suspend fun getFestival(festivalId: Int): FestivalDetail
 }

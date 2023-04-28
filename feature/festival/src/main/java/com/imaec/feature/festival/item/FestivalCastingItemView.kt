@@ -8,25 +8,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.wonder.component.theme.Body2
 import com.wonder.component.theme.Gray100
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Heading2
 import com.wonder.component.theme.WonderTheme
-import com.wonder.resource.R
+import com.wonder.domain.model.festival.FestivalDetailCasting
 
 @Composable
-internal fun FestivalGuestItemView() {
+internal fun FestivalCastingItemView(
+    castings: List<FestivalDetailCasting>
+) {
+    if (castings.isEmpty()) return
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
             modifier = Modifier.padding(start = 20.dp),
@@ -39,15 +44,15 @@ internal fun FestivalGuestItemView() {
             contentPadding = PaddingValues(horizontal = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            items(10) {
-                FestivalGuestProfileView()
+            items(castings) { casting ->
+                FestivalCastingProfileView(casting = casting)
             }
         }
     }
 }
 
 @Composable
-private fun FestivalGuestProfileView() {
+private fun FestivalCastingProfileView(casting: FestivalDetailCasting) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
@@ -55,14 +60,14 @@ private fun FestivalGuestProfileView() {
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape),
-            painter = painterResource(id = R.drawable.img_sample_guest_1),
+            painter = rememberAsyncImagePainter(model = casting.imageUrl),
             contentScale = ContentScale.Crop,
             contentDescription = null
         )
 
         Text(
             modifier = Modifier.width(80.dp),
-            text = "다운",
+            text = casting.name,
             style = Body2,
             color = Gray200,
             textAlign = TextAlign.Center
@@ -72,8 +77,10 @@ private fun FestivalGuestProfileView() {
 
 @Preview
 @Composable
-private fun FestivalGuestItemViewPreview() {
+private fun FestivalCastingItemViewPreview() {
     WonderTheme {
-        FestivalGuestItemView()
+        FestivalCastingItemView(
+            castings = emptyList()
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.imaec.feature.festival
+package com.imaec.feature.festival.item
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,13 +19,16 @@ import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
 
 @Composable
-internal fun FestivalTitleItemView() {
+internal fun FestivalTitleItemView(
+    festivalName: String,
+    festivalDescription: String?,
+) {
     Column(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Haus of Wonder",
+            text = festivalName,
             style = TextStyle(
                 fontFamily = Suit,
                 fontWeight = FontWeight.W700,
@@ -38,12 +41,13 @@ internal fun FestivalTitleItemView() {
             color = White
         )
 
-        Text(
-            text = "국내외 최정상 뮤지션들이 참여하는 음악 페스티벌로 " +
-                "다양한 서비스를 선보이는 원더월이 개최하는 첫 음악 페스티벌이다.",
-            style = Body1,
-            color = Gray200
-        )
+        if (festivalDescription != null) {
+            Text(
+                text = festivalDescription,
+                style = Body1,
+                color = Gray200
+            )
+        }
     }
 }
 
@@ -51,6 +55,9 @@ internal fun FestivalTitleItemView() {
 @Composable
 private fun FestivalTitleItemViewPreview() {
     WonderTheme {
-        FestivalTitleItemView()
+        FestivalTitleItemView(
+            festivalName = "123",
+            festivalDescription = ""
+        )
     }
 }

@@ -1,6 +1,7 @@
 package com.wonder.domain.repository
 
-import com.wonder.domain.model.Festival
+import com.wonder.domain.model.festival.Festival
+import com.wonder.domain.model.festival.FestivalDetail
 
 interface FestivalRepository {
 
@@ -14,4 +15,6 @@ interface FestivalRepository {
         page: Int?,
         size: Int?,
     ): Festival
+
+    suspend fun getFestival(festivalId: Int): FestivalDetail
 }

@@ -1,4 +1,4 @@
-package com.wonder.domain.model
+package com.wonder.domain.model.festival
 
 data class Festival(
     val count: Int,

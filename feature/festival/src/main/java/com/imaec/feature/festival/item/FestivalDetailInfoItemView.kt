@@ -15,10 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.wonder.component.theme.Gray100
 import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Gray900
@@ -27,24 +27,44 @@ import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.resource.R
+import timber.log.Timber
 
 @Composable
-internal fun FestivalDetailInfoItemView() {
+internal fun FestivalDetailInfoItemView(
+    images: List<String>
+) {
+    if (images.isEmpty()) return
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
             modifier = Modifier.padding(start = 20.dp),
-            text = "출연진",
+            text = "상세정보",
             style = Heading2,
             color = Gray100
         )
 
         Box {
-            Image(
-                modifier = Modifier,
-                painter = painterResource(id = R.drawable.img_sample_festival_detail),
-                contentScale = ContentScale.FillWidth,
-                contentDescription = null
-            )
+            Column(modifier = Modifier.fillMaxWidth()) {
+                images.forEach { imageUrl ->
+                    Timber.i("  ## imageUrl : $imageUrl")
+                    Image(
+                        modifier = Modifier,
+                        painter = rememberAsyncImagePainter(
+                            model = imageUrl,
+                            onError = {
+                                Timber.i("  ## error : ${it.result.throwable.message}")
+                            },
+                            onLoading = {
+                                Timber.i("  ## loading : $it")
+                            },
+                            onSuccess = {
+                                Timber.i("  ## success : ${it.result}")
+                            }
+                        ),
+                        contentDescription = null
+                    )
+                }
+            }
 
             val colors = listOf(
                 Gray900.copy(alpha = 0f),
@@ -90,6 +110,8 @@ internal fun FestivalDetailInfoItemView() {
 @Composable
 private fun FestivalDetailInfoItemViewPreview() {
     WonderTheme {
-        FestivalDetailInfoItemView()
+        FestivalDetailInfoItemView(
+            images = listOf("1", "2")
+        )
     }
 }

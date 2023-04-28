@@ -1,7 +1,8 @@
 package com.wonder.data.repository
 
 import com.wonder.data.remote.festival.FestivalRemoteDataSource
-import com.wonder.domain.model.Festival
+import com.wonder.domain.model.festival.Festival
+import com.wonder.domain.model.festival.FestivalDetail
 import com.wonder.domain.repository.FestivalRepository
 import javax.inject.Inject
 
@@ -28,4 +29,7 @@ internal class FestivalRepositoryImpl @Inject constructor(
         page = page,
         size = size
     )
+
+    override suspend fun getFestival(festivalId: Int): FestivalDetail =
+        festivalRemoteDataSource.getFestival(festivalId)
 }
