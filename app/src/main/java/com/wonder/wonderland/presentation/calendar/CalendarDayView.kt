@@ -89,7 +89,9 @@ internal fun CalendarDayView(
         }
 
         Box {
-            festivalDays.forEachIndexed { index, festivalDay ->
+            festivalDays.filter {
+                it.order < 5
+            }.forEachIndexed { index, festivalDay ->
                 Box(
                     modifier = Modifier
                         .padding(
