@@ -9,6 +9,7 @@ import com.wonder.component.util.toDate
 import com.wonder.component.util.toDateString
 import com.wonder.domain.usecase.festival.SearchFestivalParam
 import com.wonder.domain.usecase.festival.SearchFestivalsUseCase
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,8 @@ internal class CalendarViewModel @Inject constructor(
             is CalendarResult.UpdateYearMonth -> {
                 state.copy(
                     isLoading = true,
-                    currentYearMonth = currentYearMonth
+                    currentYearMonth = currentYearMonth,
+                    calendarInfo = CalendarInfo()
                 )
             }
             else -> state

@@ -17,10 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
@@ -41,6 +41,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,6 +81,8 @@ import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.picker.WheelPicker
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.switch.WonderSwitch
+import com.wonder.component.util.month
+import com.wonder.component.util.year
 import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
@@ -92,6 +96,7 @@ import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @Composable
 internal fun CalendarView(
@@ -114,7 +119,10 @@ internal fun CalendarView(
     }
 
     LaunchedEffect(Unit) {
-        calendarViewModel.processEvent(CalendarEvent.GetCurrentYearMonth)
+        if (calendarState.currentYearMonth.isEmpty()) {
+            calendarViewModel.processEvent(CalendarEvent.GetCurrentYearMonth)
+        }
+
         calendarViewModel.effects.collect { effect ->
             when (effect) {
                 is CalendarEffect.MoveFestival -> onMoveFestival(effect.festivalId)
@@ -176,6 +184,7 @@ private fun CalendarScreen(
                             Box {
                                 CalendarContent(
                                     modifier = Modifier.padding(padding),
+                                    calendarGridState = calendarState.calendarGridState,
                                     calendarInfo = calendarState.calendarInfo,
                                     currentMonth = calendarState.currentYearMonth,
                                     onFestivalClick = onFestivalClick
@@ -272,12 +281,13 @@ private fun CalendarTopBar(
 @Composable
 private fun CalendarContent(
     modifier: Modifier,
+    calendarGridState: LazyGridState,
     calendarInfo: CalendarInfo,
     currentMonth: String,
     onFestivalClick: (festivalId: Int) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val lazyGridState = rememberLazyGridState()
+    val gridState = rememberSaveable(saver = LazyGridState.Saver) { calendarGridState }
     var scrollOffset by remember { mutableStateOf(0f) }
     val weeks = remember { mutableListOf("일", "월", "화", "수", "목", "금", "토") }
     val festivalDayWithOffsetItems = remember(currentMonth) {
@@ -297,17 +307,16 @@ private fun CalendarContent(
             )
         }
     }
-
-    LaunchedEffect(currentMonth) {
-        lazyGridState.scrollToItem(0)
-        festivalDayWithOffsetItems.clear()
-    }
+    val calendar = Calendar.getInstance()
+    val isCurrentYearMonth by rememberUpdatedState(
+        newValue = calendar.year() == calendarInfo.year && calendar.month() == calendarInfo.month
+    )
 
     Box {
         CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
             LazyVerticalGrid(
                 modifier = modifier,
-                state = lazyGridState,
+                state = gridState,
                 columns = GridCells.Fixed(7),
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
@@ -340,7 +349,7 @@ private fun CalendarContent(
                         festivalDays = day.festivalDays,
                         isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
                         isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
-                        isToday = calendarInfo.today == (index + 1),
+                        isToday = isCurrentYearMonth && calendarInfo.today == (index + 1),
                         onFestivalClick = onFestivalClick,
                         onStartOrSundayPositioned = onFestivalAdd,
                         onScrollOffsetChanged = {

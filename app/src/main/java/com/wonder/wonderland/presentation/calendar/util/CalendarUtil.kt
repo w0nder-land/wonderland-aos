@@ -27,7 +27,6 @@ internal suspend fun getCalendarInfo(
     // firstDayOfWeek : 현재 월의 첫 번째 요일
     // lastDayOfMonth : 현재 월의 마지막 날
     val month = calendar.month()
-    val today = calendar.dayOfMonth()
     calendar.set(Calendar.DAY_OF_MONTH, 1)
     val firstDayOfWeek = calendar.dayOfWeek()
     val lastDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -68,7 +67,9 @@ internal suspend fun getCalendarInfo(
     }
 
     return CalendarInfo(
-        today = today,
+        year = calendar.year(),
+        month = month,
+        today = Calendar.getInstance().dayOfMonth(),
         firstDayOfWeek = firstDayOfWeek,
         lastDayOfMonth = lastDayOfMonth,
         calendarDays = calendarDays,

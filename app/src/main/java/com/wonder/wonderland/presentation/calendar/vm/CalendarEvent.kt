@@ -11,4 +11,6 @@ internal sealed interface CalendarEvent : WonderEvent {
     data class UpdateCurrentYearMonth(val yearMonth: String) : CalendarEvent
 
     data class ClickFestival(val festivalId: Int) : CalendarEvent
+
+    object Dispose : CalendarEvent
 }
