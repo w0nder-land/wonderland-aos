@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,10 +23,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +43,8 @@ import com.imaec.feature.festival.item.FestivalTitleItemView
 import com.imaec.feature.festival.vm.FestivalEvent
 import com.imaec.feature.festival.vm.FestivalState
 import com.imaec.feature.festival.vm.FestivalViewModel
+import com.imaec.model.festival.FestivalDetailVo
+import com.imaec.model.festival.FestivalStateType
 import com.wonder.component.theme.Caption1
 import com.wonder.component.theme.Gray500
 import com.wonder.component.theme.Gray600
@@ -54,7 +60,7 @@ import com.wonder.component.ui.topbar.CollapsingTopBar
 import com.wonder.component.ui.topbar.TopBar
 import com.wonder.component.ui.topbar.TopBarIcon
 import com.wonder.component.ui.topbar.platCollapsedScrollBehavior
-import com.wonder.domain.model.festival.FestivalDetail
+import com.wonder.component.util.LaunchApp
 import com.wonder.resource.R
 
 @Composable
@@ -82,48 +88,64 @@ private fun FestivalScreen(
 ) {
     val scrollBehavior = platCollapsedScrollBehavior(rememberTopAppBarState())
 
-    if (festivalState.isLoading || festivalState.festival == null) return
-
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            CollapsingTopBar(
-                scrollBehavior = scrollBehavior,
-                topBarColor = Gray900,
-                topBar = {
-                    TopBar(
-                        rightIcon = TopBarIcon(
-                            iconRes = R.drawable.ic_share,
-                            onIconClick = {}
-                        ),
-                        onLeftIconClick = onBackClick
-                    )
-                },
-                content = {
-                    Image(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .background(Gray900),
-                        painter = rememberAsyncImagePainter(
-                            model = festivalState.festival.thumbNailUrl
-                        ),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null
-                    )
-                }
+            if (!festivalState.isLoading && festivalState.festival != null) {
+                CollapsingTopBar(
+                    scrollBehavior = scrollBehavior,
+                    topBarColor = Gray900,
+                    topBar = {
+                        TopBar(
+                            rightIcon = TopBarIcon(
+                                iconRes = R.drawable.ic_share,
+                                onIconClick = {}
+                            ),
+                            onLeftIconClick = onBackClick
+                        )
+                    },
+                    content = {
+                        Image(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f)
+                                .background(Gray900),
+                            painter = rememberAsyncImagePainter(
+                                model = festivalState.festival.thumbNailUrl,
+                                error = rememberAsyncImagePainter(
+                                    model = festivalState.festival.images.firstOrNull()
+                                )
+                            ),
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
+            TopBar(
+                rightIcon = TopBarIcon(
+                    iconRes = R.drawable.ic_share,
+                    onIconClick = {}
+                ),
+                onLeftIconClick = onBackClick
             )
         },
         content = { padding ->
-            FestivalContent(
-                modifier = Modifier.padding(padding),
-                festival = festivalState.festival
-            )
+            if (!festivalState.isLoading && festivalState.festival != null) {
+                FestivalContent(
+                    modifier = Modifier.padding(padding),
+                    festival = festivalState.festival
+                )
+            }
         },
         bottomBar = {
-            FestivalBottomBar(
-                festival = festivalState.festival
-            )
+            if (!festivalState.isLoading && festivalState.festival != null) {
+                FestivalBottomBar(
+                    festival = festivalState.festival
+                )
+            }
         }
     )
 }
@@ -131,7 +153,7 @@ private fun FestivalScreen(
 @Composable
 private fun FestivalContent(
     modifier: Modifier,
-    festival: FestivalDetail,
+    festival: FestivalDetailVo,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -153,21 +175,26 @@ private fun FestivalContent(
                 runningTime = festival.runningTime,
                 age = festival.age,
                 links = festival.links,
+                dDay = festival.dDay,
                 ticketingDate = festival.ticketingDate,
                 ticketingItems = festival.ticketingItems
             )
         }
 
-        item {
-            FestivalCastingItemView(
-                castings = festival.castings
-            )
+        if (festival.castings.isNotEmpty()) {
+            item {
+                FestivalCastingItemView(
+                    castings = festival.castings
+                )
+            }
         }
 
-        item {
-            FestivalDetailInfoItemView(
-                images = festival.images
-            )
+        if (festival.images.isNotEmpty()) {
+            item {
+                FestivalDetailInfoItemView(
+                    images = festival.images
+                )
+            }
         }
 
         // TODO : 추후 추가 예정
@@ -179,8 +206,22 @@ private fun FestivalContent(
 
 @Composable
 private fun FestivalBottomBar(
-    festival: FestivalDetail,
+    festival: FestivalDetailVo,
 ) {
+    val context = LocalContext.current
+    val buttonText by rememberUpdatedState(
+        newValue = if (festival.progressState == FestivalStateType.N) {
+            "종료된 공연입니다."
+        } else if (festival.bookingLinkUrl != null) {
+            "예매하기"
+        } else {
+            "예매링크가 없어요"
+        }
+    )
+    val isButtonEnabled by rememberUpdatedState(
+        newValue = festival.progressState != FestivalStateType.N && festival.bookingLinkUrl != null
+    )
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -221,16 +262,24 @@ private fun FestivalBottomBar(
                     .weight(1f)
                     .height(48.dp)
                     .background(
-                        color = Gray700,
+                        color = if (isButtonEnabled) White else Gray700,
                         shape = RoundedCornerShape(6.dp)
                     )
-                    .singleClick(shape = RoundedCornerShape(6.dp)) { }
+                    .singleClick(
+                        shape = RoundedCornerShape(6.dp),
+                        enabled = isButtonEnabled
+                    ) {
+                        LaunchApp.launchBrowser(
+                            context = context,
+                            url = festival.bookingLinkUrl ?: return@singleClick
+                        )
+                    }
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "예매링크가 없어요",
+                    text = buttonText,
                     style = Subtitle2,
-                    color = Gray500
+                    color = if (isButtonEnabled) Gray900 else Gray500
                 )
             }
         }

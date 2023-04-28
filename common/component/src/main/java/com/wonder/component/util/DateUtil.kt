@@ -4,10 +4,22 @@ import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 fun getCurrentYearMonth(): String {
     val calendar = Calendar.getInstance()
     return "${calendar[Calendar.YEAR]}년 ${calendar[Calendar.MONTH] + 1}월"
+}
+
+/**
+ * firstDate - secondDate
+ */
+@Suppress("SimpleDateFormat")
+fun getDiffDay(firstDate: Date, secondDate: Date): Int {
+    val sdf = SimpleDateFormat("yyyyMMdd")
+    val formattedFirstDate = sdf.format(firstDate).toDate("yyyyMMdd")
+    val formattedSecondDate = sdf.format(secondDate).toDate("yyyyMMdd")
+    return ((formattedFirstDate.time - formattedSecondDate.time) / (24 * 60 * 60 * 1000)).toInt()
 }
 
 fun Int.dayOfWeekToString() = when (this) {
@@ -66,5 +78,5 @@ fun Calendar.addDayOfMonth(amount: Int): Calendar = apply {
 }
 
 @SuppressLint("SimpleDateFormat")
-fun String.toDate(pattern: String = "yyyyMMdd"): Date =
-    SimpleDateFormat(pattern).parse(this) ?: Date()
+fun String.toDate(pattern: String = "yyyyMMdd", locale: Locale = Locale.KOREA): Date =
+    SimpleDateFormat(pattern, locale).parse(this) ?: Date()

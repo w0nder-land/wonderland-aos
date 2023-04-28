@@ -24,7 +24,7 @@ fun NavGraphBuilder.homeScreen(
 
         HomeView(
             mainViewModel = mainViewModel,
-            onFestivalClick = { navController.navigateToFestival() }
+            onFestivalClick = { navController.navigateToFestival(festivalId = 310) }
         )
     }
 }

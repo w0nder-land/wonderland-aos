@@ -9,5 +9,6 @@ android {
 }
 
 dependencies {
+    implementation(project(Module.CommonComponent))
     implementation(project(Module.Domain))
 }

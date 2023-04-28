@@ -1,6 +1,7 @@
 package com.imaec.feature.festival.vm
 
 import androidx.lifecycle.SavedStateHandle
+import com.imaec.model.festival.toVo
 import com.wonder.base.WonderViewModel
 import com.wonder.domain.usecase.festival.GetFestivalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,7 @@ internal class FestivalViewModel @Inject constructor(
 
     private fun Flow<FestivalEvent.GetFestival>.toGetFestivalResult(): Flow<FestivalResult> =
         mapLatest {
-            val festivalDetail = getFestivalUseCase(festivalId)
+            val festivalDetail = getFestivalUseCase(festivalId).toVo()
             FestivalResult.Festival(festivalDetail)
         }
 }

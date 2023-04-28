@@ -19,19 +19,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.imaec.model.festival.FestivalDetailCastingVo
 import com.wonder.component.theme.Body2
 import com.wonder.component.theme.Gray100
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Heading2
 import com.wonder.component.theme.WonderTheme
-import com.wonder.domain.model.festival.FestivalDetailCasting
 
 @Composable
 internal fun FestivalCastingItemView(
-    castings: List<FestivalDetailCasting>
+    castings: List<FestivalDetailCastingVo>
 ) {
-    if (castings.isEmpty()) return
-
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Text(
             modifier = Modifier.padding(start = 20.dp),
@@ -52,7 +50,7 @@ internal fun FestivalCastingItemView(
 }
 
 @Composable
-private fun FestivalCastingProfileView(casting: FestivalDetailCasting) {
+private fun FestivalCastingProfileView(casting: FestivalDetailCastingVo) {
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {

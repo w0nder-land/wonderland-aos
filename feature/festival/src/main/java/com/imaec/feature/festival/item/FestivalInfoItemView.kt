@@ -20,9 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.imaec.model.festival.FestivalAgeType
+import com.imaec.model.festival.FestivalDetailLinkVo
+import com.imaec.model.festival.FestivalDetailTicketingVo
 import com.wonder.component.theme.Body1
 import com.wonder.component.theme.Body2
 import com.wonder.component.theme.Caption1
@@ -35,8 +39,8 @@ import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.divider.HorizontalDivider
-import com.wonder.domain.model.festival.FestivalDetailLink
-import com.wonder.domain.model.festival.FestivalDetailTicketing
+import com.wonder.component.ui.singleClick
+import com.wonder.component.util.LaunchApp
 import com.wonder.resource.R
 
 @Composable
@@ -45,10 +49,11 @@ internal fun FestivalInfoItemView(
     endDate: String,
     location: String?,
     runningTime: Int?,
-    age: String,
-    links: List<FestivalDetailLink>,
+    age: FestivalAgeType?,
+    links: List<FestivalDetailLinkVo>,
+    dDay: String?,
     ticketingDate: String?,
-    ticketingItems: List<FestivalDetailTicketing>
+    ticketingItems: List<FestivalDetailTicketingVo>
 ) {
     val infoItems = mutableListOf<FestivalInfo>()
     infoItems.add(
@@ -73,20 +78,15 @@ internal fun FestivalInfoItemView(
             )
         )
     }
-    infoItems.add(
-        FestivalInfo(
-            title = "관람연령",
-            content = age
-        )
-    )
-    if (links.isNotEmpty()) {
+    if (age != null) {
         infoItems.add(
             FestivalInfo(
-                title = "공식",
-                content = links.joinToString(" | ") { it.linkType }
+                title = "관람연령",
+                content = age.title
             )
         )
     }
+
     Column(
         modifier = Modifier.padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -118,9 +118,51 @@ internal fun FestivalInfoItemView(
                     )
                 }
             }
+
+            if (links.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.height(24.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.width(80.dp),
+                        text = "공식",
+                        style = Subtitle2,
+                        color = Gray100
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        val context = LocalContext.current
+                        links.forEachIndexed { index, festivalLink ->
+                            festivalLink.linkType?.let { festivalLinkType ->
+                                Text(
+                                    modifier = Modifier.singleClick(hasRipple = false) {
+                                        LaunchApp.launchBrowser(context, festivalLink.linkUrl)
+                                    },
+                                    text = festivalLinkType.title,
+                                    style = Body1,
+                                    color = Gray200
+                                )
+
+                                if (index != links.lastIndex) {
+                                    Divider(
+                                        modifier = Modifier.size(width = 1.dp, height = 13.dp),
+                                        color = Gray600
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         FestivalInfoTicketView(
+            dDay = dDay,
             ticketingDate = ticketingDate,
             ticketingItems = ticketingItems
         )
@@ -129,8 +171,9 @@ internal fun FestivalInfoItemView(
 
 @Composable
 private fun FestivalInfoTicketView(
+    dDay: String?,
     ticketingDate: String?,
-    ticketingItems: List<FestivalDetailTicketing>,
+    ticketingItems: List<FestivalDetailTicketingVo>,
 ) {
     ticketingDate ?: return
 
@@ -155,19 +198,21 @@ private fun FestivalInfoTicketView(
                 color = Gray100
             )
 
-            Text(
-                modifier = Modifier
-                    .padding(start = 6.dp)
-                    .border(
-                        width = 1.dp,
-                        color = Wonder500,
-                        shape = CircleShape
-                    )
-                    .padding(horizontal = 6.dp, vertical = 2.dp),
-                text = "D-24",
-                style = Caption1,
-                color = Wonder500
-            )
+            if (dDay != null) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 6.dp)
+                        .border(
+                            width = 1.dp,
+                            color = Wonder500,
+                            shape = CircleShape
+                        )
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
+                    text = dDay,
+                    style = Caption1,
+                    color = Wonder500
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -179,6 +224,7 @@ private fun FestivalInfoTicketView(
         }
 
         if (ticketingItems.isNotEmpty()) {
+            val context = LocalContext.current
             Column(
                 modifier = Modifier
                     .padding(top = 60.dp)
@@ -194,6 +240,9 @@ private fun FestivalInfoTicketView(
                 ) {
                     ticketingItems.forEachIndexed { index, festivalDetailTicketing ->
                         Row(
+                            modifier = Modifier.singleClick(hasRipple = false) {
+                                LaunchApp.launchBrowser(context, festivalDetailTicketing.linkUrl)
+                            },
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
@@ -213,10 +262,8 @@ private fun FestivalInfoTicketView(
 
                         if (index < ticketingItems.lastIndex) {
                             Divider(
-                                modifier = Modifier
-                                    .width(1.dp)
-                                    .height(13.dp)
-                                    .background(Gray600)
+                                modifier = Modifier.size(width = 1.dp, height = 13.dp),
+                                color = Gray600
                             )
                         }
                     }
@@ -242,8 +289,9 @@ private fun FestivalInfoItemViewPreview() {
             endDate = "2023.04.26(수)",
             location = "일산 킨텍스 제2전시관 7,8홀",
             runningTime = 100,
-            age = "전체관람가",
+            age = FestivalAgeType.GR001,
             links = emptyList(),
+            dDay = "D-24",
             ticketingDate = "2023.03.20(목)",
             ticketingItems = emptyList()
         )
