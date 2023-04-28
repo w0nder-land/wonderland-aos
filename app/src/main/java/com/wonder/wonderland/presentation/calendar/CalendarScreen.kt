@@ -87,6 +87,7 @@ import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.model.FestivalDay
 import com.wonder.wonderland.presentation.calendar.model.FestivalDayWithOffset
+import com.wonder.wonderland.presentation.calendar.vm.CalendarEffect
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
@@ -97,6 +98,7 @@ internal fun CalendarView(
     mainViewModel: MainViewModel,
     calendarViewModel: CalendarViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
+    onMoveFestival: (festivalId: Int) -> Unit,
 ) {
     val calendarState = calendarViewModel.states.collectAsStateWithLifecycle().value
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -113,6 +115,11 @@ internal fun CalendarView(
 
     LaunchedEffect(Unit) {
         calendarViewModel.processEvent(CalendarEvent.GetCurrentYearMonth)
+        calendarViewModel.effects.collect { effect ->
+            when (effect) {
+                is CalendarEffect.MoveFestival -> onMoveFestival(effect.festivalId)
+            }
+        }
     }
 
     LaunchedEffect(calendarState.currentYearMonth) {
@@ -128,6 +135,9 @@ internal fun CalendarView(
         drawerState = drawerState,
         onSelectYearMonth = { yearMonth ->
             calendarViewModel.processEvent(CalendarEvent.UpdateCurrentYearMonth(yearMonth))
+        },
+        onFestivalClick = { festivalId ->
+            calendarViewModel.processEvent(CalendarEvent.ClickFestival(festivalId))
         }
     )
 }
@@ -137,6 +147,7 @@ private fun CalendarScreen(
     calendarState: CalendarState,
     drawerState: DrawerState,
     onSelectYearMonth: (yearMonth: String) -> Unit,
+    onFestivalClick: (festivalId: Int) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -167,6 +178,7 @@ private fun CalendarScreen(
                                     modifier = Modifier.padding(padding),
                                     calendarInfo = calendarState.calendarInfo,
                                     currentMonth = calendarState.currentYearMonth,
+                                    onFestivalClick = onFestivalClick
                                 )
 
                                 CalendarFilterView(
@@ -262,6 +274,7 @@ private fun CalendarContent(
     modifier: Modifier,
     calendarInfo: CalendarInfo,
     currentMonth: String,
+    onFestivalClick: (festivalId: Int) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val lazyGridState = rememberLazyGridState()
@@ -315,6 +328,7 @@ private fun CalendarContent(
                         festivalDays = day.festivalDays,
                         isSunday = index == 0,
                         isCurrentMonth = false,
+                        onFestivalClick = onFestivalClick,
                         onStartOrSundayPositioned = onFestivalAdd
                     )
                 }
@@ -327,6 +341,7 @@ private fun CalendarContent(
                         isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
                         isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
                         isToday = calendarInfo.today == (index + 1),
+                        onFestivalClick = onFestivalClick,
                         onStartOrSundayPositioned = onFestivalAdd,
                         onScrollOffsetChanged = {
                             scrollOffset = it
@@ -342,6 +357,7 @@ private fun CalendarContent(
                         isSunday = false,
                         isSaturday = index == calendarInfo.afterMonthDayCount - 1,
                         isCurrentMonth = false,
+                        onFestivalClick = onFestivalClick,
                         onStartOrSundayPositioned = onFestivalAdd
                     )
                 }
@@ -578,7 +594,8 @@ private fun CalendarScreenPreview() {
                 )
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-            onSelectYearMonth = {}
+            onSelectYearMonth = {},
+            onFestivalClick = {}
         )
     }
 }
@@ -616,7 +633,8 @@ private fun CalendarScreenDrawerPreview() {
                 )
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
-            onSelectYearMonth = {}
+            onSelectYearMonth = {},
+            onFestivalClick = {}
         )
     }
 }

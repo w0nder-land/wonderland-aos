@@ -13,4 +13,6 @@ internal sealed interface CalendarResult : WonderResult {
     data class CurrentCalendar(val calendarInfo: CalendarInfo) : CalendarResult
 
     data class UpdateYearMonth(val currentYearMonth: String) : CalendarResult
+
+    data class ClickFestival(val festivalId: Int) : CalendarResult
 }

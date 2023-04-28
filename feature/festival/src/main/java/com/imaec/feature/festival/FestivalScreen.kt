@@ -49,6 +49,7 @@ import com.wonder.component.ui.topbar.TopBar
 import com.wonder.component.ui.topbar.TopBarIcon
 import com.wonder.component.ui.topbar.platCollapsedScrollBehavior
 import com.wonder.resource.R
+import timber.log.Timber
 
 @Composable
 internal fun FestivalView(
@@ -56,6 +57,8 @@ internal fun FestivalView(
     onBack: () -> Unit
 ) {
     BackHandler { onBack() }
+
+    Timber.i("  ## festivalId : ${festivalViewModel.festivalId}")
 
     FestivalScreen(
         onBackClick = onBack

@@ -1,6 +1,5 @@
 package com.wonder.wonderland.presentation.calendar.vm
 
-import com.imaec.model.FestivalInfo
 import com.imaec.model.festival.toVo
 import com.wonder.base.WonderViewModel
 import com.wonder.component.util.addMonth
@@ -29,7 +28,8 @@ internal class CalendarViewModel @Inject constructor(
     override fun Flow<CalendarEvent>.toResults(): Flow<CalendarResult> = merge(
         filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
         filterIsInstance<CalendarEvent.SearchFestivals>().toSearchFestivalsResult(),
-        filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult()
+        filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult(),
+        filterIsInstance<CalendarEvent.ClickFestival>().toClickFestivalResult()
     )
 
     override fun CalendarResult.reduce(state: CalendarState): CalendarState {
@@ -52,8 +52,13 @@ internal class CalendarViewModel @Inject constructor(
                     currentYearMonth = currentYearMonth
                 )
             }
+            else -> state
         }
     }
+
+    override fun Flow<CalendarResult>.toEffects(): Flow<CalendarEffect> = merge(
+        filterIsInstance<CalendarResult.ClickFestival>().toClickFestivalEffect()
+    )
 
     private fun Flow<CalendarEvent.GetCurrentYearMonth>.toGetCurrentYearMonthResult(): Flow<CalendarResult> =
         mapLatest {
@@ -89,6 +94,11 @@ internal class CalendarViewModel @Inject constructor(
             CalendarResult.UpdateYearMonth(currentYearMonth = it.yearMonth)
         }
 
+    private fun Flow<CalendarEvent.ClickFestival>.toClickFestivalResult(): Flow<CalendarResult> =
+        mapLatest {
+            CalendarResult.ClickFestival(festivalId = it.festivalId)
+        }
+
     private val yearMonthRange = 2000
     private fun getYearMonthItems(): List<String> {
         val monthItems = mutableListOf<String>()
@@ -101,103 +111,8 @@ internal class CalendarViewModel @Inject constructor(
         return monthItems
     }
 
-    private fun getFestivals(): List<FestivalInfo> {
-        return listOf(
-            FestivalInfo(
-                name = "0",
-                startDate = "2023.02.26",
-                endDate = "2023.03.04"
-            ),
-            FestivalInfo(
-                name = "1",
-                startDate = "2023.04.01",
-                endDate = "2023.04.02"
-            ),
-            FestivalInfo(
-                name = "2",
-                startDate = "2023.04.01",
-                endDate = "2023.04.6"
-            ),
-            FestivalInfo(
-                name = "3",
-                startDate = "2023.04.1",
-                endDate = "2023.04.4"
-            ),
-            FestivalInfo(
-                name = "4",
-                startDate = "2023.04.1",
-                endDate = "2023.04.5"
-            ),
-            FestivalInfo(
-                name = "5",
-                startDate = "2023.04.1",
-                endDate = "2023.04.3"
-            ),
-            FestivalInfo(
-                name = "6",
-                startDate = "2023.04.1",
-                endDate = "2023.04.1"
-            ),
-            FestivalInfo(
-                name = "7",
-                startDate = "2023.04.13",
-                endDate = "2023.04.17"
-            ),
-            FestivalInfo(
-                name = "8",
-                startDate = "2023.04.20",
-                endDate = "2023.04.21"
-            ),
-            FestivalInfo(
-                name = "9",
-                startDate = "2023.04.15",
-                endDate = "2023.04.20"
-            ),
-            FestivalInfo(
-                name = "10",
-                startDate = "2023.04.19",
-                endDate = "2023.04.24"
-            ),
-            FestivalInfo(
-                name = "11",
-                startDate = "2023.04.1",
-                endDate = "2023.04.14"
-            ),
-            FestivalInfo(
-                name = "12",
-                startDate = "2023.04.3",
-                endDate = "2023.04.7"
-            ),
-            FestivalInfo(
-                name = "13",
-                startDate = "2023.04.26",
-                endDate = "2023.04.26"
-            ),
-            FestivalInfo(
-                name = "14",
-                startDate = "2023.04.23",
-                endDate = "2023.04.23"
-            ),
-            FestivalInfo(
-                name = "15",
-                startDate = "2023.04.24",
-                endDate = "2023.04.24"
-            ),
-            FestivalInfo(
-                name = "16",
-                startDate = "2023.04.25",
-                endDate = "2023.04.25"
-            ),
-            FestivalInfo(
-                name = "17",
-                startDate = "2023.03.28",
-                endDate = "2023.04.1"
-            ),
-            FestivalInfo(
-                name = "18",
-                startDate = "2023.02.28",
-                endDate = "2023.03.1"
-            ),
-        )
-    }
+    private fun Flow<CalendarResult.ClickFestival>.toClickFestivalEffect(): Flow<CalendarEffect> =
+        mapLatest {
+            CalendarEffect.MoveFestival(it.festivalId)
+        }
 }

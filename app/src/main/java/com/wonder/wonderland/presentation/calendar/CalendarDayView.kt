@@ -35,6 +35,7 @@ import com.wonder.component.theme.WonderBlue
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.theme.WonderYellow
 import com.wonder.component.ui.divider.HorizontalDivider
+import com.wonder.component.ui.singleClick
 import com.wonder.wonderland.presentation.calendar.model.FestivalDay
 
 @Composable
@@ -46,6 +47,7 @@ internal fun CalendarDayView(
     isSaturday: Boolean = false,
     isToday: Boolean = false,
     isCurrentMonth: Boolean = true,
+    onFestivalClick: (festivalId: Int) -> Unit,
     onStartOrSundayPositioned: (festivalDay: FestivalDay, offset: Offset) -> Unit,
     onScrollOffsetChanged: (scrollOffset: Float) -> Unit = {},
 ) {
@@ -134,6 +136,7 @@ internal fun CalendarDayView(
                                 )
                             )
                         )
+                        .singleClick { onFestivalClick(festivalDay.festivalId) }
                         .onGloballyPositioned { coordinates ->
                             if (festivalDay.isStartDay || isSunday) {
                                 onStartOrSundayPositioned(
@@ -198,6 +201,7 @@ private fun CalendarDayViewPreview() {
                 )
             ),
             isSunday = false,
+            onFestivalClick = {},
             onStartOrSundayPositioned = { _, _ -> }
         )
     }

@@ -7,6 +7,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.composable
+import com.imaec.feature.festival.navigateToFestival
 import com.wonder.component.navigation.Navigate
 import com.wonder.wonderland.presentation.MainViewModel
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
@@ -26,7 +27,8 @@ fun NavGraphBuilder.calendarScreen(
         CalendarView(
             mainViewModel = mainViewModel,
             calendarViewModel = calendarViewModel,
-            onBackClick = { mainNavController.popBackStack() }
+            onBackClick = mainNavController::popBackStack,
+            onMoveFestival = navController::navigateToFestival
         )
     }
 }
