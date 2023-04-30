@@ -10,6 +10,7 @@ android {
 }
 
 dependencies {
+    implementation(project(Module.CommonModel))
     implementation(project(Module.Domain))
 
     KotlinConfig.run {

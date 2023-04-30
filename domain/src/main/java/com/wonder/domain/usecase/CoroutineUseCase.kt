@@ -2,10 +2,26 @@ package com.wonder.domain.usecase
 
 abstract class UseCase<in P, R> {
 
-    suspend operator fun invoke(parameters: P): R = execute(parameters)
+    suspend operator fun invoke(parameters: P): R? = try {
+        execute(parameters)
+    } catch (e: Exception) {
+        null
+    }
 
     @Throws(RuntimeException::class)
     protected abstract suspend fun execute(parameters: P): R
+}
+
+abstract class NoParamUseCase<R> {
+
+    suspend operator fun invoke(): R? = try {
+        execute()
+    } catch (e: Exception) {
+        null
+    }
+
+    @Throws(RuntimeException::class)
+    protected abstract suspend fun execute(): R
 }
 
 abstract class ResultUseCase<in P, R> {
@@ -35,14 +51,6 @@ abstract class ResultNoParamUseCase<R> {
             Result.Exception(e)
         }
     }
-
-    @Throws(RuntimeException::class)
-    protected abstract suspend fun execute(): R
-}
-
-abstract class NoParamUseCase<R> {
-
-    suspend operator fun invoke(): R = execute()
 
     @Throws(RuntimeException::class)
     protected abstract suspend fun execute(): R

@@ -43,4 +43,11 @@ internal sealed interface CalendarResult : WonderResult {
         val regionFilters: List<CalendarFilter>,
         val ageFilters: List<CalendarFilter>
     ) : CalendarResult
+
+    data class Error(
+        val categoryFilters: List<CalendarFilter>,
+        val stateFilters: List<CalendarFilter>,
+        val regionFilters: List<CalendarFilter>,
+        val ageFilters: List<CalendarFilter>
+    ) : CalendarResult
 }

@@ -3,6 +3,7 @@ package com.wonder.feature.splash.vm
 import com.wonder.base.WonderViewModel
 import com.wonder.domain.usecase.CheckServerUseCase
 import com.wonder.domain.usecase.auth.IsLoginUseCase
+import com.wonder.domain.usecase.successOr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
@@ -29,7 +30,7 @@ internal class SplashViewModel @Inject constructor(
     private fun Flow<SplashEvent.CheckServer>.toCheckServerResult(): Flow<SplashResult> =
         mapLatest {
             checkServerUseCase()
-            val isLogin = isLoginUseCase()
+            val isLogin = isLoginUseCase().successOr(false)
             SplashResult.SuccessCheckServer(isLogin)
         }
 

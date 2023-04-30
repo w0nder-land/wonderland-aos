@@ -36,6 +36,7 @@ import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Suit
 import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.util.showMessage
 import com.wonder.component.util.snackbarState
 import com.wonder.wonderland.presentation.calendar.calendarScreen
 import com.wonder.wonderland.presentation.home.homeScreen
@@ -47,6 +48,12 @@ fun MainView(
     mainViewModel: MainViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
+    LaunchedEffect(Unit) {
+        mainViewModel.networkErrorEvent.collect {
+            showMessage(it)
+        }
+    }
+
     MainScreen(
         navController = navController,
         currentDestination = mainViewModel.currentNavigation.collectAsStateWithLifecycle().value,

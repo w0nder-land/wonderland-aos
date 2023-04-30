@@ -130,6 +130,17 @@ internal fun CalendarView(
         )
     }
 
+    LaunchedEffect(calendarState.hasError) {
+        if (calendarState.hasError) {
+            calendarViewModel.processEvent(
+                event = CalendarEvent.SearchFestivals(
+                    isLoading = calendarState.calendarInfo.calendarDays.isEmpty(),
+                    yearMonth = calendarState.currentYearMonth
+                )
+            )
+        }
+    }
+
     CalendarScreen(
         calendarState = calendarState,
         drawerState = drawerState,

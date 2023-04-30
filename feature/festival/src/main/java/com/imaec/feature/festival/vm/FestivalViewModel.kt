@@ -32,12 +32,14 @@ internal class FestivalViewModel @Inject constructor(
                     festival = festival
                 )
             }
+            FestivalResult.Error -> state.copy(hasError = true)
         }
     }
 
     private fun Flow<FestivalEvent.GetFestival>.toGetFestivalResult(): Flow<FestivalResult> =
         mapLatest {
-            val festivalDetail = getFestivalUseCase(festivalId).toVo()
+            val festivalDetail = getFestivalUseCase(festivalId)?.toVo()
+                ?: return@mapLatest FestivalResult.Error
             FestivalResult.Festival(festivalDetail)
         }
 }

@@ -61,6 +61,7 @@ internal class CalendarViewModel @Inject constructor(
             is CalendarResult.CurrentCalendar -> {
                 states.copy(
                     isLoading = false,
+                    hasError = false,
                     calendarInfo = calendarInfo,
                     categoryFilters = categoryFilters,
                     stateFilters = stateFilters,
@@ -93,6 +94,15 @@ internal class CalendarViewModel @Inject constructor(
                 )
             }
             is CalendarResult.ClickFestival -> states
+            is CalendarResult.Error -> {
+                states.copy(
+                    hasError = true,
+                    categoryFilters = categoryFilters,
+                    stateFilters = stateFilters,
+                    regionFilters = regionFilters,
+                    ageFilters = ageFilters,
+                )
+            }
         }
     }
 
@@ -134,6 +144,11 @@ internal class CalendarViewModel @Inject constructor(
                     region = regionCodes,
                     age = ageCodes,
                 )
+            ) ?: return@mapLatest CalendarResult.Error(
+                categoryFilters = states.value.selectedCategoryFilters,
+                stateFilters = states.value.selectedStateFilters,
+                regionFilters = states.value.selectedRegionFilters,
+                ageFilters = states.value.selectedAgeFilters
             )
             val festivals = festival.festivals.map(FestivalItem::toVo)
             val festivalFilter = festival.filterItems.toVo()
