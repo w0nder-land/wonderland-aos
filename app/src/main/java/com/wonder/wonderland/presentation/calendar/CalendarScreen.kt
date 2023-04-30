@@ -119,7 +119,7 @@ internal fun CalendarView(
         }
     }
 
-    LaunchedEffect(calendarState.currentYearMonth) {
+    LaunchedEffect(calendarState.currentYearMonth, calendarState.isInterest) {
         if (calendarState.currentYearMonth.isEmpty()) return@LaunchedEffect
 
         calendarViewModel.processEvent(
@@ -146,6 +146,9 @@ internal fun CalendarView(
         drawerState = drawerState,
         onSelectYearMonth = { yearMonth ->
             calendarViewModel.processEvent(CalendarEvent.UpdateCurrentYearMonth(yearMonth))
+        },
+        onInterestFestivalChanged = { isInterest ->
+            calendarViewModel.processEvent(CalendarEvent.UpdateInterest(isInterest))
         },
         onFestivalClick = { festivalId ->
             calendarViewModel.processEvent(CalendarEvent.ClickFestival(festivalId))
@@ -181,6 +184,7 @@ private fun CalendarScreen(
     calendarState: CalendarState,
     drawerState: DrawerState,
     onSelectYearMonth: (yearMonth: String) -> Unit,
+    onInterestFestivalChanged: (isInterest: Boolean) -> Unit,
     onFestivalClick: (festivalId: Int) -> Unit,
     onCategoryFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
     onStateFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
@@ -223,9 +227,11 @@ private fun CalendarScreen(
                     containerColor = Gray900,
                     topBar = {
                         CalendarTopBar(
+                            isInterest = calendarState.isInterest,
                             currentMonth = calendarState.currentYearMonth,
                             yearMonthItems = calendarState.yearMonthItems,
-                            onSelectYearMonth = onSelectYearMonth
+                            onSelectYearMonth = onSelectYearMonth,
+                            onInterestFestivalChanged = onInterestFestivalChanged
                         )
                     },
                     content = { padding ->
@@ -261,11 +267,13 @@ private fun CalendarScreen(
 
 @Composable
 private fun CalendarTopBar(
+    isInterest: Boolean,
     currentMonth: String,
     yearMonthItems: List<String>,
     onSelectYearMonth: (yearMonth: String) -> Unit,
+    onInterestFestivalChanged: (isInterest: Boolean) -> Unit,
 ) {
-    var isInterestFestivalChecked by remember { mutableStateOf(false) }
+    val isInterestFestivalChecked by rememberUpdatedState(newValue = isInterest)
     var isShowSelectMonthBottomSheet by remember { mutableStateOf(false) }
 
     Row(
@@ -303,12 +311,14 @@ private fun CalendarTopBar(
         ) {
             WonderSwitch(
                 checked = isInterestFestivalChecked,
-                onCheckedChange = { isInterestFestivalChecked = !isInterestFestivalChecked }
+                onCheckedChange = {
+                    onInterestFestivalChanged(it)
+                }
             )
 
             Text(
                 modifier = Modifier.singleClick(hasRipple = false) {
-                    isInterestFestivalChecked = !isInterestFestivalChecked
+                    onInterestFestivalChanged(!isInterestFestivalChecked)
                 },
                 text = "관심축제만 보기",
                 style = Caption2,
@@ -497,6 +507,7 @@ private fun CalendarScreenPreview() {
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onSelectYearMonth = {},
+            onInterestFestivalChanged = {},
             onFestivalClick = {},
             onCategoryFilterItemClick = {},
             onStateFilterItemClick = {},
@@ -542,6 +553,7 @@ private fun CalendarScreenDrawerPreview() {
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
             onSelectYearMonth = {},
+            onInterestFestivalChanged = {},
             onFestivalClick = {},
             onCategoryFilterItemClick = {},
             onStateFilterItemClick = {},

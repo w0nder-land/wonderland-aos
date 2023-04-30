@@ -41,6 +41,7 @@ internal class CalendarViewModel @Inject constructor(
         filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
         filterIsInstance<CalendarEvent.SearchFestivals>().toSearchFestivalsResult(),
         filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult(),
+        filterIsInstance<CalendarEvent.UpdateInterest>().toUpdateInterestResult(),
         filterIsInstance<CalendarEvent.ClickFestival>().toClickFestivalResult(),
         filterIsInstance<CalendarEvent.ClickCategoryFilterItem>().toClickCategoryFilterItemResult(),
         filterIsInstance<CalendarEvent.ClickStateFilterItem>().toClickStateFilterItemResult(),
@@ -76,6 +77,12 @@ internal class CalendarViewModel @Inject constructor(
             is CalendarResult.UpdateYearMonth -> {
                 states.copy(
                     currentYearMonth = currentYearMonth,
+                    calendarInfo = CalendarInfo()
+                )
+            }
+            is CalendarResult.UpdateInterest -> {
+                states.copy(
+                    isInterest = isInterest,
                     calendarInfo = CalendarInfo()
                 )
             }
@@ -139,6 +146,7 @@ internal class CalendarViewModel @Inject constructor(
             val festival = searchFestivalsUseCase(
                 SearchFestivalParam(
                     date = it.yearMonth.toDate("yyyy년 M월").toDateString("yyyy-MM"),
+                    likeStatus = states.value.isInterest,
                     category = categoryCodes,
                     state = stateCodes,
                     region = regionCodes,
@@ -179,6 +187,11 @@ internal class CalendarViewModel @Inject constructor(
     private fun Flow<CalendarEvent.UpdateCurrentYearMonth>.toUpdateCurrentYearMonthResult(): Flow<CalendarResult> =
         mapLatest {
             CalendarResult.UpdateYearMonth(currentYearMonth = it.yearMonth)
+        }
+
+    private fun Flow<CalendarEvent.UpdateInterest>.toUpdateInterestResult(): Flow<CalendarResult> =
+        mapLatest {
+            CalendarResult.UpdateInterest(isInterest = it.isInterest)
         }
 
     private fun Flow<CalendarEvent.ClickFestival>.toClickFestivalResult(): Flow<CalendarResult> =

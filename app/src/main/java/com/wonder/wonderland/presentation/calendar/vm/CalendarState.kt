@@ -11,6 +11,7 @@ internal data class CalendarState(
     override val hasError: Boolean = false,
     val calendarGridState: LazyGridState = LazyGridState(),
     val currentYearMonth: String = "",
+    val isInterest: Boolean = false,
     val yearMonthItems: List<String> = emptyList(),
     val calendarInfo: CalendarInfo = CalendarInfo(),
     val categoryFilters: List<CalendarFilter> = emptyList(),
