@@ -3,36 +3,28 @@ package com.wonder.wonderland.presentation.calendar
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -47,7 +39,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -65,20 +56,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wonder.component.theme.Caption2
 import com.wonder.component.theme.Gray50
-import com.wonder.component.theme.Gray600
 import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle1
-import com.wonder.component.theme.Subtitle2
-import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.Suit
 import com.wonder.component.theme.Sunday
 import com.wonder.component.theme.White
-import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
-import com.wonder.component.ui.bottomsheet.BottomSheetTopDot
-import com.wonder.component.ui.divider.HorizontalDivider
-import com.wonder.component.ui.picker.WheelPicker
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.component.util.month
@@ -86,6 +70,8 @@ import com.wonder.component.util.year
 import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
+import com.wonder.wonderland.presentation.calendar.bottomsheet.SelectMonthBottomSheetDialog
+import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterButton
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterDrawer
 import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
@@ -190,7 +176,7 @@ private fun CalendarScreen(
                                     onFestivalClick = onFestivalClick
                                 )
 
-                                CalendarFilterView(
+                                CalendarFilterButton(
                                     modifier = Modifier
                                         .padding(padding)
                                         .align(Alignment.BottomCenter),
@@ -411,163 +397,6 @@ private fun FestivalNameView(
         color = Gray800,
         maxLines = 1
     )
-}
-
-@Composable
-private fun CalendarFilterView(
-    modifier: Modifier,
-    onFilterClick: () -> Unit,
-) {
-    var isSelected by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = modifier
-            .padding(bottom = 16.dp)
-            .size(width = 83.dp, height = 44.dp)
-            .background(
-                color = if (isSelected) White else Gray900,
-                shape = CircleShape
-            )
-            .border(
-                width = 1.dp,
-                color = White,
-                shape = CircleShape
-            )
-            .singleClick(shape = CircleShape) {
-                onFilterClick()
-                isSelected = !isSelected
-            }
-    ) {
-        Row(
-            modifier = Modifier.align(Alignment.Center),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = R.drawable.ic_filter),
-                tint = if (isSelected) Gray900 else White,
-                contentDescription = null
-            )
-
-            Text(
-                text = "필터",
-                style = Subtitle3,
-                color = if (isSelected) Gray900 else White
-            )
-        }
-
-        if (isSelected) {
-            Box(
-                modifier = Modifier
-                    .padding(end = 8.dp, top = 11.dp)
-                    .size(6.dp)
-                    .background(
-                        color = Wonder500,
-                        shape = CircleShape
-                    )
-                    .align(Alignment.TopEnd)
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SelectMonthBottomSheetDialog(
-    currentMonth: String,
-    yearMonthItems: List<String>,
-    onSelectYearMonth: (yearMonth: String) -> Unit,
-    onBottomSheetClose: () -> Unit,
-) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var selectedIndex by remember { mutableStateOf(yearMonthItems.indexOf(currentMonth)) }
-    val gradientColors = listOf(
-        Gray800.copy(alpha = 1f),
-        Gray800.copy(alpha = 0f)
-    )
-
-    ModalBottomSheet(
-        onDismissRequest = onBottomSheetClose,
-        sheetState = sheetState,
-        dragHandle = {
-            BottomSheetTopDot()
-        },
-        containerColor = Gray800
-    ) {
-        Column(modifier = Modifier.height(346.dp)) {
-            Box {
-                WheelPicker(
-                    startIndex = selectedIndex,
-                    menuCount = yearMonthItems.size,
-                    isInfinite = false,
-                    onCurrentIndex = { selectedIndex = it },
-                    content = { index ->
-                        Text(
-                            text = yearMonthItems[index],
-                            style = TextStyle(
-                                fontFamily = Suit,
-                                fontWeight = FontWeight.W500,
-                                fontSize = 24.sp,
-                                lineHeight = 36.sp,
-                                platformStyle = PlatformTextStyle(
-                                    includeFontPadding = false
-                                )
-                            ),
-                            color = White
-                        )
-                    }
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(42.dp)
-                        .background(brush = Brush.verticalGradient(colors = gradientColors))
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(42.dp)
-                        .background(
-                            brush = Brush.verticalGradient(colors = gradientColors.reversed())
-                        )
-                        .align(Alignment.BottomCenter)
-                )
-            }
-
-            HorizontalDivider(color = Gray600)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(76.dp)
-                    .padding(horizontal = 20.dp, vertical = 14.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .background(
-                            color = White,
-                            shape = RoundedCornerShape(6.dp)
-                        )
-                        .singleClick {
-                            onSelectYearMonth(yearMonthItems[selectedIndex])
-                            onBottomSheetClose()
-                        }
-                ) {
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "확인",
-                        style = Subtitle2,
-                        color = Gray800
-                    )
-                }
-            }
-        }
-    }
 }
 
 @Preview

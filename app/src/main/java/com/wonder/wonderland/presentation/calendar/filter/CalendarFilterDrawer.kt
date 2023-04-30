@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wonder.component.theme.Body2
 import com.wonder.component.theme.Caption1
@@ -39,12 +40,13 @@ import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Heading2
 import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.White
+import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 
 @Composable
-fun CalendarFilterDrawer() {
+internal fun CalendarFilterDrawer() {
     val categories = listOf(
         CalendarFilter(
             title = "전체",
@@ -326,4 +328,12 @@ private fun CalendarFilterItem(
     }
 
     HorizontalDivider(color = Gray600)
+}
+
+@Preview
+@Composable
+private fun CalendarFilterDrawerPreview() {
+    WonderTheme {
+        CalendarFilterDrawer()
+    }
 }
