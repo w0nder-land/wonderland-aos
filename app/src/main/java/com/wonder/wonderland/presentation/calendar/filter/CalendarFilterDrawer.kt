@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wonder.component.theme.Body2
@@ -40,6 +42,7 @@ import com.wonder.component.theme.Gray800
 import com.wonder.component.theme.Heading2
 import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.White
+import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
@@ -78,6 +81,8 @@ internal fun CalendarFilterDrawer(
             item {
                 CalendarFilterItem(
                     title = "장르",
+                    selectedFilter = categoryFilters
+                        .filterNot { it.title == "전체" }.filter { it.isSelected },
                     isExpanded = isCategoryExpanded,
                     onFilterTitleClick = { isCategoryExpanded = !isCategoryExpanded },
                     content = {
@@ -98,6 +103,8 @@ internal fun CalendarFilterDrawer(
             item {
                 CalendarFilterItem(
                     title = "진행상태",
+                    selectedFilter = stateFilters
+                        .filterNot { it.title == "전체" }.filter { it.isSelected },
                     isExpanded = isStateExpanded,
                     onFilterTitleClick = { isStateExpanded = !isStateExpanded },
                     content = {
@@ -118,6 +125,8 @@ internal fun CalendarFilterDrawer(
             item {
                 CalendarFilterItem(
                     title = "지역",
+                    selectedFilter = regionFilters
+                        .filterNot { it.title == "전체" }.filter { it.isSelected },
                     isExpanded = isRegionExpanded,
                     onFilterTitleClick = { isRegionExpanded = !isRegionExpanded },
                     content = {
@@ -143,6 +152,8 @@ internal fun CalendarFilterDrawer(
             item {
                 CalendarFilterItem(
                     title = "연령",
+                    selectedFilter = ageFilters
+                        .filterNot { it.title == "전체" }.filter { it.isSelected },
                     isExpanded = isAgeExpanded,
                     onFilterTitleClick = { isAgeExpanded = !isAgeExpanded },
                     content = {
@@ -235,6 +246,7 @@ private fun CalendarFilterTopView(
 @Composable
 private fun CalendarFilterItem(
     title: String,
+    selectedFilter: List<CalendarFilter>,
     isExpanded: Boolean,
     onFilterTitleClick: () -> Unit,
     content: @Composable () -> Unit,
@@ -256,19 +268,37 @@ private fun CalendarFilterItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
+                modifier = Modifier.padding(end = 30.dp),
                 text = title,
                 style = Subtitle2,
                 color = White
             )
 
-            Icon(
-                modifier = Modifier
-                    .size(16.dp)
-                    .rotate(iconRotate),
-                painter = painterResource(id = R.drawable.ic_arrow_down),
-                tint = Gray500,
-                contentDescription = null
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (selectedFilter.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = selectedFilter.joinToString(", ") { it.title },
+                        style = Body2,
+                        color = Gray200,
+                        textAlign = TextAlign.End,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Icon(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(iconRotate),
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    tint = if (selectedFilter.isNotEmpty()) Wonder500 else Gray500,
+                    contentDescription = null
+                )
+            }
         }
 
         if (isExpanded) {
