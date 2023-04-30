@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
@@ -33,6 +36,7 @@ import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Suit
 import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.util.snackbarState
 import com.wonder.wonderland.presentation.calendar.calendarScreen
 import com.wonder.wonderland.presentation.home.homeScreen
 import com.wonder.wonderland.presentation.my.myScreen
@@ -50,7 +54,7 @@ fun MainView(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun MainScreen(
     navController: NavHostController,
@@ -58,8 +62,16 @@ private fun MainScreen(
     onBottomNavigationClick: (destination: MainDestination) -> Unit,
 ) {
     val mainNavController = rememberAnimatedNavController()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        snackbarState.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         content = { padding ->
             MainContent(
                 modifier = Modifier.padding(padding),
