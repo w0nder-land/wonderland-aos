@@ -2,10 +2,10 @@ package com.imaec.model.festival
 
 enum class FestivalRegionType(val title: String) {
     SEL("서울"),
-    HDN("홍대"),
     DHK("대학로"),
+    HND("홍대"),
     GGI("경기"),
-    ICN("인천"),
+    INC("인천"),
     DEJ("대전"),
     DEG("대구"),
     GWJ("광주"),
@@ -16,5 +16,6 @@ enum class FestivalRegionType(val title: String) {
     GKS("경상"),
     JEL("전라"),
     KWO("강원"),
+    JEU("제주"),
     ONL("온라인")
 }

@@ -25,10 +25,10 @@ class SearchFestivalsUseCase @Inject constructor(
 data class SearchFestivalParam(
     val date: String,
     val likeStatus: Boolean = false,
-    val category: String? = null,
-    val state: String? = null,
-    val region: String? = null,
-    val age: String? = null,
+    val category: List<String?> = emptyList(),
+    val state: List<String?> = emptyList(),
+    val region: List<String?> = emptyList(),
+    val age: List<String?> = emptyList(),
     val page: Int? = null,
     val size: Int? = 150,
 )

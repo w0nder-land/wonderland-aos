@@ -16,41 +16,45 @@ data class FestivalItem(
 )
 
 data class FilterItems(
-    val category: Category,
-    val state: State,
-    val region: Region,
-    val age: Age
+    val category: Category = Category(0, 0, 0, 0),
+    val state: State = State(0, 0, 0),
+    val region: Region = Region(
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0
+    ),
+    val age: Age = Age(0, 0, 0)
 )
 
 data class Category(
     val F: Int,
-    val H: Int,
     val I: Int,
-    val V: Int
+    val V: Int,
+    val H: Int
 )
 
 data class State(
-    val N: Int,
+    val Y: Int,
     val W: Int,
-    val Y: Int
+    val N: Int
 )
 
 data class Region(
-    val BUS: Int,
-    val CHC: Int,
-    val DEG: Int,
-    val DEJ: Int,
-    val DHK: Int,
-    val GGI: Int,
-    val GKS: Int,
-    val GWJ: Int,
-    val HND: Int,
-    val INC: Int,
-    val JEL: Int,
-    val JEU: Int,
-    val KWO: Int,
     val SEL: Int,
-    val ULS: Int
+    val DHK: Int,
+    val HND: Int,
+    val GGI: Int,
+    val INC: Int,
+    val DEJ: Int,
+    val DEG: Int,
+    val GWJ: Int,
+    val BUS: Int,
+    val ULS: Int,
+    val CHC: Int,
+    val GKS: Int,
+    val JEL: Int,
+    val KWO: Int,
+    val JEU: Int
 )
 
 data class Age(

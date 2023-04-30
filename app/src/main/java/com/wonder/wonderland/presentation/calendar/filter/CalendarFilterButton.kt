@@ -12,8 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,9 +30,10 @@ import com.wonder.resource.R
 @Composable
 internal fun CalendarFilterButton(
     modifier: Modifier,
+    isFilterSelected: Boolean,
     onFilterClick: () -> Unit,
 ) {
-    var isSelected by remember { mutableStateOf(false) }
+    val isSelected by rememberUpdatedState(newValue = isFilterSelected)
 
     Box(
         modifier = modifier
@@ -48,10 +48,7 @@ internal fun CalendarFilterButton(
                 color = White,
                 shape = CircleShape
             )
-            .singleClick(shape = CircleShape) {
-                onFilterClick()
-                isSelected = !isSelected
-            }
+            .singleClick(shape = CircleShape) { onFilterClick() }
     ) {
         Row(
             modifier = Modifier.align(Alignment.Center),
@@ -89,10 +86,23 @@ internal fun CalendarFilterButton(
 
 @Preview
 @Composable
-private fun CalendarFilterButtonPreview() {
+private fun CalendarFilterButtonSelectedPreview() {
     WonderTheme {
         CalendarFilterButton(
             modifier = Modifier,
+            isFilterSelected = true,
+            onFilterClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CalendarFilterButtonUnselectedPreview() {
+    WonderTheme {
+        CalendarFilterButton(
+            modifier = Modifier,
+            isFilterSelected = false,
             onFilterClick = {}
         )
     }

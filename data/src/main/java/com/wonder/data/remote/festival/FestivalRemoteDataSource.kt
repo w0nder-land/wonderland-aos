@@ -8,10 +8,10 @@ internal interface FestivalRemoteDataSource {
     suspend fun searchFestivals(
         date: String,
         likeStatus: Boolean,
-        category: String?,
-        state: String?,
-        region: String?,
-        age: String?,
+        category: List<String?>,
+        state: List<String?>,
+        region: List<String?>,
+        age: List<String?>,
         page: Int?,
         size: Int?,
     ): Festival

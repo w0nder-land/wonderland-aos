@@ -20,6 +20,7 @@ import com.wonder.component.theme.Caption1
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Gray300
 import com.wonder.component.theme.Wonder500
+import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 
 @Composable
@@ -27,14 +28,16 @@ fun CalendarFilterItemView(
     title: String,
     count: Int,
     isSelected: Boolean,
-    width: Dp = 257.dp
+    width: Dp = 257.dp,
+    onFilterItemClick: () -> Unit,
 ) {
     Box {
         Row(
             modifier = Modifier
                 .width(width)
                 .height(44.dp)
-                .padding(start = 44.dp),
+                .padding(start = 44.dp)
+                .singleClick(hasRipple = false) { onFilterItemClick() },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {

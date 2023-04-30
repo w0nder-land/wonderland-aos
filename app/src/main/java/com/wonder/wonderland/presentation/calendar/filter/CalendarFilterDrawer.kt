@@ -46,104 +46,22 @@ import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 
 @Composable
-internal fun CalendarFilterDrawer() {
-    val categories = listOf(
-        CalendarFilter(
-            title = "전체",
-            count = 457
-        ),
-        CalendarFilter(
-            title = "뮤직 페스티벌",
-            count = 345,
-            isSelected = true
-        ),
-        CalendarFilter(
-            title = "인디/록",
-            count = 56
-        ),
-        CalendarFilter(
-            title = "내한 공연",
-            count = 28
-        ),
-        CalendarFilter(
-            title = "힙합/EDM",
-            count = 28
-        ),
-    )
-    val stateItems = listOf(
-        CalendarFilter(
-            title = "전체",
-            count = 457
-        ),
-        CalendarFilter(
-            title = "진행 중인 축제",
-            count = 345,
-            isSelected = true
-        ),
-        CalendarFilter(
-            title = "시작 예정 축제",
-            count = 56,
-            isSelected = true
-        ),
-        CalendarFilter(
-            title = "종료된 축제",
-            count = 28
-        ),
-    )
-    val regions = listOf(
-        CalendarFilter(
-            title = "전체",
-            count = 457,
-            isSelected = true
-        ),
-        CalendarFilter(
-            title = "서울",
-            count = 4
-        ),
-        CalendarFilter(
-            title = "대학로",
-            count = 4
-        ),
-        CalendarFilter(
-            title = "홍대",
-            count = 3
-        ),
-        CalendarFilter(
-            title = "경기",
-            count = 2
-        ),
-        CalendarFilter(
-            title = "인천",
-            count = 4
-        ),
-        CalendarFilter(
-            title = "대전",
-            count = 0
-        ),
-        CalendarFilter(
-            title = "대구",
-            count = 2
-        ),
-    )
-    val ages = listOf(
-        CalendarFilter(
-            title = "전체",
-            count = 457
-        ),
-        CalendarFilter(
-            title = "전체 관람가",
-            count = 345,
-            isSelected = true
-        ),
-        CalendarFilter(
-            title = "만 12세 이상",
-            count = 56
-        ),
-        CalendarFilter(
-            title = "만 19세 이상",
-            count = 28
-        ),
-    )
+internal fun CalendarFilterDrawer(
+    isFilterSelected: Boolean,
+    categoryFilters: List<CalendarFilter>,
+    stateFilters: List<CalendarFilter>,
+    regionFilters: List<CalendarFilter>,
+    ageFilters: List<CalendarFilter>,
+    onCategoryFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onStateFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onRegionFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onAgeFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onFilterClear: () -> Unit,
+) {
+    var isCategoryExpanded by remember { mutableStateOf(false) }
+    var isStateExpanded by remember { mutableStateOf(false) }
+    var isRegionExpanded by remember { mutableStateOf(false) }
+    var isAgeExpanded by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -151,75 +69,105 @@ internal fun CalendarFilterDrawer() {
             .width(275.dp)
             .background(Gray800)
     ) {
-        CalendarFilterTopView()
+        CalendarFilterTopView(
+            isFilterSelected = isFilterSelected,
+            onFilterClear = onFilterClear
+        )
 
         LazyColumn {
             item {
-                CalendarFilterItem(title = "장르") {
-                    Column(modifier = Modifier.padding(vertical = 14.dp)) {
-                        categories.forEach { category ->
-                            CalendarFilterItemView(
-                                title = category.title,
-                                count = category.count,
-                                isSelected = category.isSelected
-                            )
+                CalendarFilterItem(
+                    title = "장르",
+                    isExpanded = isCategoryExpanded,
+                    onFilterTitleClick = { isCategoryExpanded = !isCategoryExpanded },
+                    content = {
+                        Column(modifier = Modifier.padding(vertical = 14.dp)) {
+                            categoryFilters.forEach { category ->
+                                CalendarFilterItemView(
+                                    title = category.title,
+                                    count = category.count,
+                                    isSelected = category.isSelected,
+                                    onFilterItemClick = { onCategoryFilterItemClick(category) }
+                                )
+                            }
                         }
                     }
-                }
+                )
             }
 
             item {
-                CalendarFilterItem(title = "진행상태") {
-                    Column(modifier = Modifier.padding(vertical = 14.dp)) {
-                        stateItems.forEach { state ->
-                            CalendarFilterItemView(
-                                title = state.title,
-                                count = state.count,
-                                isSelected = state.isSelected
-                            )
+                CalendarFilterItem(
+                    title = "진행상태",
+                    isExpanded = isStateExpanded,
+                    onFilterTitleClick = { isStateExpanded = !isStateExpanded },
+                    content = {
+                        Column(modifier = Modifier.padding(vertical = 14.dp)) {
+                            stateFilters.forEach { state ->
+                                CalendarFilterItemView(
+                                    title = state.title,
+                                    count = state.count,
+                                    isSelected = state.isSelected,
+                                    onFilterItemClick = { onStateFilterItemClick(state) }
+                                )
+                            }
                         }
                     }
-                }
+                )
             }
 
             item {
-                CalendarFilterItem(title = "지역") {
-                    Column(modifier = Modifier.padding(vertical = 14.dp)) {
-                        regions.chunked(2).forEach { chunkedRegions ->
-                            Row {
-                                chunkedRegions.forEach { region ->
-                                    CalendarFilterItemView(
-                                        title = region.title,
-                                        count = region.count,
-                                        isSelected = region.isSelected,
-                                        width = 137.dp
-                                    )
+                CalendarFilterItem(
+                    title = "지역",
+                    isExpanded = isRegionExpanded,
+                    onFilterTitleClick = { isRegionExpanded = !isRegionExpanded },
+                    content = {
+                        Column(modifier = Modifier.padding(vertical = 14.dp)) {
+                            regionFilters.chunked(2).forEach { chunkedRegions ->
+                                Row {
+                                    chunkedRegions.forEach { region ->
+                                        CalendarFilterItemView(
+                                            title = region.title,
+                                            count = region.count,
+                                            isSelected = region.isSelected,
+                                            width = 137.dp,
+                                            onFilterItemClick = { onRegionFilterItemClick(region) }
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-                }
+                )
             }
 
             item {
-                CalendarFilterItem(title = "연령") {
-                    Column(modifier = Modifier.padding(vertical = 14.dp)) {
-                        ages.forEach { age ->
-                            CalendarFilterItemView(
-                                title = age.title,
-                                count = age.count,
-                                isSelected = age.isSelected
-                            )
+                CalendarFilterItem(
+                    title = "연령",
+                    isExpanded = isAgeExpanded,
+                    onFilterTitleClick = { isAgeExpanded = !isAgeExpanded },
+                    content = {
+                        Column(modifier = Modifier.padding(vertical = 14.dp)) {
+                            ageFilters.forEach { age ->
+                                CalendarFilterItemView(
+                                    title = age.title,
+                                    count = age.count,
+                                    isSelected = age.isSelected,
+                                    onFilterItemClick = { onAgeFilterItemClick(age) }
+                                )
+                            }
                         }
                     }
-                }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun CalendarFilterTopView() {
+private fun CalendarFilterTopView(
+    isFilterSelected: Boolean,
+    onFilterClear: () -> Unit,
+) {
     Row(
         modifier = Modifier.padding(start = 20.dp, end = 16.dp, top = 12.dp, bottom = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -239,34 +187,36 @@ private fun CalendarFilterTopView() {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Row(
-            modifier = Modifier
-                .width(64.dp)
-                .height(26.dp)
-                .border(
-                    width = 1.dp,
-                    color = Gray600,
-                    shape = RoundedCornerShape(4.dp)
+        if (isFilterSelected) {
+            Row(
+                modifier = Modifier
+                    .width(64.dp)
+                    .height(26.dp)
+                    .border(
+                        width = 1.dp,
+                        color = Gray600,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .singleClick(shape = RoundedCornerShape(4.dp)) { onFilterClear() },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(
+                    space = 4.dp,
+                    alignment = Alignment.CenterHorizontally
                 )
-                .singleClick {},
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(
-                space = 4.dp,
-                alignment = Alignment.CenterHorizontally
-            )
-        ) {
-            Icon(
-                modifier = Modifier.size(16.dp),
-                painter = painterResource(id = R.drawable.ic_retry),
-                tint = Gray300,
-                contentDescription = null
-            )
+            ) {
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    painter = painterResource(id = R.drawable.ic_retry),
+                    tint = Gray300,
+                    contentDescription = null
+                )
 
-            Text(
-                text = "초기화",
-                style = Caption1,
-                color = White
-            )
+                Text(
+                    text = "초기화",
+                    style = Caption1,
+                    color = White
+                )
+            }
         }
 
         Icon(
@@ -285,11 +235,12 @@ private fun CalendarFilterTopView() {
 @Composable
 private fun CalendarFilterItem(
     title: String,
+    isExpanded: Boolean,
+    onFilterTitleClick: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    var isExpandedItem by remember { mutableStateOf(false) }
     val iconRotate by animateFloatAsState(
-        targetValue = if (isExpandedItem) 180f else 0f
+        targetValue = if (isExpanded) 180f else 0f
     )
     Column(modifier = Modifier.animateContentSize()) {
         Row(
@@ -297,9 +248,9 @@ private fun CalendarFilterItem(
                 .fillMaxWidth()
                 .height(55.dp)
                 .background(
-                    color = if (isExpandedItem) Gray700 else Gray800
+                    color = if (isExpanded) Gray700 else Gray800
                 )
-                .singleClick { isExpandedItem = !isExpandedItem }
+                .singleClick { onFilterTitleClick() }
                 .padding(start = 20.dp, end = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -320,7 +271,7 @@ private fun CalendarFilterItem(
             )
         }
 
-        if (isExpandedItem) {
+        if (isExpanded) {
             HorizontalDivider(color = Gray600)
 
             content()
@@ -334,6 +285,17 @@ private fun CalendarFilterItem(
 @Composable
 private fun CalendarFilterDrawerPreview() {
     WonderTheme {
-        CalendarFilterDrawer()
+        CalendarFilterDrawer(
+            isFilterSelected = false,
+            categoryFilters = emptyList(),
+            stateFilters = emptyList(),
+            regionFilters = emptyList(),
+            ageFilters = emptyList(),
+            onCategoryFilterItemClick = {},
+            onStateFilterItemClick = {},
+            onRegionFilterItemClick = {},
+            onAgeFilterItemClick = {},
+            onFilterClear = {}
+        )
     }
 }

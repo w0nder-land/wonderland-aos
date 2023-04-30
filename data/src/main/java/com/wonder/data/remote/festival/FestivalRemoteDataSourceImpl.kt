@@ -12,10 +12,10 @@ internal class FestivalRemoteDataSourceImpl @Inject constructor(
     override suspend fun searchFestivals(
         date: String,
         likeStatus: Boolean,
-        category: String?,
-        state: String?,
-        region: String?,
-        age: String?,
+        category: List<String?>,
+        state: List<String?>,
+        region: List<String?>,
+        age: List<String?>,
         page: Int?,
         size: Int?
     ): Festival = festivalService.searchFestivals(

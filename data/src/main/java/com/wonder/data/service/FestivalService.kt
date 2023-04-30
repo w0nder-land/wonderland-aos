@@ -17,10 +17,10 @@ internal interface FestivalService {
     suspend fun searchFestivals(
         @Query("date") date: String,
         @Query("likeStatus") likeStatus: Boolean,
-        @Query("category") category: String?,
-        @Query("state") state: String?,
-        @Query("region") region: String?,
-        @Query("age") age: String?,
+        @Query("category") category: List<String?>,
+        @Query("state") state: List<String?>,
+        @Query("region") region: List<String?>,
+        @Query("age") age: List<String?>,
         @Query("page") page: Int?,
         @Query("size") size: Int?,
     ): SingleResponse<FestivalResponse>

@@ -71,6 +71,7 @@ import com.wonder.resource.R
 import com.wonder.wonderland.presentation.MainDestination
 import com.wonder.wonderland.presentation.MainViewModel
 import com.wonder.wonderland.presentation.calendar.bottomsheet.SelectMonthBottomSheetDialog
+import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterButton
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterDrawer
 import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
@@ -81,6 +82,8 @@ import com.wonder.wonderland.presentation.calendar.vm.CalendarEffect
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
+import com.wonder.wonderland.presentation.calendar.vm.isFilterChanged
+import com.wonder.wonderland.presentation.calendar.vm.isFilterSelected
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -120,7 +123,10 @@ internal fun CalendarView(
         if (calendarState.currentYearMonth.isEmpty()) return@LaunchedEffect
 
         calendarViewModel.processEvent(
-            event = CalendarEvent.SearchFestivals(calendarState.currentYearMonth)
+            event = CalendarEvent.SearchFestivals(
+                isLoading = calendarState.calendarInfo.calendarDays.isEmpty(),
+                yearMonth = calendarState.currentYearMonth
+            )
         )
     }
 
@@ -132,6 +138,29 @@ internal fun CalendarView(
         },
         onFestivalClick = { festivalId ->
             calendarViewModel.processEvent(CalendarEvent.ClickFestival(festivalId))
+        },
+        onCategoryFilterItemClick = { categoryFilter ->
+            calendarViewModel.processEvent(CalendarEvent.ClickCategoryFilterItem(categoryFilter))
+        },
+        onStateFilterItemClick = { stateFilter ->
+            calendarViewModel.processEvent(CalendarEvent.ClickStateFilterItem(stateFilter))
+        },
+        onRegionFilterItemClick = { regionFilter ->
+            calendarViewModel.processEvent(CalendarEvent.ClickRegionFilterItem(regionFilter))
+        },
+        onAgeFilterItemClick = { ageFilter ->
+            calendarViewModel.processEvent(CalendarEvent.ClickAgeFilterItem(ageFilter))
+        },
+        onFilterClear = {
+            calendarViewModel.processEvent(CalendarEvent.ClearFilter)
+        },
+        onSearchFestival = {
+            calendarViewModel.processEvent(
+                event = CalendarEvent.SearchFestivals(
+                    isLoading = true,
+                    yearMonth = calendarState.currentYearMonth
+                )
+            )
         }
     )
 }
@@ -142,8 +171,20 @@ private fun CalendarScreen(
     drawerState: DrawerState,
     onSelectYearMonth: (yearMonth: String) -> Unit,
     onFestivalClick: (festivalId: Int) -> Unit,
+    onCategoryFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onStateFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onRegionFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onAgeFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
+    onFilterClear: () -> Unit,
+    onSearchFestival: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(drawerState.isClosed) {
+        if (drawerState.isClosed && !calendarState.isLoading && calendarState.isFilterChanged()) {
+            onSearchFestival()
+        }
+    }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         ModalNavigationDrawer(
@@ -151,7 +192,18 @@ private fun CalendarScreen(
             drawerState = drawerState,
             drawerContent = {
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    CalendarFilterDrawer()
+                    CalendarFilterDrawer(
+                        isFilterSelected = calendarState.isFilterSelected(),
+                        categoryFilters = calendarState.categoryFilters,
+                        stateFilters = calendarState.stateFilters,
+                        regionFilters = calendarState.regionFilters,
+                        ageFilters = calendarState.ageFilters,
+                        onCategoryFilterItemClick = onCategoryFilterItemClick,
+                        onStateFilterItemClick = onStateFilterItemClick,
+                        onRegionFilterItemClick = onRegionFilterItemClick,
+                        onAgeFilterItemClick = onAgeFilterItemClick,
+                        onFilterClear = onFilterClear
+                    )
                 }
             }
         ) {
@@ -180,6 +232,7 @@ private fun CalendarScreen(
                                     modifier = Modifier
                                         .padding(padding)
                                         .align(Alignment.BottomCenter),
+                                    isFilterSelected = calendarState.isFilterSelected(),
                                     onFilterClick = {
                                         scope.launch {
                                             drawerState.open()
@@ -433,7 +486,13 @@ private fun CalendarScreenPreview() {
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
             onSelectYearMonth = {},
-            onFestivalClick = {}
+            onFestivalClick = {},
+            onCategoryFilterItemClick = {},
+            onStateFilterItemClick = {},
+            onRegionFilterItemClick = {},
+            onAgeFilterItemClick = {},
+            onFilterClear = {},
+            onSearchFestival = {}
         )
     }
 }
@@ -472,7 +531,13 @@ private fun CalendarScreenDrawerPreview() {
             ),
             drawerState = rememberDrawerState(initialValue = DrawerValue.Open),
             onSelectYearMonth = {},
-            onFestivalClick = {}
+            onFestivalClick = {},
+            onCategoryFilterItemClick = {},
+            onStateFilterItemClick = {},
+            onRegionFilterItemClick = {},
+            onAgeFilterItemClick = {},
+            onFilterClear = {},
+            onSearchFestival = {}
         )
     }
 }
