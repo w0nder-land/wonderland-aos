@@ -69,7 +69,7 @@ internal class CalendarViewModel @Inject constructor(
                     regionFilters = regionFilters,
                     ageFilters = ageFilters,
                     selectedCategoryFilters = selectedCategoryFilters,
-                    selectedStateFilters = selectedAgeFilters,
+                    selectedStateFilters = selectedStateFilters,
                     selectedRegionFilters = selectedRegionFilters,
                     selectedAgeFilters = selectedAgeFilters
                 )
