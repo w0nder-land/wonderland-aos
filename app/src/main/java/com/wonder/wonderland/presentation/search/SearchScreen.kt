@@ -4,14 +4,11 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,11 +16,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,7 +28,6 @@ import com.wonder.component.theme.Gray700
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle3
 import com.wonder.component.theme.WonderTheme
-import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.tab.SlideTab
 import com.wonder.component.ui.textfield.BasicTextField
 import com.wonder.component.util.Keyboard
@@ -140,28 +134,7 @@ fun SearchTopBar(
         if (keyboardState == Keyboard.Closed) focusManager.clearFocus()
     }
 
-    Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (focusState || keyword.value.isNotBlank()) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .singleClick(shape = CircleShape) { focusManager.clearFocus() }
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.Center),
-                    painter = painterResource(id = R.drawable.ic_back),
-                    tint = Gray50,
-                    contentDescription = null
-                )
-            }
-        }
-
+    Box(modifier = Modifier.padding(horizontal = 16.dp)) {
         BasicTextField(
             modifier = Modifier
                 .padding(vertical = 7.dp)
