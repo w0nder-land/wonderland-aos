@@ -74,6 +74,12 @@ internal fun CalendarFilterDrawer(
     ) {
         CalendarFilterTopView(
             isFilterSelected = isFilterSelected,
+            selectedFilters = mutableListOf<CalendarFilter>().apply {
+                addAll(categoryFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+                addAll(stateFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+                addAll(regionFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+                addAll(ageFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+            },
             onFilterClear = onFilterClear
         )
 
@@ -177,10 +183,11 @@ internal fun CalendarFilterDrawer(
 @Composable
 private fun CalendarFilterTopView(
     isFilterSelected: Boolean,
+    selectedFilters: List<CalendarFilter>,
     onFilterClear: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.padding(start = 20.dp, end = 16.dp, top = 12.dp, bottom = 16.dp),
+        modifier = Modifier.padding(start = 20.dp, end = 16.dp, top = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -240,7 +247,14 @@ private fun CalendarFilterTopView(
         )
     }
 
-    HorizontalDivider(color = Gray600)
+    if (selectedFilters.isNotEmpty()) {
+        CalendarSelectedFiltersView(selectedFilters = selectedFilters)
+    }
+
+    HorizontalDivider(
+        modifier = Modifier.padding(top = 16.dp),
+        color = Gray600
+    )
 }
 
 @Composable
