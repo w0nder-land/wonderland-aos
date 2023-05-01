@@ -38,18 +38,35 @@ android {
         useBuildCache = true
     }
 
+    signingConfigs {
+        debug {
+            storeFile file(project.rootProject.file("keystore/wonder_debug.jks"))
+            storePassword KEYSTORE_PASSWORD
+            keyAlias DEBUG_KEY_ALIAS
+            keyPassword KEY_ALIAS_PASSWORD
+        }
+        release {
+            storeFile file(project.rootProject.file("keystore/wonder_release.jks"))
+            storePassword KEYSTORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword KEY_ALIAS_PASSWORD
+        }
+    }
+
     buildTypes {
         debug {
             debuggable true
             minifyEnabled BuildTypeDebug.minifyEnabled
             shrinkResources false
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
+            signingConfig signingConfigs.debug
         }
         release {
             debuggable false
             minifyEnabled BuildTypeRelease.minifyEnabled
             shrinkResources true
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
+            signingConfig signingConfigs.release
         }
     }
 
@@ -60,6 +77,7 @@ android {
             versionCode BuildTypeDebug.versionCode
             versionName BuildTypeDebug.versionName
             manifestPlaceholders = [
+                    appName     : BuildTypeDebug.appName,
                     kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
             ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
@@ -69,6 +87,7 @@ android {
             versionCode BuildTypeRelease.versionCode
             versionName BuildTypeRelease.versionName
             manifestPlaceholders = [
+                    appName     : BuildTypeRelease.appName,
                     kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
             ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
