@@ -52,6 +52,7 @@ import com.wonder.resource.R
 @Composable
 internal fun CalendarFilterDrawer(
     isFilterSelected: Boolean,
+    selectedFilters: List<CalendarFilter>,
     categoryFilters: List<CalendarFilter>,
     stateFilters: List<CalendarFilter>,
     regionFilters: List<CalendarFilter>,
@@ -77,18 +78,13 @@ internal fun CalendarFilterDrawer(
     ) {
         CalendarFilterTopView(
             isFilterSelected = isFilterSelected,
-            selectedFilters = mutableListOf<CalendarFilter>().apply {
-                addAll(categoryFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
-                addAll(stateFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
-                addAll(regionFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
-                addAll(ageFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
-            },
+            selectedFilters = selectedFilters,
             onCloseFilterClick = onCloseFilterClick,
             onFilterClear = onFilterClear,
             onDeleteCategoryFilterClick = onCategoryFilterItemClick,
             onDeleteStateFilterClick = onStateFilterItemClick,
             onDeleteRegionFilterClick = onRegionFilterItemClick,
-            onDeleteAgeFilterClick = onAgeFilterItemClick,
+            onDeleteAgeFilterClick = onAgeFilterItemClick
         )
 
         LazyColumn {
@@ -262,7 +258,7 @@ private fun CalendarFilterTopView(
     }
 
     if (selectedFilters.isNotEmpty()) {
-        CalendarSelectedFiltersView(
+        CalendarSelectedFiltersFlow(
             selectedFilters = selectedFilters,
             onDeleteCategoryFilterClick = onDeleteCategoryFilterClick,
             onDeleteStateFilterClick = onDeleteStateFilterClick,
@@ -351,6 +347,7 @@ private fun CalendarFilterDrawerPreview() {
     WonderTheme {
         CalendarFilterDrawer(
             isFilterSelected = false,
+            selectedFilters = emptyList(),
             categoryFilters = emptyList(),
             stateFilters = emptyList(),
             regionFilters = emptyList(),

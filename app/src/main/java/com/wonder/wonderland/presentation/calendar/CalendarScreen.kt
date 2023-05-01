@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -74,6 +76,7 @@ import com.wonder.wonderland.presentation.calendar.bottomsheet.SelectMonthBottom
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterButton
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterDrawer
+import com.wonder.wonderland.presentation.calendar.filter.CalendarSelectedFiltersRow
 import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
 import com.wonder.wonderland.presentation.calendar.model.FestivalDay
@@ -82,6 +85,8 @@ import com.wonder.wonderland.presentation.calendar.vm.CalendarEffect
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
 import com.wonder.wonderland.presentation.calendar.vm.CalendarViewModel
+import com.wonder.wonderland.presentation.calendar.vm.getSelectedConfirmedFilters
+import com.wonder.wonderland.presentation.calendar.vm.getSelectedFilters
 import com.wonder.wonderland.presentation.calendar.vm.isFilterChanged
 import com.wonder.wonderland.presentation.calendar.vm.isFilterSelected
 import kotlinx.coroutines.launch
@@ -209,6 +214,7 @@ private fun CalendarScreen(
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     CalendarFilterDrawer(
                         isFilterSelected = calendarState.isFilterSelected(),
+                        selectedFilters = calendarState.getSelectedFilters(),
                         categoryFilters = calendarState.categoryFilters,
                         stateFilters = calendarState.stateFilters,
                         regionFilters = calendarState.regionFilters,
@@ -247,6 +253,27 @@ private fun CalendarScreen(
                                     calendarGridState = calendarState.calendarGridState,
                                     calendarInfo = calendarState.calendarInfo,
                                     currentMonth = calendarState.currentYearMonth,
+                                    selectedFilters = calendarState.getSelectedConfirmedFilters(),
+                                    onDeleteCategoryFilterClick = {
+                                        onCategoryFilterItemClick(it)
+                                        onSearchFestival()
+                                    },
+                                    onDeleteStateFilterClick = {
+                                        onStateFilterItemClick(it)
+                                        onSearchFestival()
+                                    },
+                                    onDeleteRegionFilterClick = {
+                                        onRegionFilterItemClick(it)
+                                        onSearchFestival()
+                                    },
+                                    onDeleteAgeFilterClick = {
+                                        onAgeFilterItemClick(it)
+                                        onSearchFestival()
+                                    },
+                                    onFilterClear = {
+                                        onFilterClear()
+                                        onSearchFestival()
+                                    },
                                     onFestivalClick = onFestivalClick
                                 )
 
@@ -349,6 +376,12 @@ private fun CalendarContent(
     calendarGridState: LazyGridState,
     calendarInfo: CalendarInfo,
     currentMonth: String,
+    selectedFilters: List<CalendarFilter>,
+    onDeleteCategoryFilterClick: (filter: CalendarFilter) -> Unit,
+    onDeleteStateFilterClick: (filter: CalendarFilter) -> Unit,
+    onDeleteRegionFilterClick: (filter: CalendarFilter) -> Unit,
+    onDeleteAgeFilterClick: (filter: CalendarFilter) -> Unit,
+    onFilterClear: () -> Unit,
     onFestivalClick: (festivalId: Int) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -378,62 +411,74 @@ private fun CalendarContent(
     )
 
     Box {
-        CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
-            LazyVerticalGrid(
-                modifier = modifier,
-                state = gridState,
-                columns = GridCells.Fixed(7),
-                contentPadding = PaddingValues(vertical = 12.dp)
-            ) {
-                items(weeks) {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = it,
-                        style = Caption2,
-                        color = if (it == "일") Sunday else White,
-                        textAlign = TextAlign.Center
-                    )
-                }
+        Column(modifier = modifier) {
+            if (selectedFilters.isNotEmpty()) {
+                CalendarSelectedFiltersRow(
+                    selectedFilters = selectedFilters,
+                    onDeleteCategoryFilterClick = onDeleteCategoryFilterClick,
+                    onDeleteStateFilterClick = onDeleteStateFilterClick,
+                    onDeleteRegionFilterClick = onDeleteRegionFilterClick,
+                    onDeleteAgeFilterClick = onDeleteAgeFilterClick,
+                    onFilterClear = onFilterClear
+                )
+            }
 
-                itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
-                    CalendarDayView(
-                        currentMonth = currentMonth,
-                        day = day.day,
-                        festivalDays = day.festivalDays,
-                        isSunday = index == 0,
-                        isCurrentMonth = false,
-                        onFestivalClick = onFestivalClick,
-                        onStartOrSundayPositioned = onFestivalAdd
-                    )
-                }
+            CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
+                LazyVerticalGrid(
+                    state = gridState,
+                    columns = GridCells.Fixed(7),
+                    contentPadding = PaddingValues(vertical = 12.dp)
+                ) {
+                    items(weeks) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = it,
+                            style = Caption2,
+                            color = if (it == "일") Sunday else White,
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
-                itemsIndexed(calendarInfo.calendarDays) { index, day ->
-                    CalendarDayView(
-                        currentMonth = currentMonth,
-                        day = day.day,
-                        festivalDays = day.festivalDays,
-                        isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
-                        isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
-                        isToday = isCurrentYearMonth && calendarInfo.today == (index + 1),
-                        onFestivalClick = onFestivalClick,
-                        onStartOrSundayPositioned = onFestivalAdd,
-                        onScrollOffsetChanged = {
-                            scrollOffset = it
-                        }
-                    )
-                }
+                    itemsIndexed(calendarInfo.beforeCalendarDays) { index, day ->
+                        CalendarDayView(
+                            currentMonth = currentMonth,
+                            day = day.day,
+                            festivalDays = day.festivalDays,
+                            isSunday = index == 0,
+                            isCurrentMonth = false,
+                            onFestivalClick = onFestivalClick,
+                            onStartOrSundayPositioned = onFestivalAdd
+                        )
+                    }
 
-                itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
-                    CalendarDayView(
-                        currentMonth = currentMonth,
-                        day = day.day,
-                        festivalDays = day.festivalDays,
-                        isSunday = false,
-                        isSaturday = index == calendarInfo.afterMonthDayCount - 1,
-                        isCurrentMonth = false,
-                        onFestivalClick = onFestivalClick,
-                        onStartOrSundayPositioned = onFestivalAdd
-                    )
+                    itemsIndexed(calendarInfo.calendarDays) { index, day ->
+                        CalendarDayView(
+                            currentMonth = currentMonth,
+                            day = day.day,
+                            festivalDays = day.festivalDays,
+                            isSunday = index % 7 == 7 - calendarInfo.beforeMonthDayCount,
+                            isSaturday = index % 7 == 7 - calendarInfo.beforeMonthDayCount - 1,
+                            isToday = isCurrentYearMonth && calendarInfo.today == (index + 1),
+                            onFestivalClick = onFestivalClick,
+                            onStartOrSundayPositioned = onFestivalAdd,
+                            onScrollOffsetChanged = {
+                                scrollOffset = it
+                            }
+                        )
+                    }
+
+                    itemsIndexed(calendarInfo.afterCalendarDays) { index, day ->
+                        CalendarDayView(
+                            currentMonth = currentMonth,
+                            day = day.day,
+                            festivalDays = day.festivalDays,
+                            isSunday = false,
+                            isSaturday = index == calendarInfo.afterMonthDayCount - 1,
+                            isCurrentMonth = false,
+                            onFestivalClick = onFestivalClick,
+                            onStartOrSundayPositioned = onFestivalAdd
+                        )
+                    }
                 }
             }
         }

@@ -44,3 +44,17 @@ internal fun CalendarState.isFilterSelected(): Boolean =
         stateFilters.filterNot { it.title == "전체" }.any { it.isSelected } ||
         regionFilters.filterNot { it.title == "전체" }.any { it.isSelected } ||
         ageFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+
+internal fun CalendarState.getSelectedFilters() = mutableListOf<CalendarFilter>().apply {
+    addAll(categoryFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+    addAll(stateFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+    addAll(regionFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+    addAll(ageFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+}
+
+internal fun CalendarState.getSelectedConfirmedFilters() = mutableListOf<CalendarFilter>().apply {
+    addAll(selectedCategoryFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+    addAll(selectedStateFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+    addAll(selectedRegionFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+    addAll(selectedAgeFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
+}

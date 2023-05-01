@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.wonder.component.theme.Black
 import com.wonder.component.theme.Gray100
 
 @Composable
@@ -46,8 +47,8 @@ fun VerticalDivider(
 @Composable
 fun HorizontalGradientDivider(modifier: Modifier = Modifier) {
     val colors = listOf(
-        Color.Black.copy(alpha = 0f),
-        Color.Black.copy(alpha = 0.04f)
+        Black.copy(alpha = 0f),
+        Black.copy(alpha = 0.04f)
     )
     Spacer(
         modifier = modifier
