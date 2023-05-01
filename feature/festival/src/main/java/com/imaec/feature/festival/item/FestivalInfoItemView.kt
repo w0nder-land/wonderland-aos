@@ -1,5 +1,6 @@
 package com.imaec.feature.festival.item
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +37,7 @@ import com.wonder.component.theme.Gray100
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Gray600
 import com.wonder.component.theme.Gray800
+import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Heading2
 import com.wonder.component.theme.Subtitle2
 import com.wonder.component.theme.Wonder500
@@ -271,12 +275,44 @@ private fun FestivalInfoTicketView(
             }
         }
 
+        Canvas(
+            modifier = Modifier
+                .size(14.dp)
+                .background(Gray800)
+                .align(Alignment.CenterStart)
+        ) {
+            drawArc(
+                color = Gray900,
+                startAngle = -90f,
+                sweepAngle = 180f,
+                useCenter = false,
+                size = Size(size.width, size.height),
+                topLeft = Offset(x = -7.dp.toPx(), y = 0f)
+            )
+        }
+
         HorizontalDivider(
             modifier = Modifier
                 .padding(top = 60.dp)
                 .padding(horizontal = 20.dp),
             color = Gray600
         )
+
+        Canvas(
+            modifier = Modifier
+                .size(14.dp)
+                .background(Gray800)
+                .align(Alignment.CenterEnd)
+        ) {
+            drawArc(
+                color = Gray900,
+                startAngle = 90f,
+                sweepAngle = 180f,
+                useCenter = false,
+                size = Size(size.width, size.height),
+                topLeft = Offset(x = 7.dp.toPx(), y = 0f)
+            )
+        }
     }
 }
 
@@ -293,7 +329,16 @@ private fun FestivalInfoItemViewPreview() {
             links = emptyList(),
             dDay = "D-24",
             ticketingDate = "2023.03.20(목)",
-            ticketingItems = emptyList()
+            ticketingItems = listOf(
+                FestivalDetailTicketingVo(
+                    linkUrl = "",
+                    title = "멜론 티켓"
+                ),
+                FestivalDetailTicketingVo(
+                    linkUrl = "",
+                    title = "인터파크 티켓"
+                )
+            )
         )
     }
 }

@@ -40,7 +40,7 @@ import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
 import com.wonder.resource.R
 
-private val MAX_HEIGHT = 6000.dp
+private val MAX_HEIGHT = 7000.dp
 private val DEFAULT_MIN_HEIGHT = 808.dp
 
 @Composable
