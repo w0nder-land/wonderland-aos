@@ -24,8 +24,8 @@ fun BottomSheetTopDot() {
         val height = size.height
 
         drawLine(
-            start = Offset(x = width / 2 - 36.dp.toPx(), y = height / 2),
-            end = Offset(x = width / 2 + 36.dp.toPx(), y = height / 2),
+            start = Offset(x = width / 2 - 18.dp.toPx(), y = height / 2),
+            end = Offset(x = width / 2 + 18.dp.toPx(), y = height / 2),
             color = Gray500,
             strokeWidth = 4.dp.toPx(),
             cap = StrokeCap.Round
