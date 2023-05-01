@@ -148,7 +148,8 @@ private fun TabBaselineLayout(
     icon: @Composable (() -> Unit)?
 ) {
     Layout(
-        modifier = Modifier.padding(horizontal = if (isTabTextEmpty) 0.dp else HorizontalTabPadding),
+        modifier = Modifier
+            .padding(horizontal = if (isTabTextEmpty) 0.dp else HorizontalTabPadding),
         content = {
             if (text != null) {
                 Box(

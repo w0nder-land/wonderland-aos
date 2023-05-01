@@ -93,7 +93,12 @@ private fun MainScreen(
 
                     if (currentDestination != destination) {
                         with(mainNavController) {
-                            if (currentBackStack.value.any { it.destination.route == destination.route }) {
+                            // backStack에 destination과 같은 route가 있다면
+                            // destination으로 이동하지 않고 기존 route로 popBackStack
+                            val isRouteExist = currentBackStack.value.any {
+                                it.destination.route == destination.route
+                            }
+                            if (isRouteExist) {
                                 popBackStack(
                                     route = destination.route,
                                     inclusive = false,

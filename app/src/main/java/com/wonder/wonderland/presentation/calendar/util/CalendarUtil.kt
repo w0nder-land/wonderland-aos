@@ -146,12 +146,16 @@ private fun getFestivalDays(
             if (festivalDay != day) continue
 
             // 축제 일이 현재 월인 경우에만 달력에 축제 일정을 추가
-            val festivalMonth = startDate.toCalendar().addDayOfMonth(festivalDayOfYear - startDayOfYear)
+            val festivalMonth = startDate
+                .toCalendar()
+                .addDayOfMonth(festivalDayOfYear - startDayOfYear)
             if (festivalMonth.month() != currentMonth) return@forEachIndexed
 
             // 해당 일의 주의 시작일(일요일)과 마지막 일(토요일)을 가져온다
             val weekRange = getCurrentWeekRange(
-                festivalCalendar = startDate.toCalendar().addDayOfMonth(festivalDayOfYear - startDayOfYear)
+                festivalCalendar = startDate
+                    .toCalendar()
+                    .addDayOfMonth(festivalDayOfYear - startDayOfYear)
             )
 
             // 해당 일이 속한 주의 다른 축제 수
@@ -240,7 +244,9 @@ private fun getOrder(
     beforeFestivals.forEach {
         // 축제 시작일이 현재 주의 시작일보다 작거나 축제 종료일이 현재 주의 마지막 날보다 크면
         // 해당일의 첫 번째 축제이기 때문에 order를 증가시키지 않는다
-        if (festivalDayOfYear < weekRange.first || festivalDayOfYear > weekRange.last) return@forEach
+        if (festivalDayOfYear < weekRange.first || festivalDayOfYear > weekRange.last) {
+            return@forEach
+        }
 
         // beforeFestivalStartDay : 이전 축제의 시작일
         // beforeFestivalEndDay : 이전 축제의 종료일

@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
  * Result에 따라 toStates()와 reduce()에서 새로운 상태가 생성 되거나
  * toEffects()에서 새로운 동작이 생성된다.
  */
-abstract class WonderViewModel<E : WonderEvent, R : WonderResult, S : WonderState, SE : WonderEffect>(
+abstract class WonderViewModel
+<E : WonderEvent, R : WonderResult, S : WonderState, SE : WonderEffect>(
     initialState: S
 ) : ViewModel() {
     val states: StateFlow<S>

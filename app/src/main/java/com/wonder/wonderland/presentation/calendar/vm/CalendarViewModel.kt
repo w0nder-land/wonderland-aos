@@ -120,7 +120,7 @@ internal class CalendarViewModel @Inject constructor(
     private fun Flow<CalendarEvent.Loading>.toLoadingResult(): Flow<CalendarResult> =
         mapLatest { CalendarResult.Loading(it.isLoading) }
 
-    private fun Flow<CalendarEvent.GetCurrentYearMonth>.toGetCurrentYearMonthResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.GetCurrentYearMonth>.toGetCurrentYearMonthResult() =
         mapLatest {
             val currentYearMonth = getCurrentYearMonth()
             val yearMonthItems = getYearMonthItems()
@@ -131,7 +131,7 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.SearchFestivals>.toSearchFestivalsResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.SearchFestivals>.toSearchFestivalsResult() =
         mapLatest {
             if (it.isLoading) processEvent(CalendarEvent.Loading(isLoading = true))
 
@@ -184,7 +184,7 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.UpdateCurrentYearMonth>.toUpdateCurrentYearMonthResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.UpdateCurrentYearMonth>.toUpdateCurrentYearMonthResult() =
         mapLatest {
             CalendarResult.UpdateYearMonth(currentYearMonth = it.yearMonth)
         }
@@ -199,7 +199,7 @@ internal class CalendarViewModel @Inject constructor(
             CalendarResult.ClickFestival(festivalId = it.festivalId)
         }
 
-    private fun Flow<CalendarEvent.ClickCategoryFilterItem>.toClickCategoryFilterItemResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.ClickCategoryFilterItem>.toClickCategoryFilterItemResult() =
         mapLatest {
             CalendarResult.ClickCategoryFilterItem(
                 categoryFilters = getClickedFilters(
@@ -209,7 +209,7 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.ClickStateFilterItem>.toClickStateFilterItemResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.ClickStateFilterItem>.toClickStateFilterItemResult() =
         mapLatest {
             CalendarResult.ClickStateFilterItem(
                 stateFilters = getClickedFilters(
@@ -219,7 +219,7 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.ClickRegionFilterItem>.toClickRegionFilterItemResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.ClickRegionFilterItem>.toClickRegionFilterItemResult() =
         mapLatest {
             CalendarResult.ClickRegionFilterItem(
                 regionFilters = getClickedFilters(
@@ -229,7 +229,7 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.ClickAgeFilterItem>.toClickAgeFilterItemResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.ClickAgeFilterItem>.toClickAgeFilterItemResult() =
         mapLatest {
             CalendarResult.ClickAgeFilterItem(
                 ageFilters = getClickedFilters(
@@ -239,7 +239,7 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.ClearFilter>.toClearFilterResult(): Flow<CalendarResult> =
+    private fun Flow<CalendarEvent.ClearFilter>.toClearFilterResult() =
         mapLatest {
             CalendarResult.ClearFilter(
                 categoryFilters = getClickedFilters(

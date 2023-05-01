@@ -38,6 +38,7 @@ import com.wonder.component.theme.Suit
 import com.wonder.component.theme.White
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import kotlin.math.abs
 
 @OptIn(ExperimentalSnapperApi::class)
 @Composable
@@ -53,8 +54,11 @@ fun WheelPicker(
     isInfinite: Boolean = true,
     content: @Composable BoxScope.(index: Int) -> Unit,
 ) {
-    val centerItemIndex =
-        if (isInfinite) startIndex - (maxVisibleMenuCount / 2) else kotlin.math.abs(startIndex - (maxVisibleMenuCount / 2))
+    val centerItemIndex = if (isInfinite) {
+        startIndex - (maxVisibleMenuCount / 2)
+    } else {
+        abs(startIndex - (maxVisibleMenuCount / 2))
+    }
     val maxIntQuotient = (1000000000 / menuCount) * menuCount
     val infiniteIndex = remember { maxIntQuotient + centerItemIndex }
     val itemHeightToPx = with(LocalDensity.current) { itemHeight.toPx() }

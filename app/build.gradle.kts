@@ -73,3 +73,18 @@ dependencies {
         androidTestRuntimeOnly(JUNIT5_RUNNER)
     }
 }
+
+ktlint {
+    debug.set(true)
+    verbose.set(true)
+    android.set(true)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}

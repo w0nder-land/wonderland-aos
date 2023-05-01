@@ -99,7 +99,11 @@ fun CollapsingTopBar(
         Modifier
     }
 
-    val baseOffset = if (scrollBehavior.state.heightOffsetLimit > minHeightPx) -minHeightPx else (minHeightPx - collapsingContentHeight)
+    val baseOffset = if (scrollBehavior.state.heightOffsetLimit > minHeightPx) {
+        -minHeightPx
+    } else {
+        (minHeightPx - collapsingContentHeight)
+    }
     val titleCollapsedFraction = offset / baseOffset
     val collapsedAlpha =
         CubicBezierEasing(.8f, 0f, .8f, .15f).transform(titleCollapsedFraction)

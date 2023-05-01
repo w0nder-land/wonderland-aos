@@ -167,7 +167,11 @@ fun BasicTextField(
                             .padding(
                                 vertical = if (singleLine) 0.dp else 12.5.dp
                             ),
-                        contentAlignment = if (singleLine) Alignment.CenterStart else Alignment.TopStart,
+                        contentAlignment = if (singleLine) {
+                            Alignment.CenterStart
+                        } else {
+                            Alignment.TopStart
+                        },
                     ) {
                         innerTextField()
 
