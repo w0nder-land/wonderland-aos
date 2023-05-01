@@ -213,11 +213,16 @@ private fun CalendarScreen(
                         stateFilters = calendarState.stateFilters,
                         regionFilters = calendarState.regionFilters,
                         ageFilters = calendarState.ageFilters,
+                        onCloseFilterClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+                        },
+                        onFilterClear = onFilterClear,
                         onCategoryFilterItemClick = onCategoryFilterItemClick,
                         onStateFilterItemClick = onStateFilterItemClick,
                         onRegionFilterItemClick = onRegionFilterItemClick,
-                        onAgeFilterItemClick = onAgeFilterItemClick,
-                        onFilterClear = onFilterClear
+                        onAgeFilterItemClick = onAgeFilterItemClick
                     )
                 }
             }

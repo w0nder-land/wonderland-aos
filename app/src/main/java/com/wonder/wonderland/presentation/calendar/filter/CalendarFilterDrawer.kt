@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -55,11 +56,12 @@ internal fun CalendarFilterDrawer(
     stateFilters: List<CalendarFilter>,
     regionFilters: List<CalendarFilter>,
     ageFilters: List<CalendarFilter>,
+    onCloseFilterClick: () -> Unit,
+    onFilterClear: () -> Unit,
     onCategoryFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
     onStateFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
     onRegionFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
     onAgeFilterItemClick: (calendarFilter: CalendarFilter) -> Unit,
-    onFilterClear: () -> Unit,
 ) {
     var isCategoryExpanded by remember { mutableStateOf(false) }
     var isStateExpanded by remember { mutableStateOf(false) }
@@ -71,6 +73,7 @@ internal fun CalendarFilterDrawer(
             .fillMaxHeight()
             .width(275.dp)
             .background(Gray800)
+            .singleClick(hasRipple = false) { }
     ) {
         CalendarFilterTopView(
             isFilterSelected = isFilterSelected,
@@ -80,7 +83,12 @@ internal fun CalendarFilterDrawer(
                 addAll(regionFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
                 addAll(ageFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
             },
-            onFilterClear = onFilterClear
+            onCloseFilterClick = onCloseFilterClick,
+            onFilterClear = onFilterClear,
+            onDeleteCategoryFilterClick = onCategoryFilterItemClick,
+            onDeleteStateFilterClick = onStateFilterItemClick,
+            onDeleteRegionFilterClick = onRegionFilterItemClick,
+            onDeleteAgeFilterClick = onAgeFilterItemClick,
         )
 
         LazyColumn {
@@ -184,7 +192,12 @@ internal fun CalendarFilterDrawer(
 private fun CalendarFilterTopView(
     isFilterSelected: Boolean,
     selectedFilters: List<CalendarFilter>,
+    onCloseFilterClick: () -> Unit,
     onFilterClear: () -> Unit,
+    onDeleteCategoryFilterClick: (filter: CalendarFilter) -> Unit,
+    onDeleteStateFilterClick: (filter: CalendarFilter) -> Unit,
+    onDeleteRegionFilterClick: (filter: CalendarFilter) -> Unit,
+    onDeleteAgeFilterClick: (filter: CalendarFilter) -> Unit,
 ) {
     Row(
         modifier = Modifier.padding(start = 20.dp, end = 16.dp, top = 12.dp),
@@ -240,7 +253,8 @@ private fun CalendarFilterTopView(
         Icon(
             modifier = Modifier
                 .padding(start = 10.dp)
-                .size(32.dp),
+                .size(32.dp)
+                .singleClick(shape = CircleShape) { onCloseFilterClick() },
             painter = painterResource(id = R.drawable.ic_close_drawer),
             tint = White,
             contentDescription = null
@@ -248,7 +262,13 @@ private fun CalendarFilterTopView(
     }
 
     if (selectedFilters.isNotEmpty()) {
-        CalendarSelectedFiltersView(selectedFilters = selectedFilters)
+        CalendarSelectedFiltersView(
+            selectedFilters = selectedFilters,
+            onDeleteCategoryFilterClick = onDeleteCategoryFilterClick,
+            onDeleteStateFilterClick = onDeleteStateFilterClick,
+            onDeleteRegionFilterClick = onDeleteRegionFilterClick,
+            onDeleteAgeFilterClick = onDeleteAgeFilterClick,
+        )
     }
 
     HorizontalDivider(
@@ -335,11 +355,12 @@ private fun CalendarFilterDrawerPreview() {
             stateFilters = emptyList(),
             regionFilters = emptyList(),
             ageFilters = emptyList(),
+            onCloseFilterClick = {},
+            onFilterClear = {},
             onCategoryFilterItemClick = {},
             onStateFilterItemClick = {},
             onRegionFilterItemClick = {},
-            onAgeFilterItemClick = {},
-            onFilterClear = {}
+            onAgeFilterItemClick = {}
         )
     }
 }
