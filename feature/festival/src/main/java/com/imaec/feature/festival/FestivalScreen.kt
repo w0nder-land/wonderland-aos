@@ -251,7 +251,7 @@ private fun FestivalBottomBar(
                 )
 
                 Text(
-                    text = "13",
+                    text = "${festival.likeCount}",
                     style = Caption1,
                     color = White
                 )
