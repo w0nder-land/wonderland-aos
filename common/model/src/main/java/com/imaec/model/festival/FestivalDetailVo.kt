@@ -8,7 +8,6 @@ import com.wonder.domain.model.festival.FestivalDetailCasting
 import com.wonder.domain.model.festival.FestivalDetailLink
 import com.wonder.domain.model.festival.FestivalDetailTicketing
 import java.util.Date
-import java.util.Locale
 
 data class FestivalDetailVo(
     val festivalId: Int,
@@ -53,8 +52,8 @@ fun FestivalDetail.toVo() = FestivalDetailVo(
     festivalId = festivalId,
     festivalName = festivalName,
     thumbNailUrl = thumbNailUrl,
-    startDate = startDate.toDate("yyyy-MM-dd(EE)", Locale.US).toDateString("yyyy.MM.dd(EE)"),
-    endDate = endDate.toDate("yyyy-MM-dd(EE)", Locale.US).toDateString("yyyy.MM.dd(EE)"),
+    startDate = startDate.toDate("yyyy-MM-dd(EE)").toDateString("yyyy.MM.dd(EE)"),
+    endDate = endDate.toDate("yyyy-MM-dd(EE)").toDateString("yyyy.MM.dd(EE)"),
     images = images,
     runningTime = runningTime,
     categoryType = FestivalCategoryType.values().firstOrNull { it.name == categoryType },
@@ -69,12 +68,12 @@ fun FestivalDetail.toVo() = FestivalDetailVo(
     description = description,
     links = links.map(FestivalDetailLink::toVo),
     ticketingDate = ticketingDate
-        ?.toDate("yyyy-MM-dd(EE) HH:mm", Locale.US)
+        ?.toDate("yyyy-MM-dd(EE)")
         ?.toDateString("yyyy.MM.dd(EE) HH:mm"),
     ticketingItems = ticketingItems.map(FestivalDetailTicketing::toVo),
     dDay = run {
         val diff = getDiffDay(
-            firstDate = ticketingDate?.toDate("yyyy-MM-dd(EE) HH:mm", Locale.US) ?: Date(),
+            firstDate = ticketingDate?.toDate("yyyy-MM-dd(EE)") ?: Date(),
             secondDate = Date()
         )
         if (diff == 0) {
