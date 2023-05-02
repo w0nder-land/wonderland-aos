@@ -12,8 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,13 +29,13 @@ import com.wonder.component.theme.WonderTheme
 import com.wonder.component.theme.WonderYellow
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
-import com.wonder.wonderland.presentation.calendar.model.FestivalDay
+import com.wonder.wonderland.presentation.calendar.model.FestivalDayVo
 
 @Composable
 internal fun CalendarDayView(
     modifier: Modifier = Modifier,
     day: String,
-    festivalDays: List<FestivalDay>,
+    festivalDays: List<FestivalDayVo>,
     isSunday: Boolean,
     isSaturday: Boolean = false,
     isToday: Boolean = false,
@@ -159,7 +157,7 @@ private fun CalendarDayViewPreview() {
         CalendarDayView(
             day = "22",
             festivalDays = listOf(
-                FestivalDay(
+                FestivalDayVo(
                     festivalId = 1,
                     festivalName = "live SUM 2023 : 예빛, 허회경, 정새벽",
                     year = 2023,

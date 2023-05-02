@@ -35,14 +35,14 @@ import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.util.month
 import com.wonder.component.util.year
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
 import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun CalendarColumn(
     calendarListState: LazyListState,
-    calendarInfo: CalendarInfo,
+    calendarInfo: CalendarInfoVo,
     onFestivalClick: (festivalId: Int) -> Unit,
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -137,7 +137,7 @@ private fun CalendarColumnPreview() {
     WonderTheme {
         CalendarColumn(
             calendarListState = rememberLazyListState(),
-            calendarInfo = CalendarInfo(),
+            calendarInfo = CalendarInfoVo(),
             onFestivalClick = {}
         )
     }

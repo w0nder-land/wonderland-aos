@@ -51,8 +51,8 @@ import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterButton
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterDrawer
 import com.wonder.wonderland.presentation.calendar.filter.CalendarSelectedFiltersRow
-import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
+import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfoVo
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEffect
 import com.wonder.wonderland.presentation.calendar.vm.CalendarEvent
 import com.wonder.wonderland.presentation.calendar.vm.CalendarState
@@ -343,7 +343,7 @@ private fun CalendarTopBar(
 private fun CalendarContent(
     modifier: Modifier,
     calendarListState: LazyListState,
-    calendarInfo: CalendarInfo,
+    calendarInfo: CalendarInfoVo,
     selectedFilters: List<CalendarFilter>,
     onDeleteCategoryFilterClick: (filter: CalendarFilter) -> Unit,
     onDeleteStateFilterClick: (filter: CalendarFilter) -> Unit,
@@ -377,19 +377,19 @@ private fun CalendarContent(
 @Preview
 @Composable
 private fun CalendarScreenPreview() {
-    val calendarDays = mutableListOf<CalendarDayInfo>().apply {
+    val calendarDays = mutableListOf<CalendarDayInfoVo>().apply {
         repeat(30) {
-            add(CalendarDayInfo(year = 2023, month = 5, day = it + 1))
+            add(CalendarDayInfoVo(year = 2023, month = 5, day = it + 1))
         }
     }
-    val beforeCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+    val beforeCalendarDays = mutableListOf<CalendarDayInfoVo>().apply {
         repeat(6) {
-            add(CalendarDayInfo(year = 2023, month = 5, day = it + 21))
+            add(CalendarDayInfoVo(year = 2023, month = 5, day = it + 21))
         }
     }
-    val afterCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+    val afterCalendarDays = mutableListOf<CalendarDayInfoVo>().apply {
         repeat(6) {
-            add(CalendarDayInfo(year = 2023, month = 5, day = it + 1))
+            add(CalendarDayInfoVo(year = 2023, month = 5, day = it + 1))
         }
     }
     WonderTheme {
@@ -397,10 +397,8 @@ private fun CalendarScreenPreview() {
             calendarState = CalendarState(
                 isLoading = false,
                 currentYearMonth = "2023년 4월",
-                calendarInfo = CalendarInfo(
+                calendarInfo = CalendarInfoVo(
                     today = 22,
-                    firstDayOfWeek = 7,
-                    lastDayOfMonth = 30,
                     calendarDays = beforeCalendarDays + calendarDays + afterCalendarDays
                 )
             ),
@@ -421,19 +419,19 @@ private fun CalendarScreenPreview() {
 @Preview
 @Composable
 private fun CalendarScreenDrawerPreview() {
-    val calendarDays = mutableListOf<CalendarDayInfo>().apply {
+    val calendarDays = mutableListOf<CalendarDayInfoVo>().apply {
         repeat(30) {
-            add(CalendarDayInfo(year = 2023, month = 5, day = it + 1))
+            add(CalendarDayInfoVo(year = 2023, month = 5, day = it + 1))
         }
     }
-    val beforeCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+    val beforeCalendarDays = mutableListOf<CalendarDayInfoVo>().apply {
         repeat(6) {
-            add(CalendarDayInfo(year = 2023, month = 5, day = it + 21))
+            add(CalendarDayInfoVo(year = 2023, month = 5, day = it + 21))
         }
     }
-    val afterCalendarDays = mutableListOf<CalendarDayInfo>().apply {
+    val afterCalendarDays = mutableListOf<CalendarDayInfoVo>().apply {
         repeat(6) {
-            add(CalendarDayInfo(year = 2023, month = 5, day = it + 1))
+            add(CalendarDayInfoVo(year = 2023, month = 5, day = it + 1))
         }
     }
     WonderTheme {
@@ -441,10 +439,8 @@ private fun CalendarScreenDrawerPreview() {
             calendarState = CalendarState(
                 isLoading = false,
                 currentYearMonth = "2023년 4월",
-                calendarInfo = CalendarInfo(
+                calendarInfo = CalendarInfoVo(
                     today = 22,
-                    firstDayOfWeek = 7,
-                    lastDayOfMonth = 30,
                     calendarDays = beforeCalendarDays + calendarDays + afterCalendarDays
                 )
             ),

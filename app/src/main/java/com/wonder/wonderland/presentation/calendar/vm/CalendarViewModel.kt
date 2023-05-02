@@ -1,5 +1,6 @@
 package com.wonder.wonderland.presentation.calendar.vm
 
+import androidx.lifecycle.viewModelScope
 import com.imaec.model.festival.FestivalAgeCountVo
 import com.imaec.model.festival.FestivalAgeType
 import com.imaec.model.festival.FestivalCategoryCountVo
@@ -11,15 +12,21 @@ import com.imaec.model.festival.FestivalStateType
 import com.imaec.model.festival.toVo
 import com.wonder.base.WonderViewModel
 import com.wonder.component.util.addMonth
+import com.wonder.component.util.dayOfMonth
 import com.wonder.component.util.getCurrentYearMonth
 import com.wonder.component.util.toCalendar
 import com.wonder.component.util.toDate
 import com.wonder.component.util.toDateString
 import com.wonder.domain.model.festival.FestivalItem
+import com.wonder.domain.usecase.calendar.GetCalendarInfoUseCase
+import com.wonder.domain.usecase.calendar.SaveCalendarInfoParam
+import com.wonder.domain.usecase.calendar.SaveCalendarInfoUseCase
 import com.wonder.domain.usecase.festival.SearchFestivalParam
 import com.wonder.domain.usecase.festival.SearchFestivalsUseCase
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
+import com.wonder.wonderland.presentation.calendar.model.toDomain
+import com.wonder.wonderland.presentation.calendar.model.toVo
 import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,18 +34,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 internal class CalendarViewModel @Inject constructor(
-    private val searchFestivalsUseCase: SearchFestivalsUseCase
+    private val searchFestivalsUseCase: SearchFestivalsUseCase,
+    private val getCalendarInfoUseCase: GetCalendarInfoUseCase,
+    private val saveCalendarInfoUseCase: SaveCalendarInfoUseCase,
 ) : WonderViewModel<CalendarEvent, CalendarResult, CalendarState, CalendarEffect>(CalendarState()) {
 
     override fun Flow<CalendarEvent>.toResults(): Flow<CalendarResult> = merge(
         filterIsInstance<CalendarEvent.Loading>().toLoadingResult(),
         filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
+        filterIsInstance<CalendarEvent.SearchFestivals>().toGetCalendarInfoFromLocalResult(),
         filterIsInstance<CalendarEvent.SearchFestivals>().toSearchFestivalsResult(),
         filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult(),
         filterIsInstance<CalendarEvent.UpdateInterest>().toUpdateInterestResult(),
@@ -63,7 +74,7 @@ internal class CalendarViewModel @Inject constructor(
                 states.copy(
                     isLoading = false,
                     hasError = false,
-                    calendarInfo = calendarInfo,
+                    calendarInfo = calendarInfo ?: states.calendarInfo,
                     categoryFilters = categoryFilters,
                     stateFilters = stateFilters,
                     regionFilters = regionFilters,
@@ -78,7 +89,7 @@ internal class CalendarViewModel @Inject constructor(
             is CalendarResult.UpdateInterest -> {
                 states.copy(
                     isInterest = isInterest,
-                    calendarInfo = CalendarInfo()
+                    calendarInfo = CalendarInfoVo()
                 )
             }
             is CalendarResult.ClickCategoryFilterItem -> {
@@ -126,6 +137,18 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
+    private fun Flow<CalendarEvent.SearchFestivals>.toGetCalendarInfoFromLocalResult() =
+        mapLatest {
+            val calendarInfo = withContext(Dispatchers.IO) {
+                getCalendarInfoUseCase(it.yearMonth)
+            }
+            CalendarResult.CurrentCalendar(
+                calendarInfo = calendarInfo?.toVo()?.copy(
+                    today = Calendar.getInstance().dayOfMonth()
+                ),
+            )
+        }
+
     private fun Flow<CalendarEvent.SearchFestivals>.toSearchFestivalsResult() =
         mapLatest {
             if (it.isLoading) processEvent(CalendarEvent.Loading(isLoading = true))
@@ -165,6 +188,15 @@ internal class CalendarViewModel @Inject constructor(
             val stateFilters = getStateFilters(festivalFilter.state, stateCodes)
             val regionFilters = getRegionFilters(festivalFilter.region, regionCodes)
             val ageFilters = getAgeFilters(festivalFilter.age, ageCodes)
+
+            saveCalendarInfo(
+                yearMonth = it.yearMonth,
+                calendarInfo = calendarInfo,
+                categoryFilters = categoryFilters,
+                stateFilters = stateFilters,
+                regionFilters = regionFilters,
+                ageFilters = ageFilters,
+            )
 
             CalendarResult.CurrentCalendar(
                 calendarInfo = calendarInfo,
@@ -507,6 +539,30 @@ internal class CalendarViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun saveCalendarInfo(
+        yearMonth: String,
+        calendarInfo: CalendarInfoVo,
+        categoryFilters: List<CalendarFilter>,
+        stateFilters: List<CalendarFilter>,
+        regionFilters: List<CalendarFilter>,
+        ageFilters: List<CalendarFilter>,
+    ) {
+        val isFilterSelected = categoryFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+            || stateFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+            || regionFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+            || ageFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+        if (isFilterSelected) return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            saveCalendarInfoUseCase(
+                SaveCalendarInfoParam(
+                    yearMonth = yearMonth,
+                    calendarInfo = calendarInfo.toDomain()
+                )
+            )
         }
     }
 }

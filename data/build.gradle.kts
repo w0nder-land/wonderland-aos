@@ -34,6 +34,13 @@ dependencies {
         implementation(COROUTINES_CORE)
     }
 
+    RoomConfig.run {
+        implementation(ROOM_RUNTIME)
+        implementation(ROOM_COMMON)
+        implementation(ROOM_KTX)
+        kapt(ROOM_COMPILER)
+    }
+
     TimberConfig.run {
         implementation(TIMBER)
     }

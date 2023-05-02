@@ -2,7 +2,7 @@ package com.wonder.wonderland.presentation.calendar.vm
 
 import com.wonder.base.WonderResult
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
 
 internal sealed interface CalendarResult : WonderResult {
 
@@ -14,15 +14,15 @@ internal sealed interface CalendarResult : WonderResult {
     ) : CalendarResult
 
     data class CurrentCalendar(
-        val calendarInfo: CalendarInfo,
-        val categoryFilters: List<CalendarFilter>,
-        val stateFilters: List<CalendarFilter>,
-        val regionFilters: List<CalendarFilter>,
-        val ageFilters: List<CalendarFilter>,
-        val selectedCategoryFilters: List<CalendarFilter>,
-        val selectedStateFilters: List<CalendarFilter>,
-        val selectedRegionFilters: List<CalendarFilter>,
-        val selectedAgeFilters: List<CalendarFilter>
+        val calendarInfo: CalendarInfoVo?,
+        val categoryFilters: List<CalendarFilter> = emptyList(),
+        val stateFilters: List<CalendarFilter> = emptyList(),
+        val regionFilters: List<CalendarFilter> = emptyList(),
+        val ageFilters: List<CalendarFilter> = emptyList(),
+        val selectedCategoryFilters: List<CalendarFilter> = emptyList(),
+        val selectedStateFilters: List<CalendarFilter> = emptyList(),
+        val selectedRegionFilters: List<CalendarFilter> = emptyList(),
+        val selectedAgeFilters: List<CalendarFilter> = emptyList()
     ) : CalendarResult
 
     data class UpdateYearMonth(val currentYearMonth: String) : CalendarResult

@@ -1,5 +1,7 @@
 package com.wonder.data.di
 
+import com.wonder.data.local.calendar.CalendarLocalDataSource
+import com.wonder.data.local.calendar.CalendarLocalDataSourceImpl
 import com.wonder.data.remote.AppRemoteDataSource
 import com.wonder.data.remote.AppRemoteDataSourceImpl
 import com.wonder.data.remote.auth.AuthRemoteDataSource
@@ -33,4 +35,10 @@ internal abstract class DataSourceModule {
     abstract fun bindsFestivalRemoteDataSource(
         festivalRemoteDataSourceImpl: FestivalRemoteDataSourceImpl
     ): FestivalRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsCalendarLocalDataSource(
+        calendarLocalDataSourceImpl: CalendarLocalDataSourceImpl
+    ): CalendarLocalDataSource
 }

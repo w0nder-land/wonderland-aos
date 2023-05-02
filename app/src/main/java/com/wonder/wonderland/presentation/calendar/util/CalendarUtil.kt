@@ -11,9 +11,9 @@ import com.wonder.component.util.toCalendar
 import com.wonder.component.util.toDate
 import com.wonder.component.util.toDay
 import com.wonder.component.util.year
-import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfo
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
-import com.wonder.wonderland.presentation.calendar.model.FestivalDay
+import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfoVo
+import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
+import com.wonder.wonderland.presentation.calendar.model.FestivalDayVo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar
@@ -21,7 +21,7 @@ import java.util.Calendar
 internal suspend fun getCalendarInfo(
     festivals: List<FestivalItemVo>,
     calendar: Calendar
-): CalendarInfo {
+): CalendarInfoVo {
     // 현재 월
     // month : 현재 월
     // firstDayOfWeek : 현재 월의 첫 번째 요일
@@ -70,12 +70,10 @@ internal suspend fun getCalendarInfo(
         emptyList()
     }
 
-    return CalendarInfo(
+    return CalendarInfoVo(
         year = year,
         month = month,
         today = Calendar.getInstance().dayOfMonth(),
-        firstDayOfWeek = firstDayOfWeek,
-        lastDayOfMonth = lastDayOfMonth,
         calendarDays = beforeCalendarDays + calendarDays + afterCalendarDays
     )
 }
@@ -93,9 +91,9 @@ private suspend fun getCalendarDays(
     currentYear: Int,
     currentMonth: Int,
     festivals: List<FestivalItemVo>,
-): List<CalendarDayInfo> = withContext(Dispatchers.Default) {
+): List<CalendarDayInfoVo> = withContext(Dispatchers.Default) {
     // 달력 정보, 현재 일자와 축제 일정을 가진다
-    val calendarDays = mutableListOf<CalendarDayInfo>()
+    val calendarDays = mutableListOf<CalendarDayInfoVo>()
 
     for (day in firstDay until lastDay) {
         // 현재 일자에 들어갈 축제 일정
@@ -107,7 +105,7 @@ private suspend fun getCalendarDays(
         )
 
         calendarDays.add(
-            CalendarDayInfo(
+            CalendarDayInfoVo(
                 year = currentYear,
                 month = currentMonth,
                 day = day,
@@ -125,9 +123,9 @@ private fun getFestivalDays(
     currentMonth: Int,
     day: Int,
     festivals: List<FestivalItemVo>,
-    calendarDays: List<CalendarDayInfo>
-): List<FestivalDay> {
-    val festivalDays = mutableListOf<FestivalDay>()
+    calendarDays: List<CalendarDayInfoVo>
+): List<FestivalDayVo> {
+    val festivalDays = mutableListOf<FestivalDayVo>()
 
     festivals.forEachIndexed { festivalIndex, festivalItem ->
         // startDay : 축제 시작 일자
@@ -186,7 +184,7 @@ private fun getFestivalDays(
             )
 
             festivalDays.add(
-                FestivalDay(
+                FestivalDayVo(
                     festivalId = festivalItem.festivalId,
                     festivalName = festivalItem.festivalName,
                     year = startDate
@@ -236,8 +234,8 @@ private fun getOrder(
     weekRange: IntRange,
     festivalCalendar: Calendar,
     festivalItem: FestivalItemVo,
-    festivalDays: List<FestivalDay>,
-    calendarDays: List<CalendarDayInfo>
+    festivalDays: List<FestivalDayVo>,
+    calendarDays: List<CalendarDayInfoVo>
 ): Int {
     var order = 0
     // 축제 일정의 시작일과 종료일을 가져온다
@@ -318,8 +316,8 @@ private fun getOrder(
     startDay: Int,
     festivalItem: FestivalItemVo,
     weekRange: IntRange,
-    festivalDays: List<FestivalDay>,
-    calendarDays: List<CalendarDayInfo>
+    festivalDays: List<FestivalDayVo>,
+    calendarDays: List<CalendarDayInfoVo>
 ): Int {
     return if (festivalDay == startDay) { // 축제 시작 일인 경우
         (festivalDays.lastOrNull()?.order ?: 0) + 1

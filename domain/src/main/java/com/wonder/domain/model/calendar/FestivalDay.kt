@@ -1,6 +1,6 @@
-package com.wonder.wonderland.presentation.calendar.model
+package com.wonder.domain.model.calendar
 
-internal data class FestivalDay(
+data class FestivalDay(
     val festivalId: Int,
     val festivalName: String,
     val year: Int,
