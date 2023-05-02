@@ -64,31 +64,31 @@ internal fun FestivalDetailInfoItemView(
             color = Gray100
         )
 
-        Box {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .height(if (isExpandedImage) imageHeight else minHeight)
+        ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize()
-                    .height(if (isExpandedImage) imageHeight else minHeight)
+                modifier = Modifier.onGloballyPositioned {
+                    val height = density.run { it.size.height.toDp() }
+
+                    if (imageHeight == 0.dp && height != MAX_HEIGHT) {
+                        imageHeight = height
+                    }
+                    if (minHeight > height && !isExpandedImage) {
+                        minHeight = if (height > DEFAULT_MIN_HEIGHT) {
+                            DEFAULT_MIN_HEIGHT
+                        } else {
+                            height
+                        }
+                    }
+                },
             ) {
                 images.forEach { imageUrl ->
                     Image(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onGloballyPositioned {
-                                val height = density.run { it.size.height.toDp() }
-
-                                if (imageHeight == 0.dp && height != MAX_HEIGHT) {
-                                    imageHeight = height
-                                }
-                                if (minHeight > height && !isExpandedImage) {
-                                    minHeight = if (height > DEFAULT_MIN_HEIGHT) {
-                                        DEFAULT_MIN_HEIGHT
-                                    } else {
-                                        height
-                                    }
-                                }
-                            },
+                        modifier = Modifier.fillMaxWidth(),
                         painter = rememberAsyncImagePainter(
                             model = ImageRequest.Builder(LocalContext.current)
                                 .data(imageUrl)
