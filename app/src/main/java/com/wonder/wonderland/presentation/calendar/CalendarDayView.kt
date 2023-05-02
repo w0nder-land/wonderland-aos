@@ -13,15 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wonder.component.theme.Caption2
@@ -40,7 +35,7 @@ import com.wonder.wonderland.presentation.calendar.model.FestivalDay
 
 @Composable
 internal fun CalendarDayView(
-    currentMonth: String,
+    modifier: Modifier = Modifier,
     day: String,
     festivalDays: List<FestivalDay>,
     isSunday: Boolean,
@@ -48,23 +43,11 @@ internal fun CalendarDayView(
     isToday: Boolean = false,
     isCurrentMonth: Boolean = true,
     onFestivalClick: (festivalId: Int) -> Unit,
-    onStartOrSundayPositioned: (festivalDay: FestivalDay, offset: Offset) -> Unit,
-    onScrollOffsetChanged: (scrollOffset: Float) -> Unit = {},
 ) {
-    var initOffset by remember(currentMonth, day) { mutableStateOf<Float?>(null) }
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(top = 8.dp)
-            .defaultMinSize(minHeight = 113.dp)
-            .onGloballyPositioned {
-                if (day == "15" && isCurrentMonth) {
-                    initOffset?.let { yOffset ->
-                        onScrollOffsetChanged(it.positionInRoot().y - yOffset)
-                    } ?: run {
-                        initOffset = it.positionInRoot().y
-                    }
-                }
-            },
+            .defaultMinSize(minHeight = 113.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorizontalDivider(color = Gray700)
@@ -91,9 +74,7 @@ internal fun CalendarDayView(
         }
 
         Box {
-            festivalDays.filter {
-                it.order < 5
-            }.forEachIndexed { index, festivalDay ->
+            festivalDays.forEachIndexed { index, festivalDay ->
                 Box(
                     modifier = Modifier
                         .padding(
@@ -137,14 +118,6 @@ internal fun CalendarDayView(
                             )
                         )
                         .singleClick { onFestivalClick(festivalDay.festivalId) }
-                        .onGloballyPositioned { coordinates ->
-                            if (festivalDay.isStartDay || isSunday) {
-                                onStartOrSundayPositioned(
-                                    festivalDay,
-                                    coordinates.positionInRoot(),
-                                )
-                            }
-                        }
                 )
             }
         }
@@ -184,7 +157,6 @@ private fun endCornerRadius(
 private fun CalendarDayViewPreview() {
     WonderTheme {
         CalendarDayView(
-            currentMonth = "2023년 4월",
             day = "22",
             festivalDays = listOf(
                 FestivalDay(
@@ -201,8 +173,7 @@ private fun CalendarDayViewPreview() {
                 )
             ),
             isSunday = false,
-            onFestivalClick = {},
-            onStartOrSundayPositioned = { _, _ -> }
+            onFestivalClick = {}
         )
     }
 }

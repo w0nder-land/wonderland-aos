@@ -1,15 +1,14 @@
 package com.wonder.wonderland.presentation.calendar.vm
 
-import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.LazyListState
 import com.wonder.base.WonderState
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfo
-import java.util.function.Predicate.isEqual
 
 internal data class CalendarState(
     override val isLoading: Boolean = true,
     override val hasError: Boolean = false,
-    val calendarGridState: LazyGridState = LazyGridState(),
+    val calendarListState: LazyListState = LazyListState(),
     val currentYearMonth: String = "",
     val isInterest: Boolean = false,
     val yearMonthItems: List<String> = emptyList(),

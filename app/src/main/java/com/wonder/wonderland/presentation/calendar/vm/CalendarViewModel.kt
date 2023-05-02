@@ -74,12 +74,7 @@ internal class CalendarViewModel @Inject constructor(
                     selectedAgeFilters = selectedAgeFilters
                 )
             }
-            is CalendarResult.UpdateYearMonth -> {
-                states.copy(
-                    currentYearMonth = currentYearMonth,
-                    calendarInfo = CalendarInfo()
-                )
-            }
+            is CalendarResult.UpdateYearMonth -> states.copy(currentYearMonth = currentYearMonth)
             is CalendarResult.UpdateInterest -> {
                 states.copy(
                     isInterest = isInterest,

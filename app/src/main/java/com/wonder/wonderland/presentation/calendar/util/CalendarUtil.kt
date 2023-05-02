@@ -26,6 +26,7 @@ internal suspend fun getCalendarInfo(
     // month : 현재 월
     // firstDayOfWeek : 현재 월의 첫 번째 요일
     // lastDayOfMonth : 현재 월의 마지막 날
+    val year = calendar.year()
     val month = calendar.month()
     calendar.set(Calendar.DAY_OF_MONTH, 1)
     val firstDayOfWeek = calendar.dayOfWeek()
@@ -41,6 +42,7 @@ internal suspend fun getCalendarInfo(
     val calendarDays = getCalendarDays(
         firstDay = 1,
         lastDay = lastDayOfMonth + 1,
+        currentYear = year,
         currentMonth = month,
         festivals = sortedFestivals
     )
@@ -49,6 +51,7 @@ internal suspend fun getCalendarInfo(
     val beforeCalendarDays = getCalendarDays(
         firstDay = (beforeMonthLastDayOfMonth - firstDayOfWeek) + 2,
         lastDay = beforeMonthLastDayOfMonth + 1,
+        currentYear = year,
         currentMonth = month - 1,
         festivals = sortedFestivals
     )
@@ -59,6 +62,7 @@ internal suspend fun getCalendarInfo(
         getCalendarDays(
             firstDay = 1,
             lastDay = 7 - (firstDayOfWeek - 1 + lastDayOfMonth) % 7 + 1,
+            currentYear = year,
             currentMonth = month + 1,
             festivals = sortedFestivals
         )
@@ -67,14 +71,12 @@ internal suspend fun getCalendarInfo(
     }
 
     return CalendarInfo(
-        year = calendar.year(),
+        year = year,
         month = month,
         today = Calendar.getInstance().dayOfMonth(),
         firstDayOfWeek = firstDayOfWeek,
         lastDayOfMonth = lastDayOfMonth,
-        calendarDays = calendarDays,
-        beforeCalendarDays = beforeCalendarDays,
-        afterCalendarDays = afterCalendarDays
+        calendarDays = beforeCalendarDays + calendarDays + afterCalendarDays
     )
 }
 
@@ -88,6 +90,7 @@ internal suspend fun getCalendarInfo(
 private suspend fun getCalendarDays(
     firstDay: Int,
     lastDay: Int,
+    currentYear: Int,
     currentMonth: Int,
     festivals: List<FestivalItemVo>,
 ): List<CalendarDayInfo> = withContext(Dispatchers.Default) {
@@ -105,7 +108,9 @@ private suspend fun getCalendarDays(
 
         calendarDays.add(
             CalendarDayInfo(
-                day = "$day",
+                year = currentYear,
+                month = currentMonth,
+                day = day,
                 festivalDays = festivalDays
             )
         )
