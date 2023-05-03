@@ -61,20 +61,20 @@ internal class CalendarViewModel @Inject constructor(
         filterIsInstance<CalendarEvent.ClearFilter>().toClearFilterResult(),
     )
 
-    override fun CalendarResult.reduce(states: CalendarState): CalendarState {
+    override fun CalendarResult.reduce(state: CalendarState): CalendarState {
         return when (this) {
-            is CalendarResult.Loading -> states.copy(isLoading = isLoading)
+            is CalendarResult.Loading -> state.copy(isLoading = isLoading)
             is CalendarResult.CurrentYearMonth -> {
-                states.copy(
+                state.copy(
                     currentYearMonth = currentYearMonth,
                     yearMonthItems = yearMonthItems
                 )
             }
             is CalendarResult.CurrentCalendar -> {
-                states.copy(
+                state.copy(
                     isLoading = false,
                     hasError = false,
-                    calendarInfo = calendarInfo ?: states.calendarInfo,
+                    calendarInfo = calendarInfo ?: state.calendarInfo,
                     categoryFilters = categoryFilters,
                     stateFilters = stateFilters,
                     regionFilters = regionFilters,
@@ -85,30 +85,30 @@ internal class CalendarViewModel @Inject constructor(
                     selectedAgeFilters = selectedAgeFilters
                 )
             }
-            is CalendarResult.UpdateYearMonth -> states.copy(currentYearMonth = currentYearMonth)
+            is CalendarResult.UpdateYearMonth -> state.copy(currentYearMonth = currentYearMonth)
             is CalendarResult.UpdateInterest -> {
-                states.copy(
+                state.copy(
                     isInterest = isInterest,
                     calendarInfo = CalendarInfoVo()
                 )
             }
             is CalendarResult.ClickCategoryFilterItem -> {
-                states.copy(categoryFilters = categoryFilters)
+                state.copy(categoryFilters = categoryFilters)
             }
-            is CalendarResult.ClickStateFilterItem -> states.copy(stateFilters = stateFilters)
-            is CalendarResult.ClickRegionFilterItem -> states.copy(regionFilters = regionFilters)
-            is CalendarResult.ClickAgeFilterItem -> states.copy(ageFilters = ageFilters)
+            is CalendarResult.ClickStateFilterItem -> state.copy(stateFilters = stateFilters)
+            is CalendarResult.ClickRegionFilterItem -> state.copy(regionFilters = regionFilters)
+            is CalendarResult.ClickAgeFilterItem -> state.copy(ageFilters = ageFilters)
             is CalendarResult.ClearFilter -> {
-                states.copy(
+                state.copy(
                     categoryFilters = categoryFilters,
                     stateFilters = stateFilters,
                     regionFilters = regionFilters,
                     ageFilters = ageFilters,
                 )
             }
-            is CalendarResult.ClickFestival -> states
+            is CalendarResult.ClickFestival -> state
             is CalendarResult.Error -> {
-                states.copy(
+                state.copy(
                     hasError = true,
                     categoryFilters = categoryFilters,
                     stateFilters = stateFilters,
