@@ -24,6 +24,7 @@ import com.wonder.domain.usecase.calendar.SaveCalendarInfoUseCase
 import com.wonder.domain.usecase.festival.SearchFestivalParam
 import com.wonder.domain.usecase.festival.SearchFestivalsUseCase
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
+import com.wonder.wonderland.presentation.calendar.filter.isSelected
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
 import com.wonder.wonderland.presentation.calendar.model.toDomain
 import com.wonder.wonderland.presentation.calendar.model.toVo
@@ -139,13 +140,24 @@ internal class CalendarViewModel @Inject constructor(
 
     private fun Flow<CalendarEvent.SearchFestivals>.toGetCalendarInfoFromLocalResult() =
         mapLatest {
-            val calendarInfo = withContext(Dispatchers.IO) {
-                getCalendarInfoUseCase(it.yearMonth)
-            }
             CalendarResult.CurrentCalendar(
-                calendarInfo = calendarInfo?.toVo()?.copy(
-                    today = Calendar.getInstance().dayOfMonth()
-                ),
+                calendarInfo = if (states.value.isFilterSelected()) {
+                    null
+                } else {
+                    withContext(Dispatchers.IO) {
+                        getCalendarInfoUseCase(it.yearMonth)
+                    }?.toVo()?.copy(
+                        today = Calendar.getInstance().dayOfMonth()
+                    )
+                },
+                categoryFilters = states.value.categoryFilters,
+                stateFilters = states.value.stateFilters,
+                regionFilters = states.value.regionFilters,
+                ageFilters = states.value.ageFilters,
+                selectedCategoryFilters = states.value.categoryFilters,
+                selectedStateFilters = states.value.stateFilters,
+                selectedRegionFilters = states.value.regionFilters,
+                selectedAgeFilters = states.value.ageFilters,
             )
         }
 
@@ -550,10 +562,10 @@ internal class CalendarViewModel @Inject constructor(
         regionFilters: List<CalendarFilter>,
         ageFilters: List<CalendarFilter>,
     ) {
-        val isFilterSelected = categoryFilters.filterNot { it.title == "전체" }.any { it.isSelected }
-            || stateFilters.filterNot { it.title == "전체" }.any { it.isSelected }
-            || regionFilters.filterNot { it.title == "전체" }.any { it.isSelected }
-            || ageFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+        val isFilterSelected = categoryFilters.isSelected() ||
+            stateFilters.isSelected() ||
+            regionFilters.isSelected() ||
+            ageFilters.isSelected()
         if (isFilterSelected) return
 
         viewModelScope.launch(Dispatchers.IO) {

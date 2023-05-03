@@ -6,3 +6,5 @@ data class CalendarFilter(
     val code: String?,
     val isSelected: Boolean = false
 )
+
+fun List<CalendarFilter>.isSelected() = filterNot { it.title == "전체" }.any { it.isSelected }

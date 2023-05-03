@@ -3,6 +3,7 @@ package com.wonder.wonderland.presentation.calendar.vm
 import androidx.compose.foundation.lazy.LazyListState
 import com.wonder.base.WonderState
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
+import com.wonder.wonderland.presentation.calendar.filter.isSelected
 import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
 
 internal data class CalendarState(
@@ -24,10 +25,10 @@ internal data class CalendarState(
 ) : WonderState
 
 internal fun CalendarState.isFilterChanged(): Boolean =
-    !isEqual(categoryFilters, selectedCategoryFilters)
-        || !isEqual(stateFilters, selectedStateFilters)
-        || !isEqual(regionFilters, selectedRegionFilters)
-        || !isEqual(ageFilters, selectedAgeFilters)
+    !isEqual(categoryFilters, selectedCategoryFilters) ||
+        !isEqual(stateFilters, selectedStateFilters) ||
+        !isEqual(regionFilters, selectedRegionFilters) ||
+        !isEqual(ageFilters, selectedAgeFilters)
 
 private fun isEqual(first: List<CalendarFilter>, second: List<CalendarFilter>): Boolean {
     if (first.size != second.size) {
@@ -39,10 +40,10 @@ private fun isEqual(first: List<CalendarFilter>, second: List<CalendarFilter>): 
 }
 
 internal fun CalendarState.isFilterSelected(): Boolean =
-    categoryFilters.filterNot { it.title == "전체" }.any { it.isSelected }
-        || stateFilters.filterNot { it.title == "전체" }.any { it.isSelected }
-        || regionFilters.filterNot { it.title == "전체" }.any { it.isSelected }
-        || ageFilters.filterNot { it.title == "전체" }.any { it.isSelected }
+    categoryFilters.isSelected() ||
+        stateFilters.isSelected() ||
+        regionFilters.isSelected() ||
+        ageFilters.isSelected()
 
 internal fun CalendarState.getSelectedFilters() = mutableListOf<CalendarFilter>().apply {
     addAll(categoryFilters.filterNot { it.title == "전체" }.filter { it.isSelected })
