@@ -1,18 +1,15 @@
 package com.wonder.wonderland.presentation.calendar
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -44,6 +41,7 @@ import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.Subtitle1
 import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
+import com.wonder.component.ui.loading.LoadingView
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
@@ -266,15 +264,7 @@ private fun CalendarScreen(
                             }
 
                             if (calendarState.isLoading) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(Gray900.copy(alpha = 0.6f))
-                                ) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
-                                }
+                                LoadingView()
                             }
                         }
                     }
