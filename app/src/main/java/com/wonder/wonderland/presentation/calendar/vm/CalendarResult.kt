@@ -14,6 +14,7 @@ internal sealed interface CalendarResult : WonderResult {
     ) : CalendarResult
 
     data class CurrentCalendar(
+        val isLoading: Boolean,
         val calendarInfo: CalendarInfoVo?,
         val categoryFilters: List<CalendarFilter> = emptyList(),
         val stateFilters: List<CalendarFilter> = emptyList(),

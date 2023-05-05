@@ -14,6 +14,8 @@ internal sealed interface CalendarEvent : WonderEvent {
         val yearMonth: String
     ) : CalendarEvent
 
+    data class SearchRemoteFestivals(val yearMonth: String) : CalendarEvent
+
     data class UpdateCurrentYearMonth(val yearMonth: String) : CalendarEvent
 
     data class UpdateInterest(val isInterest: Boolean) : CalendarEvent

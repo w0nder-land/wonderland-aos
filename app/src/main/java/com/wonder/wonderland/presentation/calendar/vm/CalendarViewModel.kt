@@ -51,7 +51,7 @@ internal class CalendarViewModel @Inject constructor(
         filterIsInstance<CalendarEvent.Loading>().toLoadingResult(),
         filterIsInstance<CalendarEvent.GetCurrentYearMonth>().toGetCurrentYearMonthResult(),
         filterIsInstance<CalendarEvent.SearchFestivals>().toGetCalendarInfoFromLocalResult(),
-        filterIsInstance<CalendarEvent.SearchFestivals>().toSearchFestivalsResult(),
+        filterIsInstance<CalendarEvent.SearchRemoteFestivals>().toSearchRemoteFestivalsResult(),
         filterIsInstance<CalendarEvent.UpdateCurrentYearMonth>().toUpdateCurrentYearMonthResult(),
         filterIsInstance<CalendarEvent.UpdateInterest>().toUpdateInterestResult(),
         filterIsInstance<CalendarEvent.ClickFestival>().toClickFestivalResult(),
@@ -73,7 +73,7 @@ internal class CalendarViewModel @Inject constructor(
             }
             is CalendarResult.CurrentCalendar -> {
                 state.copy(
-                    isLoading = false,
+                    isLoading = isLoading,
                     hasError = false,
                     calendarInfo = calendarInfo ?: state.calendarInfo,
                     categoryFilters = categoryFilters,
@@ -140,16 +140,20 @@ internal class CalendarViewModel @Inject constructor(
 
     private fun Flow<CalendarEvent.SearchFestivals>.toGetCalendarInfoFromLocalResult() =
         mapLatest {
+            processEvent(CalendarEvent.SearchRemoteFestivals(yearMonth = it.yearMonth))
+
+            val calendarInfo = if (states.value.isFilterSelected()) {
+                null
+            } else {
+                withContext(Dispatchers.IO) {
+                    getCalendarInfoUseCase(it.yearMonth)
+                }?.toVo()?.copy(
+                    today = Calendar.getInstance().dayOfMonth()
+                )
+            }
             CalendarResult.CurrentCalendar(
-                calendarInfo = if (states.value.isFilterSelected()) {
-                    null
-                } else {
-                    withContext(Dispatchers.IO) {
-                        getCalendarInfoUseCase(it.yearMonth)
-                    }?.toVo()?.copy(
-                        today = Calendar.getInstance().dayOfMonth()
-                    )
-                },
+                isLoading = it.isLoading && calendarInfo == null,
+                calendarInfo = calendarInfo,
                 categoryFilters = states.value.categoryFilters,
                 stateFilters = states.value.stateFilters,
                 regionFilters = states.value.regionFilters,
@@ -161,10 +165,8 @@ internal class CalendarViewModel @Inject constructor(
             )
         }
 
-    private fun Flow<CalendarEvent.SearchFestivals>.toSearchFestivalsResult() =
+    private fun Flow<CalendarEvent.SearchRemoteFestivals>.toSearchRemoteFestivalsResult() =
         mapLatest {
-            if (it.isLoading) processEvent(CalendarEvent.Loading(isLoading = true))
-
             val categoryCodes = states.value.categoryFilters
                 .filter { it.isSelected }.map { it.code }
             val stateCodes = states.value.stateFilters
@@ -211,6 +213,7 @@ internal class CalendarViewModel @Inject constructor(
             )
 
             CalendarResult.CurrentCalendar(
+                isLoading = false,
                 calendarInfo = calendarInfo,
                 categoryFilters = categoryFilters,
                 stateFilters = stateFilters,
