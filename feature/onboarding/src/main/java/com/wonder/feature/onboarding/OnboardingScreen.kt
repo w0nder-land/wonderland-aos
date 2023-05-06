@@ -46,7 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.imaec.auth.signInKakao
+import com.wonder.auth.signInKakao
 import com.wonder.component.theme.Body1
 import com.wonder.component.theme.Gray200
 import com.wonder.component.theme.Gray500

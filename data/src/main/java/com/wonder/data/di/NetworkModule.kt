@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.JsonSyntaxException
-import com.imaec.model.common.NetworkError
+import com.wonder.model.common.NetworkError
 import com.wonder.data.BuildConfig
 import com.wonder.data.constant.HEADER
 import com.wonder.data.constant.HOST_WONDERLAND

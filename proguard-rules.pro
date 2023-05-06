@@ -1,5 +1,5 @@
 # KookminPT
--keep class com.imaec.model.** { *; }
+-keep class com.wonder.model.** { *; }
 -keep class com.wonder.domain.model.** { *; }
 -keep class com.wonder.data.model.** { *; }
 

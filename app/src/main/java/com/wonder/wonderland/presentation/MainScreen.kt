@@ -33,9 +33,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.imaec.feature.calendar.calendarScreen
-import com.imaec.feature.home.homeScreen
-import com.imaec.feature.search.searchScreen
+import com.wonder.feature.calendar.calendarScreen
+import com.wonder.feature.home.homeScreen
+import com.wonder.feature.search.searchScreen
 import com.wonder.component.navigation.Navigate
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray900
