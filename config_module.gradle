@@ -1,9 +1,9 @@
 android {
-    compileSdkVersion BuildBaseConfig.COMPILE_VERSION
+    compileSdkVersion libs.versions.compile.sdk.version.get() as Integer
 
     defaultConfig {
-        minSdkVersion BuildBaseConfig.MIN_SDK_VERSION
-        targetSdkVersion BuildBaseConfig.TARGET_SDK_VERSION
+        minSdkVersion libs.versions.min.sdk.version.get() as Integer
+        targetSdkVersion libs.versions.target.sdk.version.get() as Integer
 
         vectorDrawables {
             useSupportLibrary true
@@ -21,23 +21,23 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled BuildTypeRelease.minifyEnabled
+            minifyEnabled true
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
     }
 
     productFlavors {
         dev {
-            flavorDimensions BuildTypeDebug.dimensionsName
+            flavorDimensions DEBUG_DIMENSION_NAME
             manifestPlaceholders = [
-                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+                    kakaoNativeAppKey: KAKAO_NATIVE_APP_KEY
             ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
         prod {
-            flavorDimensions BuildTypeRelease.dimensionsName
+            flavorDimensions RELEASE_DIMENSION_NAME
             manifestPlaceholders = [
-                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+                    kakaoNativeAppKey: KAKAO_NATIVE_APP_KEY
             ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }

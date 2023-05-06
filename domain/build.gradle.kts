@@ -9,15 +9,10 @@ java {
 }
 
 dependencies {
-    CoroutineConfig.run {
-        implementation(COROUTINES_CORE)
-    }
 
-    HiltConfig.run {
-        implementation(DAGGER_HILT_CORE)
-    }
+    implementation(libs.dagger.hilt.core)
 
-    TimberConfig.run {
-        implementation(TIMBER)
-    }
+    implementation(libs.coroutines.core)
+
+    implementation(libs.timber)
 }

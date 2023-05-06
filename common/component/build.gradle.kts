@@ -1,7 +1,8 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
@@ -9,7 +10,7 @@ android {
     namespace = "com.wonder.component"
 
     composeOptions {
-        kotlinCompilerExtensionVersion = ComposeConfig.composeCompilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     buildFeatures {
@@ -20,37 +21,29 @@ android {
 dependencies {
     implementation(project(Module.CommonResource))
 
-    AndroidConfig.run {
-        api(LIFECYCLE_COMPOSE)
-    }
+    api(libs.androidx.lifecycle.runtime.compose)
+    api(libs.androidx.activity.compose)
+    api(libs.androidx.navigation.compose)
 
-    HiltConfig.run {
-        api(DAGGER_HILT_ANDROID)
-        api(HILT_NAVIGATION_COMPOSE)
-    }
+    api(libs.dagger.hilt.android)
+    api(libs.hilt.navigation.compose)
 
-    ComposeConfig.run {
-        api(COMPOSE_UI)
-        api(COMPOSE_FOUNDATION)
-        api(COMPOSE_MATERIAL3)
-        api(COMPOSE_MATERIAL)
-        api(COMPOSE_MATERIAL_CORE)
-        api(COMPOSE_MATERIAL_ICON)
-        api(COMPOSE_UI_TOOL)
-        api(COMPOSE_UI_PREVIEW)
-        api(COMPOSE_ANIMATION)
-        api(COMPOSE_FOUNDATION_LAYOUT)
-        api(COMPOSE_COIL)
-        api(COMPOSE_ACTIVITY)
-        api(COMPOSE_NAVIGATION)
-        api(COMPOSE_NAVIGATION_ANIMATION)
-    }
+    api(libs.compose.animation)
+    api(libs.compose.ui)
+    api(libs.compose.ui.tooling)
+    api(libs.compose.ui.tooling.preview)
+    api(libs.compose.foundation)
+    api(libs.compose.foundation.layout)
+    api(libs.compose.material)
+    api(libs.compose.material.icons.core)
+    api(libs.compose.material.icons.extended)
+    api(libs.compose.material3)
 
-    TimberConfig.run {
-        api(TIMBER)
-    }
+    api(libs.accompanist.navigation.animation)
 
-    ExternalLibConfig.run {
-        api(SNAPPER)
-    }
+    api(libs.coil.compose)
+
+    api(libs.snapper)
+
+    api(libs.timber)
 }

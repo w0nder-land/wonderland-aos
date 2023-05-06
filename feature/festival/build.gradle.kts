@@ -1,7 +1,8 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
@@ -9,7 +10,7 @@ android {
     namespace = "com.wonder.feature.festival"
 
     composeOptions {
-        kotlinCompilerExtensionVersion = ComposeConfig.composeCompilerVersion
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     buildFeatures {
@@ -24,7 +25,5 @@ dependencies {
     implementation(project(Module.CommonResource))
     implementation(project(Module.Domain))
 
-    HiltConfig.run {
-        kapt(DAGGER_HILT_COMPILER)
-    }
+    kapt(libs.dagger.hilt.compiler)
 }

@@ -1,11 +1,11 @@
 android {
-    compileSdkVersion BuildBaseConfig.COMPILE_VERSION
-    buildToolsVersion BuildBaseConfig.BUILD_TOOLS_VERSION
+    compileSdkVersion libs.versions.compile.sdk.version.get() as Integer
+    buildToolsVersion libs.versions.build.tools.version.get()
 
     defaultConfig {
-        applicationId BuildBaseConfig.APPLICATION_ID
-        minSdkVersion BuildBaseConfig.MIN_SDK_VERSION
-        targetSdkVersion BuildBaseConfig.TARGET_SDK_VERSION
+        applicationId "com.wonder.wonderland"
+        minSdkVersion libs.versions.min.sdk.version.get() as Integer
+        targetSdkVersion libs.versions.target.sdk.version.get() as Integer
 
         vectorDrawables {
             useSupportLibrary true
@@ -25,7 +25,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion ComposeConfig.composeCompilerVersion
+        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
     }
 
     buildFeatures {
@@ -40,13 +40,13 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file(project.rootProject.file("keystore/wonder_debug.jks"))
+            storeFile file(project.rootProject.file(DEBUG_KEY_PATH))
             storePassword KEYSTORE_PASSWORD
             keyAlias DEBUG_KEY_ALIAS
             keyPassword KEY_ALIAS_PASSWORD
         }
         release {
-            storeFile file(project.rootProject.file("keystore/wonder_release.jks"))
+            storeFile file(project.rootProject.file(RELEASE_KEY_PATH))
             storePassword KEYSTORE_PASSWORD
             keyAlias RELEASE_KEY_ALIAS
             keyPassword KEY_ALIAS_PASSWORD
@@ -56,14 +56,14 @@ android {
     buildTypes {
         debug {
             debuggable true
-            minifyEnabled BuildTypeDebug.minifyEnabled
+            minifyEnabled false
             shrinkResources false
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
             signingConfig signingConfigs.debug
         }
         release {
             debuggable false
-            minifyEnabled BuildTypeRelease.minifyEnabled
+            minifyEnabled true
             shrinkResources true
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
             signingConfig signingConfigs.release
@@ -72,23 +72,21 @@ android {
 
     productFlavors {
         dev {
-            flavorDimensions BuildTypeDebug.dimensionsName
-            applicationIdSuffix BuildTypeDebug.suffixName
-            versionCode BuildTypeDebug.versionCode
-            versionName BuildTypeDebug.versionName
+            flavorDimensions DEBUG_DIMENSION_NAME
+            applicationIdSuffix DEBUG_SUFFIX_NAME
+            versionCode libs.versions.version.code.debug.get() as Integer
+            versionName libs.versions.version.name.debug.get()
             manifestPlaceholders = [
-                    appName     : BuildTypeDebug.appName,
-                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+                kakaoNativeAppKey: KAKAO_NATIVE_APP_KEY
             ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }
         prod {
-            flavorDimensions BuildTypeRelease.dimensionsName
-            versionCode BuildTypeRelease.versionCode
-            versionName BuildTypeRelease.versionName
+            flavorDimensions RELEASE_DIMENSION_NAME
+            versionCode libs.versions.version.code.release.get() as Integer
+            versionName libs.versions.version.name.release.get()
             manifestPlaceholders = [
-                    appName     : BuildTypeRelease.appName,
-                    kakaoNativeAppKey: BuildBaseConfig.KAKAO_NATIVE_APP_KEY
+                kakaoNativeAppKey: KAKAO_NATIVE_APP_KEY
             ]
             proguardFiles(file("${rootProject.rootDir.absolutePath}/proguard-rules.pro"))
         }

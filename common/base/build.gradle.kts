@@ -1,7 +1,8 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
@@ -10,16 +11,11 @@ android {
 }
 
 dependencies {
-    AndroidConfig.run {
-        implementation(LIFECYCLE_VIEWMODEL_KTX)
-    }
 
-    CoroutineConfig.run {
-        implementation(COROUTINES_CORE)
-        implementation(COROUTINES_ANDROID)
-    }
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
-    TimberConfig.run {
-        implementation(TIMBER)
-    }
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+
+    implementation(libs.timber)
 }

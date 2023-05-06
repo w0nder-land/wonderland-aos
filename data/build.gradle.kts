@@ -1,7 +1,8 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
@@ -13,35 +14,21 @@ dependencies {
     implementation(project(Module.CommonModel))
     implementation(project(Module.Domain))
 
-    KotlinConfig.run {
-        implementation(KOTLIN_STDLIB)
-    }
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
-    HiltConfig.run {
-        implementation(DAGGER_HILT_ANDROID)
-        kapt(DAGGER_HILT_COMPILER)
-    }
+    implementation(libs.coroutines.core)
 
-    NetworkConfig.run {
-        implementation(RETROFIT)
-        implementation(RETROFIT_CONVERTER)
-        api(OKHTTP_BOM)
-        implementation(OKHTTP)
-        implementation(OKHTTP_LOGGING_INTERCEPTOR)
-    }
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter)
+    api(libs.okhttp.bom)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 
-    CoroutineConfig.run {
-        implementation(COROUTINES_CORE)
-    }
+    implementation(libs.room.runtime)
+    implementation(libs.room.common)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
 
-    RoomConfig.run {
-        implementation(ROOM_RUNTIME)
-        implementation(ROOM_COMMON)
-        implementation(ROOM_KTX)
-        kapt(ROOM_COMPILER)
-    }
-
-    TimberConfig.run {
-        implementation(TIMBER)
-    }
+    implementation(libs.timber)
 }

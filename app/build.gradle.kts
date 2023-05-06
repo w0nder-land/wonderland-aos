@@ -1,10 +1,10 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.application")
-    id("dagger.hilt.android.plugin")
-    id("de.mannodermaus.android-junit5")
-    id("kotlin-parcelize")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ktlint)
 }
 
 apply(from = "${rootProject.rootDir.absolutePath}/config.gradle")
@@ -23,55 +23,32 @@ dependencies {
     implementation(project(Module.FeatureOnboarding))
     implementation(project(Module.FeatureFestival))
 
-    AndroidConfig.run {
-        implementation(CORE_KTX)
-        implementation(ACTIVITY_KTX)
-        implementation(APPCOMPAT)
-        implementation(SPLASH_SCREEN)
-        implementation(LIFECYCLE_VIEWMODEL_KTX)
-        implementation(LIFECYCLE_VIEWMODEL_COMPOSE)
-        implementation(LIFECYCLE_EXTENSIONS)
-        implementation(CONSTRAINT_LAYOUT)
-        implementation(MATERIAL)
-    }
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.extensions)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.android.material)
 
-    CoroutineConfig.run {
-        implementation(COROUTINES_CORE)
-        implementation(COROUTINES_ANDROID)
-    }
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
-    HiltConfig.run {
-        implementation(DAGGER_HILT_ANDROID)
-        kapt(DAGGER_HILT_COMPILER)
-        implementation(HILT_COMMON)
-        kapt(HILT_COMPILER)
-        implementation(HILT_NAVIGATION_COMPOSE)
-    }
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
 
-    KakaoConfig.run {
-        implementation(KAKAO_LOGIN)
-    }
+    implementation(libs.kakao.user)
 
-    TimberConfig.run {
-        implementation(TIMBER)
-    }
+    implementation(libs.timber)
 
-    UnitTestConfig.run {
-        testImplementation(JUNIT)
-        testImplementation(JUNIT_JUPITER)
-        testImplementation(JUNIT_VINTAGE_ENGINE)
-        testImplementation(TRUTH)
-        testImplementation(MOCKK)
-        testImplementation(COROUTINE_TEST)
-    }
-
-    UITestConfig.run {
-        androidTestImplementation(JUNIT_JUPITER_API)
-        androidTestImplementation(JUNIT)
-        androidTestImplementation(ESPRESSO_CORE)
-        androidTestImplementation(JUNIT5_CORE)
-        androidTestRuntimeOnly(JUNIT5_RUNNER)
-    }
+    implementation(libs.junit)
+    implementation(libs.truth)
+    implementation(libs.coroutines.test)
 }
 
 ktlint {
