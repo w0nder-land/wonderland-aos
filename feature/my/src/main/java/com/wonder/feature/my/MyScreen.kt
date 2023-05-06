@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.my
+package com.wonder.feature.my
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.WonderTheme
+import com.wonder.feature.my.vm.MyViewModel
 
 @Composable
 fun MyView(

@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.my
+package com.wonder.feature.my
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder

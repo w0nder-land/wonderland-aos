@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.my
+package com.wonder.feature.my.vm
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

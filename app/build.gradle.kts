@@ -24,6 +24,7 @@ dependencies {
     implementation(project(Module.FeatureHome))
     implementation(project(Module.FeatureSearch))
     implementation(project(Module.FeatureCalendar))
+    implementation(project(Module.FeatureMy))
     implementation(project(Module.FeatureFestival))
 
     implementation(libs.androidx.appcompat)

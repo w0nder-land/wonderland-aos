@@ -44,7 +44,7 @@ import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.util.showMessage
 import com.wonder.component.util.snackbarState
-import com.wonder.wonderland.presentation.my.myScreen
+import com.wonder.feature.my.myScreen
 import dagger.hilt.android.internal.managers.FragmentComponentManager
 
 @Composable
