@@ -1,5 +1,6 @@
 package com.wonder.wonderland.presentation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -27,9 +29,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navOptions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.imaec.feature.home.homeScreen
 import com.wonder.component.navigation.Navigate
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray900
@@ -39,15 +43,18 @@ import com.wonder.component.theme.WonderTheme
 import com.wonder.component.util.showMessage
 import com.wonder.component.util.snackbarState
 import com.wonder.wonderland.presentation.calendar.calendarScreen
-import com.wonder.wonderland.presentation.home.homeScreen
 import com.wonder.wonderland.presentation.my.myScreen
 import com.wonder.wonderland.presentation.search.searchScreen
+import dagger.hilt.android.internal.managers.FragmentComponentManager
 
 @Composable
 fun MainView(
     mainViewModel: MainViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
+    val mainActivity = FragmentComponentManager.findActivity(LocalContext.current) as MainActivity
+    BackHandler { mainActivity.finish() }
+
     LaunchedEffect(Unit) {
         mainViewModel.networkErrorEvent.collect {
             showMessage(it)
@@ -70,6 +77,16 @@ private fun MainScreen(
 ) {
     val mainNavController = rememberAnimatedNavController()
     val snackbarHostState = remember { SnackbarHostState() }
+    val currentBackStackEntry = mainNavController.currentBackStackEntryAsState().value
+
+    LaunchedEffect(currentBackStackEntry) {
+        when (currentBackStackEntry?.destination?.route) {
+            Navigate.Screen.Home.route -> onBottomNavigationClick(MainDestination.HOME)
+            Navigate.Screen.Search.route -> onBottomNavigationClick(MainDestination.SEARCH)
+            Navigate.Screen.Calendar.route -> onBottomNavigationClick(MainDestination.CALENDAR)
+            Navigate.Screen.My.route -> onBottomNavigationClick(MainDestination.MY)
+        }
+    }
 
     LaunchedEffect(Unit) {
         snackbarState.collect { message ->

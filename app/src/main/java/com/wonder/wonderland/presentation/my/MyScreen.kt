@@ -9,19 +9,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.WonderTheme
-import com.wonder.wonderland.presentation.MainDestination
-import com.wonder.wonderland.presentation.MainViewModel
 
 @Composable
 fun MyView(
-    mainViewModel: MainViewModel,
     myViewModel: MyViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
-    BackHandler {
-        mainViewModel.selectBottomNavigationItem(MainDestination.HOME)
-        onBackClick()
-    }
+    BackHandler { onBackClick() }
 
     MyScreen()
 }

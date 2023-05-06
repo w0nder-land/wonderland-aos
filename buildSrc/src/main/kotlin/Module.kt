@@ -9,5 +9,6 @@ object Module {
     const val CommonResource = ":common:resource"
     const val FeatureSplash = ":feature:splash"
     const val FeatureOnboarding = ":feature:onboarding"
+    const val FeatureHome = ":feature:home"
     const val FeatureFestival = ":feature:festival"
 }

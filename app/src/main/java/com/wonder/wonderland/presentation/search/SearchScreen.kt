@@ -33,8 +33,6 @@ import com.wonder.component.ui.textfield.BasicTextField
 import com.wonder.component.util.Keyboard
 import com.wonder.component.util.rememberKeyboardState
 import com.wonder.resource.R
-import com.wonder.wonderland.presentation.MainDestination
-import com.wonder.wonderland.presentation.MainViewModel
 import com.wonder.wonderland.presentation.search.keyword.searchKeywordView
 import com.wonder.wonderland.presentation.search.result.searchEmptyView
 import com.wonder.wonderland.presentation.search.result.searchResultView
@@ -42,14 +40,10 @@ import java.util.Random
 
 @Composable
 fun SearchView(
-    mainViewModel: MainViewModel,
     searchViewModel: SearchViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
 ) {
-    BackHandler {
-        mainViewModel.selectBottomNavigationItem(MainDestination.HOME)
-        onBackClick()
-    }
+    BackHandler { onBackClick() }
 
     SearchScreen(
         recentKeywords = listOf(

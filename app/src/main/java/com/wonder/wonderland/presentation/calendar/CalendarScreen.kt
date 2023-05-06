@@ -45,8 +45,6 @@ import com.wonder.component.ui.loading.LoadingView
 import com.wonder.component.ui.singleClick
 import com.wonder.component.ui.switch.WonderSwitch
 import com.wonder.resource.R
-import com.wonder.wonderland.presentation.MainDestination
-import com.wonder.wonderland.presentation.MainViewModel
 import com.wonder.wonderland.presentation.calendar.bottomsheet.SelectMonthBottomSheetDialog
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
 import com.wonder.wonderland.presentation.calendar.filter.CalendarFilterButton
@@ -66,7 +64,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun CalendarView(
-    mainViewModel: MainViewModel,
     calendarViewModel: CalendarViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     onMoveFestival: (festivalId: Int) -> Unit,
@@ -79,7 +76,6 @@ internal fun CalendarView(
         if (drawerState.isOpen) {
             scope.launch { drawerState.close() }
         } else {
-            mainViewModel.selectBottomNavigationItem(MainDestination.HOME)
             onBackClick()
         }
     }

@@ -1,6 +1,5 @@
-package com.wonder.wonderland.presentation.home
+package com.imaec.feature.home
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,30 +10,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.imaec.feature.home.vm.HomeViewModel
 import com.wonder.component.theme.Body2
 import com.wonder.component.theme.Gray900
 import com.wonder.component.theme.White
 import com.wonder.component.theme.Wonder500
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.ui.singleClick
-import com.wonder.wonderland.presentation.MainActivity
-import com.wonder.wonderland.presentation.MainViewModel
-import dagger.hilt.android.internal.managers.FragmentComponentManager
 
 @Composable
 fun HomeView(
-    mainViewModel: MainViewModel,
     homeViewModel: HomeViewModel = hiltViewModel(),
     onFestivalClick: () -> Unit,
 ) {
-    val mainActivity = FragmentComponentManager.findActivity(LocalContext.current) as MainActivity
-
-    BackHandler { mainActivity.finish() }
-
     HomeScreen(
         onFestivalClick = onFestivalClick
     )
