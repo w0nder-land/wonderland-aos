@@ -1,21 +1,13 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    id(libs.plugins.android.library.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
-apply(from = "${rootProject.rootDir.absolutePath}/config_module.gradle")
+applyModuleConfig(isComposeEnable = true)
 android {
     namespace = "com.wonder.component"
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {

@@ -1,13 +1,13 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.android.application)
+    id(libs.plugins.android.application.get().pluginId)
+    id(libs.plugins.kotlin.android.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ktlint)
 }
 
-apply(from = "${rootProject.rootDir.absolutePath}/config.gradle")
+applyAndroidConfig()
 android {
     namespace = "com.wonder.wonderland"
 }
