@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.search
+package com.imaec.feature.search
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavGraphBuilder

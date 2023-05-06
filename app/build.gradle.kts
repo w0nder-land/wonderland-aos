@@ -22,6 +22,7 @@ dependencies {
     implementation(project(Module.FeatureSplash))
     implementation(project(Module.FeatureOnboarding))
     implementation(project(Module.FeatureHome))
+    implementation(project(Module.FeatureSearch))
     implementation(project(Module.FeatureFestival))
 
     implementation(libs.androidx.appcompat)

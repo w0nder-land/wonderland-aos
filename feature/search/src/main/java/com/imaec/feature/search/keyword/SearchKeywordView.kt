@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.search.keyword
+package com.imaec.feature.search.keyword
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

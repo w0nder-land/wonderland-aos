@@ -34,6 +34,7 @@ import androidx.navigation.navOptions
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.imaec.feature.home.homeScreen
+import com.imaec.feature.search.searchScreen
 import com.wonder.component.navigation.Navigate
 import com.wonder.component.theme.Gray400
 import com.wonder.component.theme.Gray900
@@ -44,7 +45,6 @@ import com.wonder.component.util.showMessage
 import com.wonder.component.util.snackbarState
 import com.wonder.wonderland.presentation.calendar.calendarScreen
 import com.wonder.wonderland.presentation.my.myScreen
-import com.wonder.wonderland.presentation.search.searchScreen
 import dagger.hilt.android.internal.managers.FragmentComponentManager
 
 @Composable

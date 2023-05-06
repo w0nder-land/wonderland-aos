@@ -10,5 +10,6 @@ object Module {
     const val FeatureSplash = ":feature:splash"
     const val FeatureOnboarding = ":feature:onboarding"
     const val FeatureHome = ":feature:home"
+    const val FeatureSearch = ":feature:search"
     const val FeatureFestival = ":feature:festival"
 }
