@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.bottomsheet
+package com.imaec.feature.calendar.bottomsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,7 +1,7 @@
-package com.wonder.wonderland.presentation.calendar.vm
+package com.imaec.feature.calendar.vm
 
 import com.wonder.base.WonderEvent
-import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
+import com.imaec.feature.calendar.filter.CalendarFilter
 
 internal sealed interface CalendarEvent : WonderEvent {
 

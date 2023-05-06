@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.vm
+package com.imaec.feature.calendar.vm
 
 import com.wonder.base.WonderEffect
 

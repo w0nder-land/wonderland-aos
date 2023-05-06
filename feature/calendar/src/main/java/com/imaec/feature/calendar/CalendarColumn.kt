@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar
+package com.imaec.feature.calendar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
@@ -35,7 +35,7 @@ import com.wonder.component.theme.White
 import com.wonder.component.theme.WonderTheme
 import com.wonder.component.util.month
 import com.wonder.component.util.year
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
+import com.imaec.feature.calendar.model.CalendarInfoVo
 import java.util.Calendar
 
 @OptIn(ExperimentalFoundationApi::class)

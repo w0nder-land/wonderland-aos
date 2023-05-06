@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.vm
+package com.imaec.feature.calendar.vm
 
 import androidx.lifecycle.viewModelScope
 import com.imaec.model.festival.FestivalAgeCountVo
@@ -23,12 +23,12 @@ import com.wonder.domain.usecase.calendar.SaveCalendarInfoParam
 import com.wonder.domain.usecase.calendar.SaveCalendarInfoUseCase
 import com.wonder.domain.usecase.festival.SearchFestivalParam
 import com.wonder.domain.usecase.festival.SearchFestivalsUseCase
-import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
-import com.wonder.wonderland.presentation.calendar.filter.isSelected
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
-import com.wonder.wonderland.presentation.calendar.model.toDomain
-import com.wonder.wonderland.presentation.calendar.model.toVo
-import com.wonder.wonderland.presentation.calendar.util.getCalendarInfo
+import com.imaec.feature.calendar.filter.CalendarFilter
+import com.imaec.feature.calendar.filter.isSelected
+import com.imaec.feature.calendar.model.CalendarInfoVo
+import com.imaec.feature.calendar.model.toDomain
+import com.imaec.feature.calendar.model.toVo
+import com.imaec.feature.calendar.util.getCalendarInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

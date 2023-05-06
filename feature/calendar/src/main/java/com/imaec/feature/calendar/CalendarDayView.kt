@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar
+package com.imaec.feature.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,7 +29,7 @@ import com.wonder.component.theme.WonderTheme
 import com.wonder.component.theme.WonderYellow
 import com.wonder.component.ui.divider.HorizontalDivider
 import com.wonder.component.ui.singleClick
-import com.wonder.wonderland.presentation.calendar.model.FestivalDayVo
+import com.imaec.feature.calendar.model.FestivalDayVo
 
 @Composable
 internal fun CalendarDayView(

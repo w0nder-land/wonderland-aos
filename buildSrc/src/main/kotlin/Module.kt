@@ -11,5 +11,6 @@ object Module {
     const val FeatureOnboarding = ":feature:onboarding"
     const val FeatureHome = ":feature:home"
     const val FeatureSearch = ":feature:search"
+    const val FeatureCalendar = ":feature:calendar"
     const val FeatureFestival = ":feature:festival"
 }

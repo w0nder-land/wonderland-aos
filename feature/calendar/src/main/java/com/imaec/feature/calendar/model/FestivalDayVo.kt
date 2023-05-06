@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.model
+package com.imaec.feature.calendar.model
 
 import com.wonder.domain.model.calendar.FestivalDay
 

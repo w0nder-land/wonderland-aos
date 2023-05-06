@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.filter
+package com.imaec.feature.calendar.filter
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState

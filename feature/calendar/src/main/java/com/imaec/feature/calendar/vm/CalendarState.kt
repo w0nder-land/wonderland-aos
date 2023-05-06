@@ -1,10 +1,10 @@
-package com.wonder.wonderland.presentation.calendar.vm
+package com.imaec.feature.calendar.vm
 
 import androidx.compose.foundation.lazy.LazyListState
 import com.wonder.base.WonderState
-import com.wonder.wonderland.presentation.calendar.filter.CalendarFilter
-import com.wonder.wonderland.presentation.calendar.filter.isSelected
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
+import com.imaec.feature.calendar.filter.CalendarFilter
+import com.imaec.feature.calendar.filter.isSelected
+import com.imaec.feature.calendar.model.CalendarInfoVo
 
 internal data class CalendarState(
     override val isLoading: Boolean = true,

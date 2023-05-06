@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.util
+package com.imaec.feature.calendar.util
 
 import com.imaec.model.festival.FestivalItemVo
 import com.wonder.component.util.addDayOfMonth
@@ -11,9 +11,9 @@ import com.wonder.component.util.toCalendar
 import com.wonder.component.util.toDate
 import com.wonder.component.util.toDay
 import com.wonder.component.util.year
-import com.wonder.wonderland.presentation.calendar.model.CalendarDayInfoVo
-import com.wonder.wonderland.presentation.calendar.model.CalendarInfoVo
-import com.wonder.wonderland.presentation.calendar.model.FestivalDayVo
+import com.imaec.feature.calendar.model.CalendarDayInfoVo
+import com.imaec.feature.calendar.model.CalendarInfoVo
+import com.imaec.feature.calendar.model.FestivalDayVo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar

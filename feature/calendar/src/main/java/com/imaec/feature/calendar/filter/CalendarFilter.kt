@@ -1,4 +1,4 @@
-package com.wonder.wonderland.presentation.calendar.filter
+package com.imaec.feature.calendar.filter
 
 data class CalendarFilter(
     val title: String,
